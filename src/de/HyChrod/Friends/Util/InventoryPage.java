@@ -92,11 +92,11 @@ public class InventoryPage {
 	private ItemStack getHead(OfflinePlayer player, PlayerUtilities pu) {
 		ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
 		SkullMeta SM = (SkullMeta)IS.getItemMeta();
-		SM.setDisplayName(player.getName() + " §7(§8Offline§7)");;
+		SM.setDisplayName(player.getName() + " Â§7(Â§8OfflineÂ§7)");;
 		SM.setOwner(player.getName());
 		if(Friends.bungeeMode) {
 			if(BungeeSQL_Manager.isOnline(player)) {
-				SM.setDisplayName(player.getName() + " §7(§aOnline§7)");
+				SM.setDisplayName(player.getName() + " Â§7(Â§aOnlineÂ§7)");
 				if(this.cfg.getBoolean("Friends.ShowServer.Enable")) {
 					SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.ShowServer.Lore").replace("%SERVER%",
 							BungeeSQL_Manager.getServer(player)))));
@@ -123,7 +123,7 @@ public class InventoryPage {
 						.replace("%minutes%", ""+time[1])
 						.replace("%seconds%", ""+time[0]))));
 			}
-		}
+		} else SM.setDisplayName(player.getName() + " Â§7(Â§aOnlineÂ§7)");
 		IS.setItemMeta(SM);
 		return IS;
 	}

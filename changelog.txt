@@ -1,0 +1,105 @@
+v2.2.3
+
+  Fixed some bugs with bungeecord
+  Added private messaging -> /f msg <Player> <Message>
+
+v2.2.0
+  
+  BungeeCord Support
+
+v2.1.0
+   
+   Complete new Code again
+   Removed Async MySQL
+   Added normal SQL
+   Bugfixes
+   More functions
+
+v2.0.7
+
+	Async MySQL
+	Bugfix
+
+v2.0.6
+
+    Performance Update
+    The GUI will open a lot faster
+    Code improvements
+
+v2.0.5
+
+    If "GiveOnJoin" is disabled, the friend-item won't appear after death
+    Type /f jump <Player> to jump to your friend
+    If "EnableJumping" is disabled it won't appear in the GUI-Options
+
+v2.0.4
+
+    Fixed a bug who the "PreviousPageItem" appeared
+    "CanMoveItem" parameter works now!
+    Now compatible with Mc17 - 1.9 in one plugin!
+    To do this i had to remove the "PlaySound"-Options!
+
+v2.0.3
+
+    Fixed a bug that don't allow to edit the config.yml
+
+v2.0.2
+
+    Fixed a few bugs
+    You can disable the friend-chat
+    You can enable in the config.yml a "Remove-Verification" 
+
+v2.0.1
+
+    Fixed a bug who occurrupted by rightclicking the friend-item 
+
+v2.0.0
+
+    Completly new code
+    More leightweight
+    A lot of new features
+    The plugin is now 100% customisable (You can change everything) 
+
+v1.3.7
+
+    You can use this plugin now with MySQL or Flatfile
+    You can see the last-online from your friends
+    Bugfixes 
+
+v1.3.4
+
+    Type "/friends" to open the GUI
+    Type "/friends help" to show up the help page 
+
+v1.3.2
+
+    Hit a player with the friend-item to send a request
+    Bugfixes 
+
+v1.3.0
+
+    Title of the GUI can be changes now
+    New GUI design
+    "/friends" or "/friends help" brings up a help page
+    Type "/friends list" to see a list of friends who are online a.t.m
+    You can have unlimited requests by different players
+    You can block players
+    Bugfixes 
+
+v1.2.0
+
+    Posibillity to change the names of items in the GUI
+    You can disable PvP between friends 
+
+v1.1.7
+
+    Added chinese translation
+    Bugfixes 
+
+v1.1.3
+
+    Little bugfixes 
+
+v1.1
+
+    Plugin is now compatible with MC1.7.X - 1.8.X

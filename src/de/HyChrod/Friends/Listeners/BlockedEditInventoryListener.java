@@ -11,7 +11,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,8 +27,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class BlockedEditInventoryListener implements Listener {
 	
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public static HashMap<Player, OfflinePlayer> editing = new HashMap<>();
 	
@@ -43,7 +40,7 @@ public class BlockedEditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
 					e.setCancelled(true);
 					if(e.getCurrentItem() != null) {
 						if(e.getCurrentItem().hasItemMeta()) {
@@ -78,7 +75,7 @@ public class BlockedEditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
 					editing.remove(p);
 				}
 			}

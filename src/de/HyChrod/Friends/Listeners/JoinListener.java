@@ -9,7 +9,6 @@ package de.HyChrod.Friends.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,8 +25,6 @@ import de.HyChrod.Friends.Util.UpdateChecker;
 public class JoinListener implements Listener {
 
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public JoinListener(Friends friends) {
 		this.plugin = friends;
@@ -39,18 +36,18 @@ public class JoinListener implements Listener {
 		PlayerUtilities pu = new PlayerUtilities(p);
 		
 		if(p.hasPermission("Friends.Admin")) {
-			if(this.cfg.getBoolean("Friends.CheckForUpdates") && !UpdateChecker.check()) {
+			if(FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates") && !UpdateChecker.check()) {
 				p.sendMessage(plugin.prefix + " §cA new §6Spigot §cupdate is available!");
 				p.sendMessage(plugin.prefix + " §cPlease update your plugin!");
 				
 			}
 		}
 		
-		if(this.cfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
-			if(p.getInventory().getItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1) == null ||
-					(p.getInventory().getItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1) != null && !p.getInventory().getItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1).hasItemMeta()
-					|| !p.getInventory().getItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1).getItemMeta().hasDisplayName()
-					|| !p.getInventory().getItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1).getItemMeta().getDisplayName().equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName()))) {
+		if(FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
+			if(p.getInventory().getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1) == null ||
+					(p.getInventory().getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1) != null && !p.getInventory().getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1).hasItemMeta()
+					|| !p.getInventory().getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1).getItemMeta().hasDisplayName()
+					|| !p.getInventory().getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1).getItemMeta().getDisplayName().equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName()))) {
 				for(int i = 0; i < p.getInventory().getSize(); i++) {
 					if(p.getInventory().getItem(i) != null) {
 						if(p.getInventory().getItem(i).hasItemMeta()) {
@@ -63,7 +60,7 @@ public class JoinListener implements Listener {
 					}
 				}
 			}
-			p.getInventory().setItem(this.cfg.getInt("Friends.FriendItem.InventorySlot")-1, ItemStacks.FRIENDITEM(p));
+			p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1, ItemStacks.FRIENDITEM(p));
 		}
 		
 		if(Friends.bungeeMode) {

@@ -6,7 +6,6 @@
 */
 package de.HyChrod.Friends.Listeners;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,14 +20,11 @@ import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Util.ItemStacks;
 
 public class ItemListener implements Listener {
-
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onItemDrop(PlayerDropItemEvent e) {
 		Player p = e.getPlayer();
-		if(this.cfg.getBoolean("Friends.Options.CanDropItem")) return;
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.CanDropItem")) return;
 		
 		if(e.getItemDrop() != null) {
 			if(e.getItemDrop().getItemStack().hasItemMeta()) {
@@ -44,7 +40,7 @@ public class ItemListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoyClick(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
-		if(this.cfg.getBoolean("Friends.Options.CanMoveItem")) return;
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.CanMoveItem")) return;
 		if(e.getCurrentItem() != null) {
 			if(e.getCurrentItem().hasItemMeta()) {
 				if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
@@ -59,7 +55,7 @@ public class ItemListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlce(BlockPlaceEvent e) {
 		Player p = e.getPlayer();
-		if(this.cfg.getBoolean("Friends.Options.CanPlaceItem")) return;
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.CanPlaceItem")) return;
 		if(e.getItemInHand() != null) {
 			if(e.getItemInHand().hasItemMeta()) {
 				if(e.getItemInHand().getItemMeta().hasDisplayName()) {
@@ -74,7 +70,7 @@ public class ItemListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDeath(PlayerDeathEvent e) {
 		Player p = e.getEntity();
-		if(this.cfg.getBoolean("Friends.Options.CanDropItem")) return;
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.CanDropItem")) return;
 		
 		for(int i = 0; i < e.getDrops().size(); i++) {
 			if(e.getDrops().get(i) != null) {
@@ -92,8 +88,8 @@ public class ItemListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onRespawn(PlayerRespawnEvent e) {
 		Player p = e.getPlayer();
-		if(this.cfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
-			if(this.cfg.getStringList("Friends.DisabledWorlds").contains(p.getWorld().getName())) return;
+		if(FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
+			if(FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(p.getWorld().getName())) return;
 			for(int i = 0; i < p.getInventory().getSize(); i++) {
 				if(p.getInventory().getItem(i) != null) {
 					if(p.getInventory().getItem(i).hasItemMeta()) {
@@ -105,7 +101,7 @@ public class ItemListener implements Listener {
 					}
 				}
 			}
-			p.getInventory().setItem(this.cfg.getInt("Friends.FriendItem.InventorySlot"), ItemStacks.FRIENDITEM(p));
+			p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot"), ItemStacks.FRIENDITEM(p));
 		}
 	}
 	

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,8 +29,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class MainInventoryListener implements Listener {
 	
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	private static HashMap<Player, Integer> currentSite = new HashMap<>();
 	
@@ -46,7 +43,7 @@ public class MainInventoryListener implements Listener {
 		
 		if(e.getInventory() != null) {
 			if(e.getInventory().getTitle() != null) {
-				if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.GUI.Title")))) {
+				if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.Title")))) {
 					e.setCancelled(true);
 					
 					if(e.getCurrentItem() != null) {
@@ -108,7 +105,7 @@ public class MainInventoryListener implements Listener {
 		Player p = (Player) e.getPlayer();
 		
 		if(e.getInventory() != null) {
-			if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.GUI.Title")))) {
+			if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.Title")))) {
 				if(currentSite.containsKey(p)) {
 					currentSite.remove(p);
 				}

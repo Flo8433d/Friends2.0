@@ -14,7 +14,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,8 +34,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class EditInventoryListener implements Listener {
 
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public static HashMap<Player, OfflinePlayer> editing = new HashMap<>();
 	
@@ -50,7 +47,7 @@ public class EditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%", editing.get(p).getName())))) {
 					e.setCancelled(true);
 					if(e.getCurrentItem() != null) {
 						if(e.getCurrentItem().hasItemMeta()) {
@@ -60,7 +57,7 @@ public class EditInventoryListener implements Listener {
 								
 								if(e.getCurrentItem().equals(ItemStacks.EDIT_JUMP.getItem())) {
 									
-									if(!this.cfg.getBoolean("Friends.Options.EnableJumping")) return;
+									if(!FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) return;
 									
 									if(Friends.bungeeMode) {
 										
@@ -100,7 +97,7 @@ public class EditInventoryListener implements Listener {
 									return;
 								}
 								if(e.getCurrentItem().equals(ItemStacks.EDIT_REMOVE.getItem())) {
-									if(this.cfg.getBoolean("Friends.Options.RemoveVerification")) {
+									if(FileManager.ConfigCfg.getBoolean("Friends.Options.RemoveVerification")) {
 										RemoveVerificationInventoryListener.confirming.put(p, editPlayer);
 										InventoryBuilder.REMOVE_VERIFICATION_INVENTORY(p);
 										return;
@@ -157,7 +154,7 @@ public class EditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%", editing.get(p).getName())))) {
 					editing.remove(p);
 				}
 			}

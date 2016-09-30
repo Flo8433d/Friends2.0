@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,23 +28,19 @@ public class BlockedPage {
 	public PlayerUtilities pu;
 	
 	private Friends plugin;
-	private FileManager mgr;
-	private FileConfiguration cfg;
 	
 	public BlockedPage(Friends plugin, Player player, int site, PlayerUtilities pu) {
 		this.player = player;
 		this.site = site;
 		this.pu = pu;
-		this.mgr = new FileManager();
-		this.cfg = this.mgr.getConfig("", "config.yml");
 		this.plugin = plugin;
 	}
 	
 	public void open() {
-		Inventory inv = Bukkit.createInventory(null, cfg.getInt("Friends.GUI.BlockedInv.InventorySize"), 
-				ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.BlockedInv.Title")));
+		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.BlockedInv.InventorySize"), 
+				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title")));
 		
-		for(String placeholder : cfg.getStringList("Friends.GUI.BlockedInv.PlaceholderItem.InventorySlots")) {
+		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.BlockedInv.PlaceholderItem.InventorySlots")) {
 			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.BLOCKED_PLACEHOLDER.getItem());
 		}
 		inv.setItem(ItemStacks.BLOCKED_NEXTPAGE.getInvSlot()-1, ItemStacks.BLOCKED_NEXTPAGE.getItem());

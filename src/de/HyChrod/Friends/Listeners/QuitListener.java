@@ -36,7 +36,7 @@ public class QuitListener implements Listener {
 		
 		PlayerUtilities pu = new PlayerUtilities(p);
 		pu.setLastOnline(System.currentTimeMillis());
-		pu.saveData();
+		pu.saveData(false);
 		
 		for(OfflinePlayer player : pu.getFriends()) {
 			if(player.isOnline()) {

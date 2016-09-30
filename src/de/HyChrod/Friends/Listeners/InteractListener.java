@@ -7,7 +7,6 @@
 package de.HyChrod.Friends.Listeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,8 +22,6 @@ import de.HyChrod.Friends.Util.ItemStacks;
 public class InteractListener implements Listener {
 	
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public InteractListener(Friends friends) {
 		this.plugin = friends;
@@ -34,13 +31,13 @@ public class InteractListener implements Listener {
 	public void onInteract(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		
-		if(this.cfg.getBoolean("Friends.GUI.Enable")) {
+		if(FileManager.ConfigCfg.getBoolean("Friends.GUI.Enable")) {
 			if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
 				if(e.getItem() != null) {
 					if(e.getItem().hasItemMeta()) {
 						if(e.getItem().getItemMeta().hasDisplayName()) {
 							if(e.getItem().getItemMeta().getDisplayName().equals(
-									ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.FriendItem.Displayname")))
+									ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")))
 									|| e.getItem().equals(ItemStacks.FRIENDITEM(((Player)e.getPlayer())))) {
 								InventoryBuilder.MAIN_INVENTORY(plugin, p);
 								return;

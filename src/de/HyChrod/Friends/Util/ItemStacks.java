@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -55,10 +54,6 @@ public enum ItemStacks {
 	BLOCKED_EDIT_UNBLOCK("Friends.GUI.BlockedEditInv.UnblockItem.Name", "Friends.GUI.BlockedEditInv.UnblockItem.Lore", "Friends.GUI.BlockedEditInv.UnblockItem.ItemID", "Friends.GUI.BlockedEditInv.UnblockItem.InventorySlot", 1),
 	BLOCKED_EDIT_BACK("Friends.GUI.BlockedEditInv.BackItem.Name", "Friends.GUI.BlockedEditInv.BackItem.Lore", "Friends.GUI.BlockedEditInv.BackItem.ItemID", "Friends.GUI.BlockedEditInv.BackItem.InventorySlot", 1),
 	BLOCKED_EDIT_PLACEHOLDER(null, null, "Friends.GUI.BlockedEditInv.PlaceholderItem.ItemID", null, 1);
-
-	
-	private static FileManager mgr = new FileManager();
-	private static FileConfiguration cfg = mgr.getConfig("", "config.yml");
 	
 	private String name;
 	private List<String> lore;
@@ -67,19 +62,17 @@ public enum ItemStacks {
 	private Integer invSlot = 0;
 	
 	ItemStacks(String name, String lore, String id, String invSlot, Integer amount) {
-		FileManager mgr = new FileManager();
-		FileConfiguration cfg = mgr.getConfig("", "config.yml");
 		
 		if(name == null) {this.name = "§r";} else {
-			this.name = ChatColor.translateAlternateColorCodes('&', cfg.getString(name));
+			this.name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(name));
 		}
 		if(lore == null) {this.lore = null;} else {
-			this.lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString(lore)).split("//"));
+			this.lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(lore)).split("//"));
 		}
-		this.itemID = cfg.getString(id).split(":");
+		this.itemID = FileManager.ConfigCfg.getString(id).split(":");
 		this.amount = amount;
 		if(invSlot != null && invSlot.length() > 5) {
-			this.invSlot = Integer.valueOf(cfg.getString(invSlot));
+			this.invSlot = Integer.valueOf(FileManager.ConfigCfg.getString(invSlot));
 		}
 	}
 	
@@ -123,39 +116,39 @@ public enum ItemStacks {
 	}
 	
 	public static ItemStack FRIENDITEM(Player player) {
-		if(cfg.getBoolean("Friends.FriendItem.PlayersHead")) {
+		if(FileManager.ConfigCfg.getBoolean("Friends.FriendItem.PlayersHead")) {
 			ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
 			SkullMeta SM = (SkullMeta)IS.getItemMeta();
 			SM.setOwner(player.getName());
-			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Displayname")));
-			SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Lore")).split("//")));
+			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")));
+			SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Lore")).split("//")));
 			IS.setItemMeta(SM);
 			return IS;
 		}
-		String[] IdByString = cfg.getString("Friends.FriendItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Displayname"));
-		return MainStack(IdByString, 1, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Lore")).split("//")), "§a");
+		String[] IdByString = FileManager.ConfigCfg.getString("Friends.FriendItem.ItemID").split(":");
+		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname"));
+		return MainStack(IdByString, 1, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Lore")).split("//")), "§a");
 	}
 	
 	public static ItemStack MAIN_REQUESTS(Integer requests) {
-		String[] IdByString = cfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.RequestsItem.Name").replace("%REQUESTS%", ""+requests));
-		return MainStack(IdByString, requests, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
+		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
+		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Name").replace("%REQUESTS%", ""+requests));
+		return MainStack(IdByString, requests, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
 	}
 	
 	public static ItemStack MAIN_BLOCKED(Integer blocked) {
-		String[] IdByString = cfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.BlockedItem.Name").replace("%BLOCKED%", ""+blocked));
-		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
+		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
+		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Name").replace("%BLOCKED%", ""+blocked));
+		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
 	}
 	
 	public static ItemStack OPTIONSBUTTON(List<String> options, String option, String code) {
-		String[] IdByString = cfg.getString("Friends.GUI.OptionsInv.ButtonOn.ItemID").split(":");
-		String name = ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOn.Name"));
-		List<String> lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
+		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.ItemID").split(":");
+		String name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Name"));
+		List<String> lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
 		if(options.contains(option)) {
-			IdByString = cfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
-			name = ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
+			IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
+			name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
 		}
 		return MainStack(IdByString, 1, name, lore, code);
 	}

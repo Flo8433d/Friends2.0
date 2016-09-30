@@ -14,7 +14,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,8 +30,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class RemoveVerificationInventoryListener implements Listener {
 
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public static HashMap<Player, OfflinePlayer> confirming = new HashMap<>();
 	
@@ -44,7 +41,7 @@ public class RemoveVerificationInventoryListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
 		if(e.getInventory() != null) {
-			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
+			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
 				e.setCancelled(true);
 				if(confirming.containsKey(p)) {
 					if(e.getCurrentItem() != null) {
@@ -100,7 +97,7 @@ public class RemoveVerificationInventoryListener implements Listener {
 	public void onClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
 		if(e.getInventory() != null) {
-			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', this.cfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
+			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
 				if(confirming.containsKey(p)) {
 					confirming.remove(p);
 				}

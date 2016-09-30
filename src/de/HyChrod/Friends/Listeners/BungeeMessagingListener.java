@@ -82,7 +82,7 @@ public class BungeeMessagingListener implements PluginMessageListener {
 	      }	
 	}
 	
-	public synchronized Object get(Player p, boolean integer) {  // here you can add parameters (e.g. String table, String column, ...)
+	public synchronized Object get(Player p, boolean integer) {
         sendToBungeeCord(p, "get", integer ? "points" : "nickname");
  
         try {

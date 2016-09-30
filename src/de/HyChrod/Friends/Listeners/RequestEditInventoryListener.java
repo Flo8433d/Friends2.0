@@ -14,7 +14,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,8 +30,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class RequestEditInventoryListener implements Listener {
 
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public static HashMap<Player, OfflinePlayer> editing = new HashMap<>();
 	
@@ -46,7 +43,7 @@ public class RequestEditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
 					e.setCancelled(true);
 					if(e.getCurrentItem() != null) {
 						if(e.getCurrentItem().hasItemMeta()) {
@@ -55,14 +52,14 @@ public class RequestEditInventoryListener implements Listener {
 								PlayerUtilities puT = new PlayerUtilities(inEdit);
 								PlayerUtilities puP = new PlayerUtilities(p);
 								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_ACCEPT.getItem())) {
-									if(puP.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit")) {
-										if(!p.hasPermission("Friends.ExtraFriends") || puP.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit+")) {
+									if(puP.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+										if(!p.hasPermission("Friends.ExtraFriends") || puP.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
 											p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Accepter"));
 											return;
 										}
 									}
-									if(puT.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit")) {
-										if(!p.hasPermission("Friends.ExtraFriends") || puT.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit+")) {
+									if(puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+										if(!p.hasPermission("Friends.ExtraFriends") || puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
 											p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
 											return;
 										}
@@ -154,7 +151,7 @@ public class RequestEditInventoryListener implements Listener {
 		if(e.getInventory() != null) {
 			if(editing.containsKey(p)) {
 				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
 					editing.remove(p);
 				}
 			}

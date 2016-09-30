@@ -6,7 +6,6 @@
 */
 package de.HyChrod.Friends.Listeners;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,8 +21,6 @@ import de.HyChrod.Friends.Util.ReflectionsManager;
 public class DamageListener implements Listener {
 	
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public DamageListener(Friends friends) {
 		this.plugin = friends;
@@ -38,14 +35,14 @@ public class DamageListener implements Listener {
 			
 			PlayerUtilities pu = new PlayerUtilities(p);
 			if(pu.getFriends().contains(toAdd)) {
-				if(this.cfg.getBoolean("Friends.Options.FriendCanPvP")) {
+				if(FileManager.ConfigCfg.getBoolean("Friends.Options.FriendCanPvP")) {
 					return;
 				}
 				e.setCancelled(true);
 				return;
 			}
 			
-			if(this.cfg.getBoolean("Friends.Options.HitToRequest")) {
+			if(FileManager.ConfigCfg.getBoolean("Friends.Options.HitToRequest")) {
 				if(p.getItemInHand() != null) {
 					if(p.getItemInHand().hasItemMeta()) {
 						if(p.getItemInHand().getItemMeta().hasDisplayName()) {
@@ -73,14 +70,14 @@ public class DamageListener implements Listener {
 									p.sendMessage(plugin.getString("Messages.Commands.Add.NoRequests"));
 									return;
 								}
-								if(pu.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit")) {
-									if(!p.hasPermission("Friends.ExtraFriends") || pu.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit+")) {
+								if(pu.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+									if(!p.hasPermission("Friends.ExtraFriends") || pu.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
 										p.sendMessage(plugin.getString("Messages.Commands.Add.LimitReached.Requester"));
 										return;
 									}
 								}
-								if(puT.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit")) {
-									if(!p.hasPermission("Friends.ExtraFriends") || puT.getFriends().size() > this.cfg.getInt("Friends.Options.FriendLimit+")) {
+								if(puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+									if(!p.hasPermission("Friends.ExtraFriends") || puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
 										p.sendMessage(plugin.getString("Messages.Commands.Add.LimitReached.ToAdd"));
 										return;
 									}

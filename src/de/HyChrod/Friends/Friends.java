@@ -8,7 +8,6 @@ package de.HyChrod.Friends;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.HyChrod.Friends.Commands.FriendCommands;
@@ -51,7 +50,7 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.List
  * Friends.Commands.Jump
  * Friends.Commands.Msg
- * Friends.Commands.Info
+ * Friends.Commands.Reload
  * 
  */
 public class Friends extends JavaPlugin {
@@ -61,29 +60,26 @@ public class Friends extends JavaPlugin {
 	private static Friends instance;
 	
 	private FileManager mgr = new FileManager();
-	private FileConfiguration ConfigCfg = this.mgr.getConfig("", "config.yml");
-	private FileConfiguration MessagesCfg = this.mgr.getConfig("", "Messages.yml");
-	private FileConfiguration MySQLCfg = this.mgr.getConfig("", "MySQL.yml");
 	
 	@Override
 	public void onEnable() {
 		this.mgr.setupFiles(this);
-		if(this.ConfigCfg.getString("Friends.Prefix") == null) {
+		if(FileManager.ConfigCfg.getString("Friends.Prefix") == null) {
 			getServer().reload();
 			return;
 		}
 		try {
-			if(this.MySQLCfg.getBoolean("MySQL.Enable")) {
+			if(FileManager.MySQLCfg.getBoolean("MySQL.Enable")) {
 				MySQL.perform();
-				if(this.ConfigCfg.getBoolean("Friends.BungeeMode")) MySQL.performBungee();
+				if(FileManager.ConfigCfg.getBoolean("Friends.BungeeMode")) MySQL.performBungee();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		instance = this;
-		this.prefix = ChatColor.translateAlternateColorCodes('&', this.ConfigCfg.getString("Friends.Prefix"));
-		if(this.ConfigCfg.getBoolean("Friends.BungeeMode")) bungeeMode = true;
-		if(!MySQL.isConnected() && this.ConfigCfg.getBoolean("Friends.BungeeMode")) {
+		this.prefix = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.Prefix"));
+		if(FileManager.ConfigCfg.getBoolean("Friends.BungeeMode")) bungeeMode = true;
+		if(!MySQL.isConnected() && FileManager.ConfigCfg.getBoolean("Friends.BungeeMode")) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cTo use BungeeMode you have to use MySQL!");
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cPlease set up your MySQL Database and try again!");
 			this.getServer().getPluginManager().disablePlugin(this);
@@ -94,7 +90,7 @@ public class Friends extends JavaPlugin {
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener(this));
 		registerClasses();
 		
-		if(!UpdateChecker.check() && this.ConfigCfg.getBoolean("Friends.CheckForUpdates")) {
+		if(!UpdateChecker.check() && FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates")) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cA new update is available!");
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cPlease update your plugin!");
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cYou will get no support for this version!!");
@@ -108,7 +104,6 @@ public class Friends extends JavaPlugin {
 		if(bungeeMode) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §9§n< BungeeMode >");
 		}
-		
 		return;
 	}
 	
@@ -141,7 +136,7 @@ public class Friends extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		try {
-			PlayerUtilities.fullSave();
+			PlayerUtilities.fullSave(true);
 			if(MySQL.isConnected()) {
 				MySQL.disconnect();
 			}
@@ -152,7 +147,7 @@ public class Friends extends JavaPlugin {
 	}
 	
 	public String getString(String path) {
-		return ChatColor.translateAlternateColorCodes('&', this.MessagesCfg.getString(path).replace("%PREFIX%", this.prefix));
+		return ChatColor.translateAlternateColorCodes('&', FileManager.MessagesCfg.getString(path).replace("%PREFIX%", this.prefix));
 	}
 	
 	public static Friends getInstance() {

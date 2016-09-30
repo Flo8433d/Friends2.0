@@ -1,6 +1,6 @@
 /*
 *
-* This class was made by VortexTM
+* This class was made by HyChrod
 * All rights reserved, 2016
 *
 */

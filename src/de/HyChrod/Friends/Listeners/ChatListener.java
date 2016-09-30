@@ -8,7 +8,6 @@ package de.HyChrod.Friends.Listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,8 +21,6 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class ChatListener implements Listener {
 	
 	public Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
 	
 	public ChatListener(Friends friends) {
 		this.plugin = friends;
@@ -35,8 +32,8 @@ public class ChatListener implements Listener {
 		if(Friends.bungeeMode) {
 			return;
 		}
-		if(this.cfg.getBoolean("Friends.FriendChat.Enable")) {
-			if(e.getMessage().startsWith(this.cfg.getString("Friends.FriendChat.Code"))) {
+		if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.Enable")) {
+			if(e.getMessage().startsWith(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"))) {
 				e.setCancelled(true);
 				
 				PlayerUtilities pu = new PlayerUtilities(p);
@@ -45,12 +42,12 @@ public class ChatListener implements Listener {
 						PlayerUtilities puT = new PlayerUtilities(player);
 						if(!puT.getOptions().contains("option_noChat")) {
 							Bukkit.getPlayer(player.getUniqueId()).sendMessage(plugin.getString("Messages.FriendChatFormat")
-									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()).replace(this.cfg.getString("Friends.FriendChat.Code"), ""));
+									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()).replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
 						}
 					}
 				}
 				p.sendMessage(plugin.getString("Messages.FriendChatFormat").replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
-						.replace(this.cfg.getString("Friends.FriendChat.Code"), ""));
+						.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
 			}
 		}
 	}

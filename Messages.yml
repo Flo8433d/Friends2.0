@@ -98,6 +98,8 @@ Messages:
       DisabledSelf: "%PREFIX% &cYou disabled the private messages!"
       Send: "&f[%PREFIX%&f] &6You &f-> &6%PLAYER%: &f%MESSAGE%"
       Format: "&f[%PREFIX%&f] &6%PLAYER% &f-> &6You: &f%MESSAGE%"
+    Reload:
+      Reloaded: "%PREFIX% &aThe plugin was successfully reloaded!"
   FriendQuit: "%PREFIX% &3%PLAYER% &cis now offline!"
   FriendJoin: "%PREFIX% &3%PLAYER% &ais now online!"
   FriendChatFormat: "%PREFIX% &3%PLAYER% &c>> &f%MESSAGE%"

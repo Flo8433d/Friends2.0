@@ -44,9 +44,9 @@ public class PlayerUtilities {
 		}
 	}
 	
-	public static void fullSave() {
+	public static void fullSave(boolean sync) {
 		for(OfflinePlayer player : friends.keySet()) {
-			new PlayerUtilities(player).saveData();
+			new PlayerUtilities(player).saveData(sync);
 		}
 	}
 	
@@ -241,7 +241,7 @@ public class PlayerUtilities {
 		return timestamps;
 	}
 	
-	public void saveData() {
+	public void saveData(boolean sync) {
 		if(Friends.bungeeMode) {
 			return;
 		}

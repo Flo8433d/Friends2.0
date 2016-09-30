@@ -31,14 +31,15 @@ BungeeCord
 | Commands      | Description   | Permission  |
 | ------------- |:-------------:| -----:|
 | /friends help     | Shows all commands | - Friends.Use |
-| /friends add <Player>      | Sends a friend-request to the player | - Friends.Use |
-| /friends remove <Player> | Removes a player form your friendlist  | - Friends.Use |
-| /friends accept <Player> | Accepts a request  | - Friends.Use |
-| /friends deny <Player> | Deny a request  | - Friends.Use |
-| /friends block <Player> | Blocks a player  | - Friends.Use |
-| /friends unblock <Player> | Unlocks a player  | - Friends.Use |
-| /friends list | Shows all your current friends  | - Friends.Use |
-| /friends toggle requests | Enable or disable requests  | - Friends.Use
-| /friends toggle chat | Enable or disable the friend-chat  | - Friends.Use |
-| /friends toggle jumping | Allow or disallow friends to jump to you  | - Friends.Use |
-| /friends info | See some additional informations  | - Friends.Use |
+| /friends add <Player>      | Sends a friend-request to the player | - Friends.Commands.Add |
+| /friends remove <Player> | Removes a player form your friendlist  | - Friends.Commands.Remove |
+| /friends accept <Player> | Accepts a request  | - Friends.Commands.Accept |
+| /friends deny <Player> | Deny a request  | - Friends.Commands.Deny |
+| /friends block <Player> | Blocks a player  | - Friends.Commands.Block |
+| /friends unblock <Player> | Unlocks a player  | - Friends.CommandsUnblock |
+| /friends list | Shows all your current friends  | - Friends.Commands.List |
+| /friends toggle requests | Enable or disable requests  | - Friends.Commands.Toggle.Requests |
+| /friends toggle chat | Enable or disable the friend-chat  | - Friends.Commands.Toggle.Chat |
+| /friends toggle jumping | Allow or disallow friends to jump to you  | - Friends.Commands.Toggle.Jumping |
+| /friends toggle msg | Allow or disallow friends to jsend private messages  | - Friends.Commands.Toggle.Msg |
+| /friends info | See some additional informations  | - Friends.Commands.Info |

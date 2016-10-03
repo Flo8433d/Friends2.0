@@ -42,4 +42,5 @@ BungeeCord
 | /friends toggle chat | Enable or disable the friend-chat  | - Friends.Commands.Toggle.Chat |
 | /friends toggle jumping | Allow or disallow friends to jump to you  | - Friends.Commands.Toggle.Jumping |
 | /friends toggle msg | Allow or disallow friends to jsend private messages  | - Friends.Commands.Toggle.Msg |
-| /friends info | See some additional informations  | - Friends.Commands.Info |
+| /friends info | See some additional informations  | / |
+| /friends reload | Reload the plugin to commit changes | - Friends.Commands.Reload |

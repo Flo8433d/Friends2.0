@@ -82,7 +82,7 @@ public class DamageListener implements Listener {
 										return;
 									}
 								}
-								puT.addRequest(p);
+								puT.addRequest(p, false);
 								toAdd.sendMessage(plugin.getString("Messages.Commands.Add.Add.ToAdd.0").replace("%PLAYER%", p.getName()));
 								toAdd.sendMessage(plugin.getString("Messages.Commands.Add.Add.ToAdd.1").replace("%PLAYER%", p.getName()));
 								

@@ -86,86 +86,91 @@ public class PlayerUtilities {
 		return currentOptions;
 	}
 	
-	public void addFriend(OfflinePlayer player) {
+	public void addFriend(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> friends = this.getFriends();
 			friends.add(player);
-			SQL_Manager.setFriends(friends, this.player);
+			SQL_Manager.setFriends(friends, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
 		if(PlayerUtilities.friends.containsKey(this.player)) currentFriends = PlayerUtilities.friends.get(this.player);
 		if(!currentFriends.contains(player)) currentFriends.add(player);
 		PlayerUtilities.friends.put(this.player, currentFriends);
+		if(!this.player.isOnline()) SQL_Manager.setFriends(currentFriends, this.player, sync);
 	}
 	
-	public void removeFriend(OfflinePlayer player) {
+	public void removeFriend(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> friends = this.getFriends();
 			if(friends.contains(player)) friends.remove(player);
-			SQL_Manager.setFriends(friends, this.player);
+			SQL_Manager.setFriends(friends, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
 		if(PlayerUtilities.friends.containsKey(this.player)) currentFriends = PlayerUtilities.friends.get(this.player);
 		if(currentFriends.contains(player)) currentFriends.remove(player);
 		PlayerUtilities.friends.put(this.player, currentFriends);
+		if(!this.player.isOnline()) SQL_Manager.setFriends(currentFriends, this.player, sync);
 	}
 	
-	public void addRequest(OfflinePlayer player) {
+	public void addRequest(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> requests = this.getRequests();
 			requests.add(player);
-			SQL_Manager.setRequests(requests, this.player);
+			SQL_Manager.setRequests(requests, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentRequest = new LinkedList<>();
 		if(PlayerUtilities.requests.containsKey(this.player)) currentRequest = PlayerUtilities.requests.get(this.player);
 		if(!currentRequest.contains(player)) currentRequest.add(player);
 		PlayerUtilities.requests.put(this.player, currentRequest);
+		if(!this.player.isOnline()) SQL_Manager.setRequests(currentRequest, this.player, sync);
 	}
 	
-	public void removeRequest(OfflinePlayer player) {
+	public void removeRequest(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> requests = this.getRequests();
 			if(requests.contains(player)) requests.remove(player);
-			SQL_Manager.setRequests(requests, this.player);
+			SQL_Manager.setRequests(requests, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentRequest = new LinkedList<>();
 		if(PlayerUtilities.requests.containsKey(this.player)) currentRequest = PlayerUtilities.requests.get(this.player);
 		if(currentRequest.contains(player)) currentRequest.remove(player);
 		PlayerUtilities.requests.put(this.player, currentRequest);
-
+		if(!this.player.isOnline()) SQL_Manager.setRequests(currentRequest, this.player, sync);
 	}
 	
-	public void addBlocked(OfflinePlayer player) {
+	public void addBlocked(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> blocked = this.getBlocked();
 			blocked.add(player);
-			SQL_Manager.setBlocked(blocked, this.player);
+			SQL_Manager.setBlocked(blocked, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
 		if(PlayerUtilities.blocked.containsKey(this.player)) currentBlocked = PlayerUtilities.blocked.get(this.player);
 		if(!currentBlocked.contains(player)) currentBlocked.add(player);
 		PlayerUtilities.blocked.put(this.player, currentBlocked);
+		if(!this.player.isOnline()) SQL_Manager.setBlocked(currentBlocked, this.player, sync);
 	}
 	
-	public void removeBlocked(OfflinePlayer player) {
+	public void removeBlocked(OfflinePlayer player, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<OfflinePlayer> blocked = this.getBlocked();
 			if(blocked.contains(player)) blocked.remove(player);
-			SQL_Manager.setBlocked(blocked, this.player);
+			SQL_Manager.setBlocked(blocked, this.player, sync);
 			return;
 		}
 		LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
 		if(PlayerUtilities.blocked.containsKey(this.player)) currentBlocked = PlayerUtilities.blocked.get(this.player);
 		if(currentBlocked.contains(player)) currentBlocked.remove(player);
 		PlayerUtilities.blocked.put(this.player, currentBlocked);
+		if(!this.player.isOnline()) SQL_Manager.setBlocked(currentBlocked, this.player, sync);
 	}
 	
-	public void toggleOption(String option) {
+	public void toggleOption(String option, boolean sync) {
 		if(Friends.bungeeMode) {
 			LinkedList<String> currentOptions = this.getOptions();
 			if(currentOptions.contains(option)) {
@@ -173,7 +178,7 @@ public class PlayerUtilities {
 			} else {
 				currentOptions.add(option);
 			}
-			SQL_Manager.setOptions(this.player, currentOptions);
+			SQL_Manager.setOptions(this.player, currentOptions, sync);
 			return;
 		}
 		LinkedList<String> currentOptions = new LinkedList<>();
@@ -186,9 +191,9 @@ public class PlayerUtilities {
 		PlayerUtilities.options.put(this.player, currentOptions);
 	}
 	
-	public void setLastOnline(Long timestamp) {
+	public void setLastOnline(Long timestamp, boolean sync) {
 		if(sql) {	
-			SQL_Manager.setLastOnline(this.player, System.currentTimeMillis());
+			SQL_Manager.setLastOnline(this.player, System.currentTimeMillis(), sync);
 			return;
 		}
 		this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".LastOnline", System.currentTimeMillis());
@@ -246,10 +251,10 @@ public class PlayerUtilities {
 			return;
 		}
 		if(sql) {
-			SQL_Manager.setFriends(this.getFriends(), this.player);
-			SQL_Manager.setRequests(this.getRequests(), this.player);
-			SQL_Manager.setBlocked(this.getBlocked(), this.player);
-			SQL_Manager.setOptions(this.player, this.getOptions());
+			SQL_Manager.setFriends(this.getFriends(), this.player, sync);
+			SQL_Manager.setRequests(this.getRequests(), this.player, sync);
+			SQL_Manager.setBlocked(this.getBlocked(), this.player, sync);
+			SQL_Manager.setOptions(this.player, this.getOptions(), sync);
 			return;
 		}
 		if(PlayerUtilities.friends.containsKey(this.player)) {

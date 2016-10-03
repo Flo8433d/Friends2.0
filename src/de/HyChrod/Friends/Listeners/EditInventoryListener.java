@@ -66,10 +66,10 @@ public class EditInventoryListener implements Listener {
 											return;
 										}
 										
-										if(!BungeeSQL_Manager.isOnline(editPlayer)) {
+										if(!BungeeSQL_Manager.isOnline(editPlayer.getUniqueId().toString())) {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										}
-										String server = BungeeSQL_Manager.getServer(editPlayer);
+										String server = BungeeSQL_Manager.getServer(editPlayer.getUniqueId().toString());
 										ByteArrayDataOutput out = ByteStreams.newDataOutput();
 										try {
 											out.writeUTF("Connect");
@@ -103,8 +103,8 @@ public class EditInventoryListener implements Listener {
 										return;
 									}
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeFriend(editPlayer);
-									puT.removeFriend(p);
+									pu.removeFriend(editPlayer, false);
+									puT.removeFriend(p, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover").replace("%PLAYER%", editPlayer.getName()));
 									if(Friends.bungeeMode && !editPlayer.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();

@@ -30,12 +30,13 @@ public class QuitListener implements Listener {
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		if(Friends.bungeeMode) {
-			BungeeSQL_Manager.setLastOnline(p, System.currentTimeMillis());
+			BungeeSQL_Manager.setLastOnline(p.getUniqueId().toString(), System.currentTimeMillis());
+			BungeeSQL_Manager.setOnline(p.getUniqueId().toString(), 0);
 			return;
 		}
 		
 		PlayerUtilities pu = new PlayerUtilities(p);
-		pu.setLastOnline(System.currentTimeMillis());
+		pu.setLastOnline(System.currentTimeMillis(), false);
 		pu.saveData(false);
 		
 		for(OfflinePlayer player : pu.getFriends()) {

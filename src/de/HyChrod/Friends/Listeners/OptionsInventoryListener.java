@@ -41,25 +41,25 @@ public class OptionsInventoryListener implements Listener {
 							PlayerUtilities pu = new PlayerUtilities(p);							
 							if(e.getCurrentItem().getItemMeta().getDisplayName()
 									.equals(ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noRequests", "§a").getItemMeta().getDisplayName())) {
-								pu.toggleOption("option_noRequests");
+								pu.toggleOption("option_noRequests", false);
 								this.reOpenInv(p);
 								return;
 							}
 							if(e.getCurrentItem().getItemMeta().getDisplayName()
 									.equals(ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noChat", "§b").getItemMeta().getDisplayName())) {
-								pu.toggleOption("option_noChat");
+								pu.toggleOption("option_noChat", false);
 								this.reOpenInv(p);
 								return;
 							}
 							if(e.getCurrentItem().getItemMeta().getDisplayName()
 									.equals(ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noJumping", "§c").getItemMeta().getDisplayName())) {
-								pu.toggleOption("option_noJumping");
+								pu.toggleOption("option_noJumping", false);
 								this.reOpenInv(p);
 								return;
 							}
 							if(e.getCurrentItem().getItemMeta().getDisplayName()
 									.equals(ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noMsg", "§d").getItemMeta().getDisplayName())) {
-								pu.toggleOption("option_noMsg");
+								pu.toggleOption("option_noMsg", false);
 								this.reOpenInv(p);
 								return;
 							}

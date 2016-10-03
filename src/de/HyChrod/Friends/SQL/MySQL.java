@@ -1,6 +1,6 @@
 /*
 *
-* This class was made by HyChrod
+* This class was made by VortexTM
 * All rights reserved, 2016
 *
 */
@@ -17,6 +17,8 @@ public class MySQL {
 
 	public static String host, port, database, username, passwort;
 	public static Connection con;
+	
+	public static ConnectionPool pool;
 
 	public static void connect() {
 		if(!isConnected()) {
@@ -24,6 +26,25 @@ public class MySQL {
 				con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, passwort);
 			} catch (SQLException e) {
 			}
+		}
+		
+		try {
+			pool = new ConnectionPool(50, 10, "jdbc:mysql://" + host + ":" + port + "/" + database, username, passwort, "com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static synchronized void closePoolConnection() {
+		if(pool != null) {
+			for(Connection conns : pool.getPool()) {
+				try {
+					conns.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			pool.getPool().clear();
 		}
 	}
 	

@@ -63,8 +63,8 @@ public class RemoveVerificationInventoryListener implements Listener {
 								}
 								if(e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeFriend(toConfirm);
-									puT.removeFriend(p);
+									pu.removeFriend(toConfirm, false);
+									puT.removeFriend(p, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover").replace("%PLAYER%", toConfirm.getName()));
 									if(Friends.bungeeMode && !toConfirm.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();

@@ -23,7 +23,7 @@ public class FileManager {
 
 	public static FileConfiguration ConfigCfg, MySQLCfg, MessagesCfg;
 	public static File ConfigFile, MySQLFile, MessagesFile;
-
+	
 	public File getFile(String path, String name) {
 		return new File("plugins/Friends2_0" + path, name);
 	}
@@ -48,7 +48,7 @@ public class FileManager {
 		cfg.set(path, obj);
 		this.saveFile(file, cfg);
 	}
-
+	
 	public void reloadConfigs(Friends plugin, boolean prefix) {
 		ConfigFile = this.getFile("", "config.yml");
 		ConfigCfg = this.getConfig(ConfigFile);
@@ -56,21 +56,25 @@ public class FileManager {
 		MySQLCfg = this.getConfig(MySQLFile);
 		MessagesFile = this.getFile("", "Messages.yml");
 		MessagesCfg = this.getConfig(MessagesFile);
-
-		if (prefix)
-			plugin.prefix = ChatColor.translateAlternateColorCodes('&', ConfigCfg.getString("Friends.Prefix"));
+		
+		if(prefix) plugin.prefix = ChatColor.translateAlternateColorCodes('&', ConfigCfg.getString("Friends.Prefix"));
 	}
 
 	@SuppressWarnings("deprecation")
 	private void loadFile(Friends friends, String name, String toCheck) {
 		File file = new File(friends.getDataFolder(), name);
-		if (file.exists()) {
-			return;
+		if(file.exists()) {
+			if(this.getConfig(file).getString(toCheck) != null) return;
+			try {
+				createBackup(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			file.delete();
 		}
 		try {
 			InputStream defConfigStream = friends.getResource(name);
-			if (defConfigStream != null)
-				YamlConfiguration.loadConfiguration(defConfigStream).save(file);
+			if(defConfigStream != null) YamlConfiguration.loadConfiguration(defConfigStream).save(file);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -79,7 +83,7 @@ public class FileManager {
 	public void setupFiles(Friends friends) {
 		friends.saveDefaultConfig();
 		FileConfiguration cfg = this.getConfig("", "config.yml");
-
+		
 		if (cfg.getString("Friends.FriendChat.FriendMSG") == null) {
 			try {
 				createBackup(getFile("", "config.yml"));
@@ -92,7 +96,6 @@ public class FileManager {
 		}
 		this.loadFile(friends, "Messages.yml", "Messages.Commands.Reload.Reloaded");
 		this.loadFile(friends, "MySQL.yml", "MySQL.Enable");
-		setNewMessages();
 
 		FileConfiguration Mcfg = this.getConfig("", "MySQL.yml");
 		MySQL.host = Mcfg.getString("MySQL.Host");
@@ -100,27 +103,12 @@ public class FileManager {
 		MySQL.database = Mcfg.getString("MySQL.Database");
 		MySQL.username = Mcfg.getString("MySQL.Username");
 		MySQL.passwort = Mcfg.getString("MySQL.Password");
-
+		
 		this.reloadConfigs(friends, false);
 	}
 
-	public void setNewMessages() {
-		File file = this.getFile("", "Messages.yml");
-		FileConfiguration cfg = this.getConfig(file);
-
-		if (cfg.getString("Messages.Commands.Reload.Reloaded") == null) {
-			try {
-				createBackup(file);
-				cfg.set("Messages.Commands.Reload.Reloaded", "%PREFIX% &aThe plugin was successfully reloaded!");
-				cfg.save(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public void createBackup(File file) throws FileNotFoundException, IOException {
-		File fDes = getFile("", file.getName() + ".bak");
+		File fDes = getFile("", file.getName().substring(0, file.getName().length()-4) + "_BACKUP.yml");
 		FileInputStream fis = new FileInputStream(file);
 		FileOutputStream fos = new FileOutputStream(fDes);
 

@@ -6,104 +6,179 @@
 */
 package de.HyChrod.Friends.SQL;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
+
+import de.HyChrod.Friends.Friends;
+import de.HyChrod.Friends.Util.Callback;
+import de.HyChrod.Friends.Util.UpdateBukkitRunnable;
 
 public class BungeeSQL_Manager {
 
-	public static Boolean playerExists(OfflinePlayer player) {
+	public static Boolean playerExists(String uuid) {
 		try {
-			ResultSet rs = MySQL.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "'");
+			
+			ResultSet rs = MySQL.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + uuid + "'");
 			
 			if(rs.next()) {
 				return rs.getString("UUID") != null;
 			}
+			
 			return false;
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
-	public static Boolean createPlayer(OfflinePlayer player) {
-		if(!(playerExists(player))) {
-			MySQL.update("INSERT INTO friends2_0_BUNGEE(UUID, ONLINE, SERVER, LASTONLINE) VALUES ('" + player.getUniqueId().toString() + "', '0', 'NOTHING', '');");
-			if(playerExists(player)) {return true;}
+	public static Boolean createPlayer(String uuid) {
+		if(!(playerExists(uuid))) {
+			MySQL.update("INSERT INTO friends2_0_BUNGEE(UUID, ONLINE, SERVER, LASTONLINE) VALUES ('" + uuid + "', '0', 'NOTHING', '');");
+			if(playerExists(uuid)) {return true;}
 			return false;
 		}
 		return true;
 	}
 	
-	public static Long getLastOnline(OfflinePlayer player) {
+	public static Long getLastOnline(String uuid) {
 		Long timeStamp = (long)0;
-		if(playerExists(player)) {
+		if(playerExists(uuid)) {			
 			try {
-				ResultSet rs = MySQL.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if((!rs.next()) || (String.valueOf(rs.getString("LASTONLINE")) == null));
+				Connection con = null;
+				PreparedStatement ps = null;
+				ResultSet rs = null;
 				
-				timeStamp = Long.parseLong(rs.getString("LASTONLINE"));
+				try {
+					con = MySQL.pool.borrowConnection();
+					ps = con.prepareStatement("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + uuid + "';");
+					rs = ps.executeQuery();
+					
+					if((!rs.next()) || (String.valueOf(rs.getString("LASTONLINE")) == null));
+					
+					timeStamp = Long.parseLong(rs.getString("LASTONLINE"));
+				} catch (Exception ex) {
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+					if(con != null) con.close();
+				}
 			} catch (Exception ex) {}
 		}
 		if(timeStamp < 5) {
-			return SQL_Manager.getLastOnline(player);
+			return SQL_Manager.getLastOnline(Bukkit.getOfflinePlayer(UUID.fromString(uuid)));
 		}
 		return timeStamp;
 	}
 	
-	public static void setLastOnline(OfflinePlayer player, Long timeStamp) {
-		if(playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET LASTONLINE='" + timeStamp.toString() + "' WHERE UUID='" + player.getUniqueId().toString() + "';");
+	public static void setLastOnline(String uuid, Long timeStamp) {
+		if(playerExists(uuid)) {
+			new UpdateBukkitRunnable(MySQL.pool, "UPDATE friends2_0_BUNGEE SET LASTONLINE='" + timeStamp.toString() + "' WHERE UUID='" + uuid + "';", 
+					new Callback<Integer, SQLException>() {
+
+						@Override
+						public void call(Integer result, SQLException thrown) {
+						}
+				
+			}).runTaskAsynchronously(Friends.getInstance());
 			return;
 		} else {
-			createPlayer(player);
-			setLastOnline(player, timeStamp);
+			createPlayer(uuid);
+			setLastOnline(uuid, timeStamp);
 		};
 	}
 	
-	public static void setServer(OfflinePlayer player, String server) {
-		if(playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET SERVER='" + server + "' WHERE UUID='" + player.getUniqueId().toString() + "';");
+	public static void setServer(String uuid, String server) {
+		if(playerExists(uuid)) {
+			new UpdateBukkitRunnable(MySQL.pool, "UPDATE friends2_0_BUNGEE SET SERVER='" + server + "' WHERE UUID='" + uuid + "';", 
+					new Callback<Integer, SQLException>() {
+
+						@Override
+						public void call(Integer result, SQLException thrown) {
+						}
+				
+			}).runTaskAsynchronously(Friends.getInstance());
 		} else {
-			createPlayer(player);
-			setServer(player, server);
+			createPlayer(uuid);
+			setServer(uuid, server);
 		}
 		return;
 	}
 	
-	public static String getServer(OfflinePlayer player) {
-		if(playerExists(player)) {
+	public static String getServer(String uuid) {
+		if(playerExists(uuid)) {
 			try {
-				ResultSet rs = MySQL.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if((!rs.next()) || (String.valueOf(rs.getString("SERVER")) == null));
-				String server = rs.getString("SERVER");
+				Connection con = null;
+				PreparedStatement ps = null;
+				ResultSet rs = null;
 				
-				return server;
-				
-			} catch (Exception e) {}
+				try {
+					con = MySQL.pool.borrowConnection();
+					ps = con.prepareStatement("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" +uuid + "';");
+					rs = ps.executeQuery();
+					
+					if((!rs.next()) || (String.valueOf(rs.getString("SERVER")) == null));
+					String server = rs.getString("SERVER");
+					
+					return server;
+				} catch (Exception ex) {
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+					if(con != null) con.close();
+				}
+			} catch (Exception ex) {}
 		}
 		return "OFFLINE";
 	}
 	
-	public static void setOnline(OfflinePlayer player, Integer value) {
-		if(playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET ONLINE='" + value + "' WHERE UUID='" + player.getUniqueId().toString() + "';");
+	public static void setOnline(String uuid, Integer value) {
+		if(playerExists(uuid)) {
+			new UpdateBukkitRunnable(MySQL.pool, "UPDATE friends2_0_BUNGEE SET ONLINE='" + value + "' WHERE UUID='" + uuid + "';", 
+					new Callback<Integer, SQLException>() {
+
+						@Override
+						public void call(Integer result, SQLException thrown) {
+						}
+				
+			}).runTaskAsynchronously(Friends.getInstance());
 		} else {
-			createPlayer(player);
-			setOnline(player, value);
+			createPlayer(uuid);
+			setOnline(uuid, value);
 		}
 		return;
 	}
 	
-	public static boolean isOnline(OfflinePlayer player) {
-		if(playerExists(player)) {
+	public static boolean isOnline(String uuid) {
+		if(playerExists(uuid)) {
 			try {
-				ResultSet rs = MySQL.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if((!rs.next()) || (Integer.valueOf(rs.getInt("ONLINE")) == null));
+				Connection con = null;
+				PreparedStatement ps = null;
+				ResultSet rs = null;
 				
-				Integer value =  rs.getInt("ONLINE");
-				return value != 0;
+				try {
+					
+					con = MySQL.pool.borrowConnection();
+					ps = con.prepareStatement("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + uuid + "';");
+					rs = ps.executeQuery();
+					
+					if((!rs.next()) || (Integer.valueOf(rs.getInt("ONLINE")) == null));
+					
+					Integer value =  rs.getInt("ONLINE");
+					return value != 0;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				} finally {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+					if(con != null) con.close();
+				}
 				
-			} catch (Exception e) {}
+			} catch (Exception ex) {}
 		}
 		return false;
 	}

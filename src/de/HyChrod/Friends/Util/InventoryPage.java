@@ -90,14 +90,14 @@ public class InventoryPage {
 		SM.setDisplayName(player.getName() + " §7(§8Offline§7)");;
 		SM.setOwner(player.getName());
 		if(Friends.bungeeMode) {
-			if(BungeeSQL_Manager.isOnline(player)) {
+			if(BungeeSQL_Manager.isOnline(player.getUniqueId().toString())) {
 				SM.setDisplayName(player.getName() + " §7(§aOnline§7)");
 				if(FileManager.ConfigCfg.getBoolean("Friends.ShowServer.Enable")) {
 					SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.ShowServer.Lore").replace("%SERVER%",
-							BungeeSQL_Manager.getServer(player)))));
+							BungeeSQL_Manager.getServer(player.getUniqueId().toString())))));
 				}
 			} else {
-				int[] time = PlayerUtilities.getLastOnline(BungeeSQL_Manager.getLastOnline(player));
+				int[] time = PlayerUtilities.getLastOnline(BungeeSQL_Manager.getLastOnline(player.getUniqueId().toString()));
 				if(FileManager.ConfigCfg.getBoolean("Friends.Options.LastOnline.Enable") && time != null && time.length >= 3) {
 					SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.Options.LastOnline.Format")
 							.replace("%days%", ""+time[3])

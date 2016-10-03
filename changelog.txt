@@ -1,8 +1,3 @@
-v2.2.4
-
-  Added a file-backup system to keep changes by adding new stuff
-  Implementing a reload command to commit changes
-
 v2.2.3
 
   Fixed some bugs with bungeecord

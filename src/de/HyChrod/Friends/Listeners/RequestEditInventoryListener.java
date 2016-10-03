@@ -65,9 +65,9 @@ public class RequestEditInventoryListener implements Listener {
 										}
 									}
 									
-									puP.addFriend(inEdit);
-									puT.addFriend(p);
-									puP.removeRequest(inEdit);
+									puP.addFriend(inEdit, false);
+									puT.addFriend(p, false);
+									puP.removeRequest(inEdit, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter").replace("%PLAYER%", inEdit.getName()));
 									if(Friends.bungeeMode && !inEdit.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -89,7 +89,7 @@ public class RequestEditInventoryListener implements Listener {
 									return;
 								}
 								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_DENY.getItem())) {
-									puP.removeRequest(inEdit);
+									puP.removeRequest(inEdit, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Deny.Deny.Denier").replace("%PLAYER%", inEdit.getName()));
 									if(Friends.bungeeMode && !inEdit.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -116,11 +116,11 @@ public class RequestEditInventoryListener implements Listener {
 												.replace("%PLAYER%", p.getName()));
 									}
 									
-									puP.addBlocked(inEdit);
-									puP.removeFriend(inEdit);
-									puP.removeRequest(inEdit);
-									puT.removeFriend(p);
-									puT.removeRequest(p);
+									puP.addBlocked(inEdit, false);
+									puP.removeFriend(inEdit, false);
+									puP.removeRequest(inEdit, false);
+									puT.removeFriend(p, false);
+									puT.removeRequest(p, false);
 									
 									p.sendMessage(plugin.getString("Messages.Commands.Block.Block.Blocker").replace("%PLAYER%", inEdit.getName()));
 									InventoryBuilder.REQUESTS_INVENTORY(plugin, p);

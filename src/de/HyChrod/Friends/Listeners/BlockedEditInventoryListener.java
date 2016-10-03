@@ -47,7 +47,7 @@ public class BlockedEditInventoryListener implements Listener {
 							if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								if(e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeBlocked(editing.get(p));
+									pu.removeBlocked(editing.get(p), false);
 									p.sendMessage(plugin.getString("Messages.Commands.Unblock.Unblock").replace("%PLAYER%", editing.get(p).getName()));
 									InventoryBuilder.BLOCKED_INVENTORY(plugin, p);
 									return;

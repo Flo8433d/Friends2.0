@@ -50,6 +50,7 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.List
  * Friends.Commands.Jump
  * Friends.Commands.Msg
+ * Friends.Commands.Info
  * Friends.Commands.Reload
  * 
  */
@@ -139,6 +140,7 @@ public class Friends extends JavaPlugin {
 			PlayerUtilities.fullSave(true);
 			if(MySQL.isConnected()) {
 				MySQL.disconnect();
+				MySQL.closePoolConnection();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

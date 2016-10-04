@@ -1,6 +1,6 @@
 /*
 *
-* This class was made by VortexTM
+* This class was made by HyChrod
 * All rights reserved, 2016
 *
 */
@@ -15,24 +15,28 @@ import org.bukkit.entity.Player;
 
 public class ReflectionsManager {
 
-	public static void sendHoverMessage(Player player, String adder, String message, String[] msgs, String[] hover, String[] command) {
+	public static void sendHoverMessage(Player player, String adder, String message, String[] msgs, String[] hover,
+			String[] command) {
 		try {
-			
-			String format = "{\"text\":\"" + message + "\",\"extra\":[";
-			for(int i = 0; i < msgs.length; i++) {
-				format = format + "{\"text\":\"" + msgs[i] + "   " + "\",\"hoverEvent\":{\"action\":\"show_text\", \"value\":\""
-						+ "" + hover[i] + "\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\"" + command[i].replace("%name%", adder) + "\"}},";
-			}
-			format = format.substring(0, (format.length()-1)) + "]}";
 
-			Object msg = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, format);
+			String format = "{\"text\":\"" + message + "\",\"extra\":[";
+			for (int i = 0; i < msgs.length; i++) {
+				format = format + "{\"text\":\"" + msgs[i] + "   "
+						+ "\",\"hoverEvent\":{\"action\":\"show_text\", \"value\":\"" + "" + hover[i]
+						+ "\"},\"clickEvent\":{\"action\":\"run_command\",\"value\":\""
+						+ command[i].replace("%name%", adder) + "\"}},";
+			}
+			format = format.substring(0, (format.length() - 1)) + "]}";
+
+			Object msg = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
+					.invoke(null, format);
 			Constructor<?> msgConstructor = getNMSClass("PacketPlayOutChat")
 					.getConstructor(getNMSClass("IChatBaseComponent"));
 			Object packet = msgConstructor.newInstance(msg);
 			Field field = packet.getClass().getDeclaredField("b");
 			field.setAccessible(true);
 			sendPacket(player, packet);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,5 +64,5 @@ public class ReflectionsManager {
 			ex.printStackTrace();
 		}
 	}
-	
+
 }

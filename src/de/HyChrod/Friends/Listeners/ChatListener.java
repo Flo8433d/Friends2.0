@@ -19,9 +19,9 @@ import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
 public class ChatListener implements Listener {
-	
+
 	public Friends plugin;
-	
+
 	public ChatListener(Friends friends) {
 		this.plugin = friends;
 	}
@@ -29,24 +29,27 @@ public class ChatListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		if(Friends.bungeeMode) {
+		if (Friends.bungeeMode) {
 			return;
 		}
-		if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.Enable")) {
-			if(e.getMessage().startsWith(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"))) {
+		if (FileManager.ConfigCfg.getBoolean("Friends.FriendChat.Enable")) {
+			if (e.getMessage().startsWith(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"))) {
 				e.setCancelled(true);
-				
+
 				PlayerUtilities pu = new PlayerUtilities(p);
-				for(OfflinePlayer player : pu.getFriends()) {
-					if(player.isOnline()) {
+				for (OfflinePlayer player : pu.getFriends()) {
+					if (player.isOnline()) {
 						PlayerUtilities puT = new PlayerUtilities(player);
-						if(!puT.getOptions().contains("option_noChat")) {
-							Bukkit.getPlayer(player.getUniqueId()).sendMessage(plugin.getString("Messages.FriendChatFormat")
-									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()).replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
+						if (!puT.getOptions().contains("option_noChat")) {
+							Bukkit.getPlayer(player.getUniqueId())
+									.sendMessage(plugin.getString("Messages.FriendChatFormat")
+											.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
+											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
 						}
 					}
 				}
-				p.sendMessage(plugin.getString("Messages.FriendChatFormat").replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
+				p.sendMessage(plugin.getString("Messages.FriendChatFormat").replace("%PLAYER%", p.getName())
+						.replace("%MESSAGE%", e.getMessage())
 						.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
 			}
 		}

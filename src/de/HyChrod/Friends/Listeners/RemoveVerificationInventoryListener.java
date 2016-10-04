@@ -30,9 +30,9 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class RemoveVerificationInventoryListener implements Listener {
 
 	private Friends plugin;
-	
+
 	public static HashMap<Player, OfflinePlayer> confirming = new HashMap<>();
-	
+
 	public RemoveVerificationInventoryListener(Friends friends) {
 		this.plugin = friends;
 	}
@@ -40,18 +40,19 @@ public class RemoveVerificationInventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
-		if(e.getInventory() != null) {
-			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
+		if (e.getInventory() != null) {
+			if (e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
+					FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
 				e.setCancelled(true);
-				if(confirming.containsKey(p)) {
-					if(e.getCurrentItem() != null) {
-						if(e.getCurrentItem().hasItemMeta()) {
-							if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
+				if (confirming.containsKey(p)) {
+					if (e.getCurrentItem() != null) {
+						if (e.getCurrentItem().hasItemMeta()) {
+							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								final OfflinePlayer toConfirm = confirming.get(p);
 								PlayerUtilities puT = new PlayerUtilities(toConfirm);
-								if(e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CANCLE.getItem())) {
+								if (e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CANCLE.getItem())) {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-										
+
 										@Override
 										public void run() {
 											p.closeInventory();
@@ -61,14 +62,15 @@ public class RemoveVerificationInventoryListener implements Listener {
 									}, 2);
 									return;
 								}
-								if(e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem())) {
+								if (e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeFriend(toConfirm, false);
-									puT.removeFriend(p, false);
-									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover").replace("%PLAYER%", toConfirm.getName()));
-									if(Friends.bungeeMode && !toConfirm.isOnline()) {
+									pu.removeFriend(toConfirm);
+									puT.removeFriend(p);
+									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover")
+											.replace("%PLAYER%", toConfirm.getName()));
+									if (Friends.bungeeMode && !toConfirm.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();
-										DataOutputStream out = new DataOutputStream(b);	
+										DataOutputStream out = new DataOutputStream(b);
 										try {
 											out.writeUTF("Message");
 											out.writeUTF(toConfirm.getName());
@@ -78,9 +80,10 @@ public class RemoveVerificationInventoryListener implements Listener {
 										}
 										p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 									}
-									if(toConfirm.isOnline()) {
-										Bukkit.getPlayer(toConfirm.getUniqueId()).sendMessage(plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
-												.replace("%PLAYER%", p.getName()));
+									if (toConfirm.isOnline()) {
+										Bukkit.getPlayer(toConfirm.getUniqueId()).sendMessage(
+												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
+														.replace("%PLAYER%", p.getName()));
 									}
 									InventoryBuilder.MAIN_INVENTORY(plugin, p);
 									return;
@@ -92,17 +95,18 @@ public class RemoveVerificationInventoryListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
-		if(e.getInventory() != null) {
-			if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
-				if(confirming.containsKey(p)) {
+		if (e.getInventory() != null) {
+			if (e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
+					FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")))) {
+				if (confirming.containsKey(p)) {
 					confirming.remove(p);
 				}
 			}
 		}
 	}
-	
+
 }

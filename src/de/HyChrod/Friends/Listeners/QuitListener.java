@@ -19,9 +19,9 @@ import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
 public class QuitListener implements Listener {
-	
+
 	public Friends plugin;
-	
+
 	public QuitListener(Friends friends) {
 		this.plugin = friends;
 	}
@@ -29,21 +29,21 @@ public class QuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
-		if(Friends.bungeeMode) {
-			BungeeSQL_Manager.setLastOnline(p.getUniqueId().toString(), System.currentTimeMillis());
-			BungeeSQL_Manager.setOnline(p.getUniqueId().toString(), 0);
+		if (Friends.bungeeMode) {
+			BungeeSQL_Manager.setLastOnline(p, System.currentTimeMillis());
 			return;
 		}
-		
+
 		PlayerUtilities pu = new PlayerUtilities(p);
-		pu.setLastOnline(System.currentTimeMillis(), false);
+		pu.setLastOnline(System.currentTimeMillis());
 		pu.saveData(false);
-		
-		for(OfflinePlayer player : pu.getFriends()) {
-			if(player.isOnline()) {
+
+		for (OfflinePlayer player : pu.getFriends()) {
+			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
-				if(!puT.getOptions().contains("option_noChat")) {
-					Bukkit.getPlayer(player.getUniqueId()).sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
+				if (!puT.getOptions().contains("option_noChat")) {
+					Bukkit.getPlayer(player.getUniqueId())
+							.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
 				}
 			}
 		}

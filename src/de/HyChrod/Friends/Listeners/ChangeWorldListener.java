@@ -18,24 +18,28 @@ import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Util.ItemStacks;
 
 public class ChangeWorldListener implements Listener {
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onWorldChange(PlayerChangedWorldEvent e) {
 		String from = e.getFrom().getName();
 		String to = e.getPlayer().getWorld().getName();
 		Player p = e.getPlayer();
-		
-		if(FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
-			if(FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from) && !FileManager.ConfigCfg.getString("Friends.DisabledWorlds").contains(to)) {
-				p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot")-1, ItemStacks.FRIENDITEM(p));
+
+		if (FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
+			if (FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from)
+					&& !FileManager.ConfigCfg.getString("Friends.DisabledWorlds").contains(to)) {
+				p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1,
+						ItemStacks.FRIENDITEM(p));
 				return;
 			}
-			if(!FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from) && FileManager.ConfigCfg.getString("Friends.DisabledWorlds").contains(to)) {
-				for(int i = 0; i < p.getInventory().getSize(); i++) {
-					if(p.getInventory().getItem(i) != null) {
-						if(p.getInventory().getItem(i).hasItemMeta()) {
-							if(p.getInventory().getItem(i).getItemMeta().hasDisplayName()) {
-								if(p.getInventory().getItem(i).getItemMeta().getDisplayName().equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+			if (!FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from)
+					&& FileManager.ConfigCfg.getString("Friends.DisabledWorlds").contains(to)) {
+				for (int i = 0; i < p.getInventory().getSize(); i++) {
+					if (p.getInventory().getItem(i) != null) {
+						if (p.getInventory().getItem(i).hasItemMeta()) {
+							if (p.getInventory().getItem(i).getItemMeta().hasDisplayName()) {
+								if (p.getInventory().getItem(i).getItemMeta().getDisplayName()
+										.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
 									p.getInventory().setItem(i, new ItemStack(Material.AIR));
 								}
 							}

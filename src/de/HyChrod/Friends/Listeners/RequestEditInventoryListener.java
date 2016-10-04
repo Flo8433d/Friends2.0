@@ -30,9 +30,9 @@ import de.HyChrod.Friends.Util.PlayerUtilities;
 public class RequestEditInventoryListener implements Listener {
 
 	private Friends plugin;
-	
+
 	public static HashMap<Player, OfflinePlayer> editing = new HashMap<>();
-	
+
 	public RequestEditInventoryListener(Friends friends) {
 		this.plugin = friends;
 	}
@@ -40,38 +40,49 @@ public class RequestEditInventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
-		if(e.getInventory() != null) {
-			if(editing.containsKey(p)) {
-				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+		if (e.getInventory() != null) {
+			if (editing.containsKey(p)) {
+				if (e.getInventory().getTitle()
+						.equals(ChatColor.translateAlternateColorCodes('&',
+								FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%",
+										editing.get(p).getName())))) {
 					e.setCancelled(true);
-					if(e.getCurrentItem() != null) {
-						if(e.getCurrentItem().hasItemMeta()) {
-							if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
+					if (e.getCurrentItem() != null) {
+						if (e.getCurrentItem().hasItemMeta()) {
+							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								OfflinePlayer inEdit = editing.get(p);
 								PlayerUtilities puT = new PlayerUtilities(inEdit);
 								PlayerUtilities puP = new PlayerUtilities(p);
-								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_ACCEPT.getItem())) {
-									if(puP.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
-										if(!p.hasPermission("Friends.ExtraFriends") || puP.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-											p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Accepter"));
+								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_ACCEPT.getItem())) {
+									if (puP.getFriends().size() > FileManager.ConfigCfg
+											.getInt("Friends.Options.FriendLimit")) {
+										if (!p.hasPermission("Friends.ExtraFriends")
+												|| puP.getFriends().size() > FileManager.ConfigCfg
+														.getInt("Friends.Options.FriendLimit+")) {
+											p.sendMessage(
+													plugin.getString("Messages.Commands.Accept.LimitReached.Accepter"));
 											return;
 										}
 									}
-									if(puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
-										if(!p.hasPermission("Friends.ExtraFriends") || puT.getFriends().size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-											p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
+									if (puT.getFriends().size() > FileManager.ConfigCfg
+											.getInt("Friends.Options.FriendLimit")) {
+										if (!p.hasPermission("Friends.ExtraFriends")
+												|| puT.getFriends().size() > FileManager.ConfigCfg
+														.getInt("Friends.Options.FriendLimit+")) {
+											p.sendMessage(plugin
+													.getString("Messages.Commands.Accept.LimitReached.Requester"));
 											return;
 										}
 									}
-									
-									puP.addFriend(inEdit, false);
-									puT.addFriend(p, false);
-									puP.removeRequest(inEdit, false);
-									p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter").replace("%PLAYER%", inEdit.getName()));
-									if(Friends.bungeeMode && !inEdit.isOnline()) {
+
+									puP.addFriend(inEdit);
+									puT.addFriend(p);
+									puP.removeRequest(inEdit);
+									p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter")
+											.replace("%PLAYER%", inEdit.getName()));
+									if (Friends.bungeeMode && !inEdit.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();
-										DataOutputStream out = new DataOutputStream(b);	
+										DataOutputStream out = new DataOutputStream(b);
 										try {
 											out.writeUTF("Message");
 											out.writeUTF(inEdit.getName());
@@ -81,19 +92,21 @@ public class RequestEditInventoryListener implements Listener {
 										}
 										p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 									}
-									if(inEdit.isOnline()) {
-										Bukkit.getPlayer(inEdit.getUniqueId()).sendMessage(plugin.getString("Messages.Commands.Accept.Accept.ToAccept")
-												.replace("%PLAYER%", p.getName()));
+									if (inEdit.isOnline()) {
+										Bukkit.getPlayer(inEdit.getUniqueId()).sendMessage(
+												plugin.getString("Messages.Commands.Accept.Accept.ToAccept")
+														.replace("%PLAYER%", p.getName()));
 									}
 									InventoryBuilder.REQUESTS_INVENTORY(plugin, p);
 									return;
 								}
-								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_DENY.getItem())) {
-									puP.removeRequest(inEdit, false);
-									p.sendMessage(plugin.getString("Messages.Commands.Deny.Deny.Denier").replace("%PLAYER%", inEdit.getName()));
-									if(Friends.bungeeMode && !inEdit.isOnline()) {
+								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_DENY.getItem())) {
+									puP.removeRequest(inEdit);
+									p.sendMessage(plugin.getString("Messages.Commands.Deny.Deny.Denier")
+											.replace("%PLAYER%", inEdit.getName()));
+									if (Friends.bungeeMode && !inEdit.isOnline()) {
 										ByteArrayOutputStream b = new ByteArrayOutputStream();
-										DataOutputStream out = new DataOutputStream(b);	
+										DataOutputStream out = new DataOutputStream(b);
 										try {
 											out.writeUTF("Message");
 											out.writeUTF(inEdit.getName());
@@ -103,32 +116,35 @@ public class RequestEditInventoryListener implements Listener {
 										}
 										p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 									}
-									if(inEdit.isOnline()) {
-										Bukkit.getPlayer(inEdit.getUniqueId()).sendMessage(plugin.getString("Messages.Commands.Deny.Deny.ToDeny")
-												.replace("%PLAYER%", p.getName()));
+									if (inEdit.isOnline()) {
+										Bukkit.getPlayer(inEdit.getUniqueId())
+												.sendMessage(plugin.getString("Messages.Commands.Deny.Deny.ToDeny")
+														.replace("%PLAYER%", p.getName()));
 									}
 									InventoryBuilder.REQUESTS_INVENTORY(plugin, p);
 									return;
 								}
-								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BLOCK.getItem())) {
-									if(inEdit.isOnline() && puP.getFriends().contains(inEdit)) {
-										Bukkit.getPlayer(inEdit.getUniqueId()).sendMessage(plugin.getString("Messages.Commands.Block.Block.ToBlock")
-												.replace("%PLAYER%", p.getName()));
+								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BLOCK.getItem())) {
+									if (inEdit.isOnline() && puP.getFriends().contains(inEdit)) {
+										Bukkit.getPlayer(inEdit.getUniqueId())
+												.sendMessage(plugin.getString("Messages.Commands.Block.Block.ToBlock")
+														.replace("%PLAYER%", p.getName()));
 									}
-									
-									puP.addBlocked(inEdit, false);
-									puP.removeFriend(inEdit, false);
-									puP.removeRequest(inEdit, false);
-									puT.removeFriend(p, false);
-									puT.removeRequest(p, false);
-									
-									p.sendMessage(plugin.getString("Messages.Commands.Block.Block.Blocker").replace("%PLAYER%", inEdit.getName()));
+
+									puP.addBlocked(inEdit);
+									puP.removeFriend(inEdit);
+									puP.removeRequest(inEdit);
+									puT.removeFriend(p);
+									puT.removeRequest(p);
+
+									p.sendMessage(plugin.getString("Messages.Commands.Block.Block.Blocker")
+											.replace("%PLAYER%", inEdit.getName()));
 									InventoryBuilder.REQUESTS_INVENTORY(plugin, p);
 									return;
 								}
-								if(e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BACK.getItem())) {
+								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BACK.getItem())) {
 									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-										
+
 										@Override
 										public void run() {
 											p.closeInventory();
@@ -144,18 +160,20 @@ public class RequestEditInventoryListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onClose(InventoryCloseEvent e) {
 		Player p = (Player) e.getPlayer();
-		if(e.getInventory() != null) {
-			if(editing.containsKey(p)) {
-				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+		if (e.getInventory() != null) {
+			if (editing.containsKey(p)) {
+				if (e.getInventory().getTitle()
+						.equals(ChatColor.translateAlternateColorCodes('&',
+								FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%",
+										editing.get(p).getName())))) {
 					editing.remove(p);
 				}
 			}
 		}
 	}
-	
+
 }

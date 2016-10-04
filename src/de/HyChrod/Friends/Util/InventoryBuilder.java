@@ -18,96 +18,121 @@ import de.HyChrod.Friends.Listeners.EditInventoryListener;
 import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
 
 public class InventoryBuilder {
-	
+
 	public static void MAIN_INVENTORY(Friends plugin, Player p) {
 		new InventoryPage(plugin, p, 0, new PlayerUtilities(p)).open();
 	}
-	
+
 	public static void REQUESTS_INVENTORY(Friends plugin, Player p) {
 		new RequestsPage(plugin, p, 0, new PlayerUtilities(p)).open();
 	}
-	
+
 	public static void BLOCKED_INVENTORY(Friends plugin, Player p) {
 		new BlockedPage(plugin, p, 0, new PlayerUtilities(p)).open();
 	}
-	
+
 	public static void OPTIONS_INVENTORY(Player p) {
-		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.InventorySize"), 
-				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.Title")));
-		
+		Inventory inv = Bukkit.createInventory(null,
+				FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.InventorySize"),
+				ChatColor.translateAlternateColorCodes('&',
+						FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.Title")));
+
 		PlayerUtilities pu = new PlayerUtilities(p);
-		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.OptionsInv.PlaceholderItems.InventorySlots")) {
-			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.OPTIONS_PLACEHOLDER.getItem());
+		for (String placeholder : FileManager.ConfigCfg
+				.getStringList("Friends.GUI.OptionsInv.PlaceholderItems.InventorySlots")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.OPTIONS_PLACEHOLDER.getItem());
 		}
-		inv.setItem(ItemStacks.OPTIONS_BACK.getInvSlot()-1, ItemStacks.OPTIONS_BACK.getItem());
-		inv.setItem(ItemStacks.OPTIONS_CHAT.getInvSlot()-1, ItemStacks.OPTIONS_CHAT.getItem());
-		inv.setItem(ItemStacks.OPTIONS_REQUESTS.getInvSlot()-1, ItemStacks.OPTIONS_REQUESTS.getItem());
-		if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.FriendMSG")) {
-			inv.setItem(ItemStacks.OPTIONS_PRIVATEMESSAGES.getInvSlot()-1, ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
-			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")-1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noMsg", "§d"));
+		inv.setItem(ItemStacks.OPTIONS_BACK.getInvSlot() - 1, ItemStacks.OPTIONS_BACK.getItem());
+		inv.setItem(ItemStacks.OPTIONS_CHAT.getInvSlot() - 1, ItemStacks.OPTIONS_CHAT.getItem());
+		inv.setItem(ItemStacks.OPTIONS_REQUESTS.getInvSlot() - 1, ItemStacks.OPTIONS_REQUESTS.getItem());
+		if (FileManager.ConfigCfg.getBoolean("Friends.FriendChat.FriendMSG")) {
+			inv.setItem(ItemStacks.OPTIONS_PRIVATEMESSAGES.getInvSlot() - 1,
+					ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
+			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")
+					- 1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noMsg", "§d"));
 		}
-		if(FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
-			inv.setItem(ItemStacks.OPTIONS_JUMPING.getInvSlot()-1, ItemStacks.OPTIONS_JUMPING.getItem());
-			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsJumping.ButtonInventorySlot")-1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noJumping", "§c"));
+		if (FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
+			inv.setItem(ItemStacks.OPTIONS_JUMPING.getInvSlot() - 1, ItemStacks.OPTIONS_JUMPING.getItem());
+			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsJumping.ButtonInventorySlot") - 1,
+					ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noJumping", "§c"));
 		}
-		
-		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsRequestsItems.ButtonInventorySlot")-1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noRequests", "§a"));
-		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot")-1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noChat", "§b"));
-		
+
+		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsRequestsItems.ButtonInventorySlot") - 1,
+				ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noRequests", "§a"));
+		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot") - 1,
+				ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noChat", "§b"));
+
 		p.openInventory(inv);
 	}
-	
+
 	public static void EDIT_INVENTORY(Player p) {
-		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.FriendEditInv.InventorySize"),
-				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%", EditInventoryListener.editing.get(p).getName())));
-		
-		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.FriendEditInv.PlaceholderItems.InventorySlots")) {
-			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.EDIT_PLACEHOLDER.getItem());
+		Inventory inv = Bukkit.createInventory(null,
+				FileManager.ConfigCfg.getInt("Friends.GUI.FriendEditInv.InventorySize"),
+				ChatColor.translateAlternateColorCodes('&',
+						FileManager.ConfigCfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%",
+								EditInventoryListener.editing.get(p).getName())));
+
+		for (String placeholder : FileManager.ConfigCfg
+				.getStringList("Friends.GUI.FriendEditInv.PlaceholderItems.InventorySlots")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.EDIT_PLACEHOLDER.getItem());
 		}
-		
-		inv.setItem(ItemStacks.EDIT_REMOVE.getInvSlot()-1, ItemStacks.EDIT_REMOVE.getItem());
-		if(FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
-			inv.setItem(ItemStacks.EDIT_JUMP.getInvSlot()-1, ItemStacks.EDIT_JUMP.getItem());
+
+		inv.setItem(ItemStacks.EDIT_REMOVE.getInvSlot() - 1, ItemStacks.EDIT_REMOVE.getItem());
+		if (FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
+			inv.setItem(ItemStacks.EDIT_JUMP.getInvSlot() - 1, ItemStacks.EDIT_JUMP.getItem());
 		}
-		inv.setItem(ItemStacks.EDIT_BACK.getInvSlot()-1, ItemStacks.EDIT_BACK.getItem());
+		inv.setItem(ItemStacks.EDIT_BACK.getInvSlot() - 1, ItemStacks.EDIT_BACK.getItem());
 		p.openInventory(inv);
 	}
-	
+
 	public static void REMOVE_VERIFICATION_INVENTORY(Player p) {
-		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.RemoveVerificationInv.InventorySize"),
-				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")));
-		
-		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.RemoveVerificationInv.PlaceholderItem.ItemID")) {
-			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.REMOVEVERIFICATION_PLACEHOLDER.getItem());
+		Inventory inv = Bukkit.createInventory(null,
+				FileManager.ConfigCfg.getInt("Friends.GUI.RemoveVerificationInv.InventorySize"),
+				ChatColor.translateAlternateColorCodes('&',
+						FileManager.ConfigCfg.getString("Friends.GUI.RemoveVerificationInv.Title")));
+
+		for (String placeholder : FileManager.ConfigCfg
+				.getStringList("Friends.GUI.RemoveVerificationInv.PlaceholderItem.ItemID")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.REMOVEVERIFICATION_PLACEHOLDER.getItem());
 		}
-		inv.setItem(ItemStacks.REMOVEVERIFICATION_CANCLE.getInvSlot()-1, ItemStacks.REMOVEVERIFICATION_CANCLE.getItem());
-		inv.setItem(ItemStacks.REMOVEVERIFICATION_CONFIRM.getInvSlot()-1, ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem());
+		inv.setItem(ItemStacks.REMOVEVERIFICATION_CANCLE.getInvSlot() - 1,
+				ItemStacks.REMOVEVERIFICATION_CANCLE.getItem());
+		inv.setItem(ItemStacks.REMOVEVERIFICATION_CONFIRM.getInvSlot() - 1,
+				ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem());
 		p.openInventory(inv);
 	}
-	
+
 	public static void REQUESTEDIT_INVENTORY(Player p) {
-		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.RequestEditInv.InventorySize"), 
-				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%", RequestEditInventoryListener.editing.get(p).getName())));
-		
-		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.RequestEditInv.PlaceholderItems.ItemID")) {
-			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.REQUESTS_EDIT_PLACEHOLDER.getItem());
+		Inventory inv = Bukkit.createInventory(null,
+				FileManager.ConfigCfg.getInt("Friends.GUI.RequestEditInv.InventorySize"),
+				ChatColor.translateAlternateColorCodes('&',
+						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%",
+								RequestEditInventoryListener.editing.get(p).getName())));
+
+		for (String placeholder : FileManager.ConfigCfg
+				.getStringList("Friends.GUI.RequestEditInv.PlaceholderItems.ItemID")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.REQUESTS_EDIT_PLACEHOLDER.getItem());
 		}
-		inv.setItem(ItemStacks.REQUEST_EDIT_ACCEPT.getInvSlot()-1, ItemStacks.REQUEST_EDIT_ACCEPT.getItem());
-		inv.setItem(ItemStacks.REQUEST_EDIT_DENY.getInvSlot()-1, ItemStacks.REQUEST_EDIT_DENY.getItem());
-		inv.setItem(ItemStacks.REQUEST_EDIT_BLOCK.getInvSlot()-1, ItemStacks.REQUEST_EDIT_BLOCK.getItem());
-		inv.setItem(ItemStacks.REQUEST_EDIT_BACK.getInvSlot()-1, ItemStacks.REQUEST_EDIT_BACK.getItem());
+		inv.setItem(ItemStacks.REQUEST_EDIT_ACCEPT.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_ACCEPT.getItem());
+		inv.setItem(ItemStacks.REQUEST_EDIT_DENY.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_DENY.getItem());
+		inv.setItem(ItemStacks.REQUEST_EDIT_BLOCK.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_BLOCK.getItem());
+		inv.setItem(ItemStacks.REQUEST_EDIT_BACK.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_BACK.getItem());
 		p.openInventory(inv);
 	}
-	
+
 	public static void BLOCKEDEDIT_INVENOTRY(Player p) {
-		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.BlockedEditInv.InventorySize"), 
-				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", BlockedEditInventoryListener.editing.get(p).getName())));
-		
-		for(String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.BlockedEditInv.PlaceholderItem.InventorySlots")) {
-			inv.setItem(Integer.valueOf(placeholder)-1, ItemStacks.BLOCKED_EDIT_PLACEHOLDER.getItem());
+		Inventory inv = Bukkit.createInventory(null,
+				FileManager.ConfigCfg.getInt("Friends.GUI.BlockedEditInv.InventorySize"),
+				ChatColor.translateAlternateColorCodes('&',
+						FileManager.ConfigCfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%",
+								BlockedEditInventoryListener.editing.get(p).getName())));
+
+		for (String placeholder : FileManager.ConfigCfg
+				.getStringList("Friends.GUI.BlockedEditInv.PlaceholderItem.InventorySlots")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.BLOCKED_EDIT_PLACEHOLDER.getItem());
 		}
-		inv.setItem(ItemStacks.BLOCKED_EDIT_UNBLOCK.getInvSlot()-1, ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem());
-		inv.setItem(ItemStacks.BLOCKED_EDIT_BACK.getInvSlot()-1, ItemStacks.BLOCKED_EDIT_BACK.getItem());
+		inv.setItem(ItemStacks.BLOCKED_EDIT_UNBLOCK.getInvSlot() - 1, ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem());
+		inv.setItem(ItemStacks.BLOCKED_EDIT_BACK.getInvSlot() - 1, ItemStacks.BLOCKED_EDIT_BACK.getItem());
 		p.openInventory(inv);
 	}
 

@@ -1,3 +1,7 @@
+v2.3.2
+
+  Code improvements
+
 v2.2.4
 
   Added a file-backup system to keep changes by adding new stuff

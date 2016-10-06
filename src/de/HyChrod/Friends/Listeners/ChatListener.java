@@ -37,7 +37,7 @@ public class ChatListener implements Listener {
 				e.setCancelled(true);
 
 				PlayerUtilities pu = new PlayerUtilities(p);
-				for (OfflinePlayer player : pu.getFriends()) {
+				for (OfflinePlayer player : pu.get(0)) {
 					if (player.isOnline()) {
 						PlayerUtilities puT = new PlayerUtilities(player);
 						if (!puT.getOptions().contains("option_noChat")) {

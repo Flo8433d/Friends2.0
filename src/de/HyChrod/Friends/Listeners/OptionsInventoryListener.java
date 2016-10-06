@@ -6,7 +6,6 @@
 */
 package de.HyChrod.Friends.Listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,14 +68,7 @@ public class OptionsInventoryListener implements Listener {
 								return;
 							}
 							if (e.getCurrentItem().equals(ItemStacks.OPTIONS_BACK.getItem())) {
-								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-									@Override
-									public void run() {
-										p.closeInventory();
-										InventoryBuilder.MAIN_INVENTORY(plugin, p);
-									}
-								}, 2);
+								InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
 								return;
 							}
 						}
@@ -87,14 +79,7 @@ public class OptionsInventoryListener implements Listener {
 	}
 
 	public void reOpenInv(final Player player) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-			@Override
-			public void run() {
-				player.closeInventory();
-				InventoryBuilder.OPTIONS_INVENTORY(player);
-			}
-		}, 5);
+		InventoryBuilder.openInv(player, InventoryBuilder.OPTIONS_INVENTORY(player, false));
 	}
 
 }

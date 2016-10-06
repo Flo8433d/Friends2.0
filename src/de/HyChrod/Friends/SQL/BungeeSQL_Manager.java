@@ -40,73 +40,32 @@ public class BungeeSQL_Manager {
 		return true;
 	}
 
-	public static Long getLastOnline(OfflinePlayer player) {
-		Long timeStamp = (long) 0;
+	public static void set(OfflinePlayer player, Object obj, String value) {
+		if (playerExists(player)) {
+			MySQL.update("UPDATE friends2_0_BUNGEE SET " + value + "='" + obj + "' WHERE UUID='"
+					+ player.getUniqueId().toString() + "';");
+		} else {
+			createPlayer(player);
+			set(player, obj, value);
+		}
+	}
+
+	public static Object get(OfflinePlayer player, String value) {
 		if (playerExists(player)) {
 			try {
 				ResultSet rs = MySQL.query(
 						"SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("LASTONLINE")) == null));
+				if ((!rs.next()) || (String.valueOf(rs.getString(value)) == null))
+					;
 
-				timeStamp = Long.parseLong(rs.getString("LASTONLINE"));
+				return rs.getObject(value);
+
 			} catch (Exception ex) {
 			}
 		}
-		if (timeStamp < 5) {
-			return SQL_Manager.getLastOnline(player);
-		}
-		return timeStamp;
-	}
-
-	public static void setLastOnline(OfflinePlayer player, Long timeStamp) {
-		if (playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET LASTONLINE='" + timeStamp.toString() + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-			return;
-		} else {
-			createPlayer(player);
-			setLastOnline(player, timeStamp);
-		}
-		;
-	}
-
-	public static void setServer(OfflinePlayer player, String server) {
-		if (playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET SERVER='" + server + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-		} else {
-			createPlayer(player);
-			setServer(player, server);
-		}
-		return;
-	}
-
-	public static String getServer(OfflinePlayer player) {
-		if (playerExists(player)) {
-			try {
-				ResultSet rs = MySQL.query(
-						"SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("SERVER")) == null))
-					;
-				String server = rs.getString("SERVER");
-
-				return server;
-
-			} catch (Exception e) {
-			}
-		}
+		if (value.equals("LASTONLINE"))
+			return 0;
 		return "OFFLINE";
-	}
-
-	public static void setOnline(OfflinePlayer player, Integer value) {
-		if (playerExists(player)) {
-			MySQL.update("UPDATE friends2_0_BUNGEE SET ONLINE='" + value + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-		} else {
-			createPlayer(player);
-			setOnline(player, value);
-		}
-		return;
 	}
 
 	public static boolean isOnline(OfflinePlayer player) {

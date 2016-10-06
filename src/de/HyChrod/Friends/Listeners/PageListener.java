@@ -16,23 +16,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Util.BlockedPage;
 import de.HyChrod.Friends.Util.InventoryBuilder;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.Page;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
-public class BlockedInventoryListener implements Listener {
+public class PageListener implements Listener {
 
 	private Friends plugin;
 
-	private static HashMap<Player, Integer> currentSite = new HashMap<>();
+	public static HashMap<Player, Integer> currentSite = new HashMap<>();
 
-	public BlockedInventoryListener(Friends friends) {
+	public PageListener(Friends friends) {
 		this.plugin = friends;
 	}
 
@@ -41,51 +41,50 @@ public class BlockedInventoryListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
 		if (e.getInventory() != null) {
-			if (e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
-					FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title")))) {
+			InventoryTypes type = checkInventory(e.getInventory().getTitle());
+			if (type != null) {
 				e.setCancelled(true);
 				if (e.getCurrentItem() != null) {
 					if (e.getCurrentItem().hasItemMeta()) {
 						if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
-							if (e.getCurrentItem().equals(ItemStacks.BLOCKED_NEXTPAGE.getItem())) {
+							if (e.getCurrentItem().equals(type.getItems().get(1).getItem())) {
 								PlayerUtilities pu = new PlayerUtilities(p);
 								Inventory inv = p.getOpenInventory().getTopInventory();
-								this.nextPage(p, pu, inv);
+								this.nextPage(p, pu, inv, type);
 								return;
 							}
-							if (e.getCurrentItem().equals(ItemStacks.BLOCKED_PREVIOUSPAGE.getItem())) {
+							if (e.getCurrentItem().equals(type.getItems().get(2).getItem())) {
 								PlayerUtilities pu = new PlayerUtilities(p);
 
 								if (currentSite.containsKey(p)) {
 									if (currentSite.get(p) > 0) {
 										int page = currentSite.get(p) - 1;
-										new BlockedPage(plugin, p, page, pu).open();
+										new Page(plugin, p, page, pu, type).open(true);
 										currentSite.put(p, page);
 										return;
 									}
 								}
-								p.sendMessage(plugin.getString("Messages.GUI.BlockedInv.FirstPage"));
+								p.sendMessage(plugin.getString("Messages.GUI." + type.getS() + ".FirstPage"));
 								return;
 							}
-							if (e.getCurrentItem().equals(ItemStacks.BLOCKED_BACK.getItem())) {
-								Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-									@Override
-									public void run() {
-										p.closeInventory();
-										InventoryBuilder.MAIN_INVENTORY(plugin, p);
-									}
-								}, 2);
+							if (e.getCurrentItem().equals(type.getItems().get(3).getItem())) {
+								InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
 								return;
 							}
 							if (e.getCurrentItem().getType().equals(Material.SKULL)
 									|| e.getCurrentItem().getType().equals(Material.SKULL_ITEM)
 											&& !e.getCurrentItem().getItemMeta().getDisplayName()
 													.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
-								String friendsName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§c",
-										"");
-								BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
-								InventoryBuilder.BLOCKEDEDIT_INVENOTRY(p);
+								String friendsName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§3", "")
+										.replace("§c", "");
+								if (type.equals(InventoryTypes.REQUEST)) {
+									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									InventoryBuilder.openInv(p, InventoryBuilder.REQUESTEDIT_INVENTORY(p, false));
+								}
+								if (type.equals(InventoryTypes.BLOCKED)) {
+									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									InventoryBuilder.openInv(p, InventoryBuilder.BLOCKEDEDIT_INVENOTRY(p, false));
+								}
 								if (currentSite.containsKey(p)) {
 									currentSite.remove(p);
 								}
@@ -98,21 +97,17 @@ public class BlockedInventoryListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClose(InventoryCloseEvent e) {
-		Player p = (Player) e.getPlayer();
-
-		if (e.getInventory() != null) {
-			if (e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-					FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title")))) {
-				if (currentSite.containsKey(p)) {
-					currentSite.remove(p);
-				}
-			}
-		}
+	public InventoryTypes checkInventory(String title) {
+		if (title.equals(ChatColor.translateAlternateColorCodes('&',
+				FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.Title"))))
+			return InventoryTypes.REQUEST;
+		if (title.equals(ChatColor.translateAlternateColorCodes('&',
+				FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title"))))
+			return InventoryTypes.BLOCKED;
+		return null;
 	}
 
-	private void nextPage(Player player, PlayerUtilities pu, Inventory inv) {
+	private void nextPage(Player player, PlayerUtilities pu, Inventory inv, InventoryTypes type) {
 		int freeSlots = 0;
 		for (int i = 0; i < inv.getSize(); i++) {
 			if (inv.getItem(i) == null) {
@@ -120,13 +115,13 @@ public class BlockedInventoryListener implements Listener {
 			}
 		}
 		if (freeSlots > 0) {
-			player.sendMessage(plugin.getString("Messages.GUI.BlockedInv.NoMorePages"));
+			player.sendMessage(plugin.getString("Messages.GUI." + type.getS() + ".NoMorePages"));
 			return;
 		}
 		int page = 1;
 		if (currentSite.containsKey(player))
 			page = currentSite.get(player) + 1;
-		new BlockedPage(plugin, player, page, pu).open();
+		new Page(plugin, player, page, pu, type).open(true);
 		currentSite.put(player, page);
 	}
 

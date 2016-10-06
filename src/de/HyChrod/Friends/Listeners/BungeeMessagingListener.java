@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
@@ -21,16 +22,12 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import de.HyChrod.Friends.Friends;
+import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.Util.ReflectionsManager;
 
 public class BungeeMessagingListener implements PluginMessageListener {
 
-	private Friends plugin;
 	private static HashMap<Player, Object> obj = new HashMap<Player, Object>();
-
-	public BungeeMessagingListener(Friends friends) {
-		this.plugin = friends;
-	}
 
 	@Override
 	public synchronized void onPluginMessageReceived(String channel, Player player, byte[] message) {
@@ -53,31 +50,7 @@ public class BungeeMessagingListener implements PluginMessageListener {
 				String[] players = somedata.split("@");
 				if (Bukkit.getPlayer(players[0]) != null) {
 					Player p = Bukkit.getPlayer(players[0]);
-
-					p.sendMessage(
-							plugin.getString("Messages.Commands.Add.Add.ToAdd.0").replace("%PLAYER%", players[1]));
-					p.sendMessage(
-							plugin.getString("Messages.Commands.Add.Add.ToAdd.1").replace("%PLAYER%", players[1]));
-
-					String[] msgs = new String[2];
-					msgs[0] = plugin.getString("Messages.Commands.Add.Add.AcceptButton");
-					msgs[1] = plugin.getString("Messages.Commands.Add.Add.DenyButton");
-
-					String[] hover = new String[2];
-					hover[0] = plugin.getString("Messages.Commands.Add.Add.AcceptHover");
-					hover[1] = plugin.getString("Messages.Commands.Add.Add.DenyHover");
-
-					String[] command = new String[2];
-					command[0] = "/friend accept %name%";
-					command[1] = "/friend deny %name%";
-
-					ReflectionsManager
-							.sendHoverMessage(p,
-									players[1], plugin.getString("Messages.Commands.Add.Add.ToAdd.2")
-											.replace("%ACCEPT_BUTTON%", "").replace("%DENY_BUTTON%", ""),
-									msgs, hover, command);
-					p.sendMessage(
-							plugin.getString("Messages.Commands.Add.Add.ToAdd.3").replace("%PLAYER%", players[1]));
+					ReflectionsManager.sendRequestMessages(Bukkit.getPlayer(players[1]), p);
 				}
 
 			} catch (Exception ex) {
@@ -87,8 +60,15 @@ public class BungeeMessagingListener implements PluginMessageListener {
 		}
 	}
 
+	public static boolean isOnline(OfflinePlayer player) {
+		if (Friends.bungeeMode) {
+			return BungeeSQL_Manager.isOnline(player);
+		}
+		return player.isOnline();
+	}
+
 	public synchronized Object get(Player p, boolean integer) {
-		sendToBungeeCord(p, "get", integer ? "points" : "nickname");
+		sendToBungeeCord(p, "get", integer ? "points" : "nickname", null);
 
 		try {
 			wait();
@@ -98,17 +78,18 @@ public class BungeeMessagingListener implements PluginMessageListener {
 		return obj.get(p);
 	}
 
-	@SuppressWarnings("static-access")
-	public void sendToBungeeCord(Player p, String channel, String sub) {
+	public static void sendToBungeeCord(Player p, String first, String second, String third) {
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
 		try {
-			out.writeUTF(channel);
-			out.writeUTF(sub);
+			out.writeUTF(first);
+			out.writeUTF(second);
+			if (third != null)
+				out.writeUTF(third);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		p.sendPluginMessage(plugin.getPlugin(Friends.class), "BungeeCord", b.toByteArray());
+		p.sendPluginMessage(Friends.getInstance(), "BungeeCord", b.toByteArray());
 	}
 
 }

@@ -6,9 +6,6 @@
 */
 package de.HyChrod.Friends.Listeners;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -19,10 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
@@ -72,15 +65,8 @@ public class EditInventoryListener implements Listener {
 										if (!BungeeSQL_Manager.isOnline(editPlayer)) {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										}
-										String server = BungeeSQL_Manager.getServer(editPlayer);
-										ByteArrayDataOutput out = ByteStreams.newDataOutput();
-										try {
-											out.writeUTF("Connect");
-											out.writeUTF(server);
-										} catch (Exception ee) {
-											ee.printStackTrace();
-										}
-										p.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+										String server = String.valueOf(BungeeSQL_Manager.get(editPlayer, "SERVER"));
+										BungeeMessagingListener.sendToBungeeCord(p, "Connect", server, null);
 										return;
 									}
 									if (!editPlayer.isOnline()) {
@@ -104,67 +90,34 @@ public class EditInventoryListener implements Listener {
 								if (e.getCurrentItem().equals(ItemStacks.EDIT_REMOVE.getItem())) {
 									if (FileManager.ConfigCfg.getBoolean("Friends.Options.RemoveVerification")) {
 										RemoveVerificationInventoryListener.confirming.put(p, editPlayer);
-										InventoryBuilder.REMOVE_VERIFICATION_INVENTORY(p);
+										InventoryBuilder.REMOVE_VERIFICATION_INVENTORY(p, true);
 										return;
 									}
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeFriend(editPlayer);
-									puT.removeFriend(p);
+									pu.update(editPlayer, 0, false);
+									puT.update(p, 0, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover")
 											.replace("%PLAYER%", editPlayer.getName()));
 									if (Friends.bungeeMode && !editPlayer.isOnline()) {
-										ByteArrayOutputStream b = new ByteArrayOutputStream();
-										DataOutputStream out = new DataOutputStream(b);
-										try {
-											out.writeUTF("Message");
-											out.writeUTF(editPlayer.getName());
-											out.writeUTF(plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
-													.replace("%PLAYER%", p.getName()));
-										} catch (IOException ex) {
-										}
-										p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
+										BungeeMessagingListener.sendToBungeeCord(p, "Message", editPlayer.getName(),
+												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
+														.replace("%PLAYER%", p.getName()));
 									}
 									if (editPlayer.isOnline()) {
 										Bukkit.getPlayer(editPlayer.getUniqueId()).sendMessage(
 												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
 														.replace("%PLAYER%", p.getName()));
 									}
-									this.openMainInv(p);
+									InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.EDIT_BACK.getItem())) {
-									this.openMainInv(p);
+									InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
 									return;
 								}
 							}
 						}
 					}
-				}
-			}
-		}
-	}
-
-	public void openMainInv(final Player p) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-			@Override
-			public void run() {
-				p.closeInventory();
-				InventoryBuilder.MAIN_INVENTORY(plugin, p);
-			}
-		}, 2);
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClose(InventoryCloseEvent e) {
-		Player p = (Player) e.getPlayer();
-		if (e.getInventory() != null) {
-			if (editing.containsKey(p)) {
-				if (e.getInventory().getTitle()
-						.equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-								FileManager.ConfigCfg.getString("Friends.GUI.FriendEditInv.Title").replace("%FRIEND%",
-										editing.get(p).getName())))) {
-					editing.remove(p);
 				}
 			}
 		}

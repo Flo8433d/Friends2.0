@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.HyChrod.Friends.FileManager;
@@ -23,11 +24,11 @@ import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
 
-public class JoinListener implements Listener {
+public class JoinQuitListener implements Listener {
 
 	private Friends plugin;
 
-	public JoinListener(Friends friends) {
+	public JoinQuitListener(Friends friends) {
 		this.plugin = friends;
 	}
 
@@ -79,15 +80,38 @@ public class JoinListener implements Listener {
 		}
 
 		if (Friends.bungeeMode) {
-			BungeeSQL_Manager.setOnline(p, 1);
+			BungeeSQL_Manager.set(p, 1, "ONLINE");
 			return;
 		}
-		for (OfflinePlayer player : pu.getFriends()) {
+		for (OfflinePlayer player : pu.get(0)) {
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
 				if (!puT.getOptions().contains("option_noChat")) {
 					Bukkit.getPlayer(player.getUniqueId())
 							.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onQuit(PlayerQuitEvent e) {
+		Player p = e.getPlayer();
+		if (Friends.bungeeMode) {
+			BungeeSQL_Manager.set(p, System.currentTimeMillis(), "LASTONLINE");
+			return;
+		}
+
+		PlayerUtilities pu = new PlayerUtilities(p);
+		pu.setLastOnline(System.currentTimeMillis());
+		pu.saveData(false);
+
+		for (OfflinePlayer player : pu.get(0)) {
+			if (player.isOnline()) {
+				PlayerUtilities puT = new PlayerUtilities(player);
+				if (!puT.getOptions().contains("option_noChat")) {
+					Bukkit.getPlayer(player.getUniqueId())
+							.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
 				}
 			}
 		}

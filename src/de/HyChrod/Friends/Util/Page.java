@@ -21,34 +21,37 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 
-public class BlockedPage {
+public class Page {
 
 	public Player player;
 	public int site;
 	public PlayerUtilities pu;
 
 	private Friends plugin;
+	private InventoryTypes type = null;
 
-	public BlockedPage(Friends plugin, Player player, int site, PlayerUtilities pu) {
+	public Page(Friends plugin, Player player, int site, PlayerUtilities pu, InventoryTypes type) {
 		this.player = player;
 		this.site = site;
 		this.pu = pu;
 		this.plugin = plugin;
+		this.type = type;
+		this.type.applyPlayer(player);
 	}
 
-	public void open() {
+	public Inventory open(boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
-				FileManager.ConfigCfg.getInt("Friends.GUI.BlockedInv.InventorySize"),
+				FileManager.ConfigCfg.getInt("Friends.GUI." + type.getS() + ".InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
-						FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title")));
+						FileManager.ConfigCfg.getString("Friends.GUI." + type.getS() + ".Title")));
 
 		for (String placeholder : FileManager.ConfigCfg
-				.getStringList("Friends.GUI.BlockedInv.PlaceholderItem.InventorySlots")) {
-			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.BLOCKED_PLACEHOLDER.getItem());
+				.getStringList("Friends.GUI." + type.getS() + ".PlaceholderItem.InventorySlots")) {
+			inv.setItem(Integer.valueOf(placeholder) - 1, type.getItems().get(0).getItem());
 		}
-		inv.setItem(ItemStacks.BLOCKED_NEXTPAGE.getInvSlot() - 1, ItemStacks.BLOCKED_NEXTPAGE.getItem());
-		inv.setItem(ItemStacks.BLOCKED_PREVIOUSPAGE.getInvSlot() - 1, ItemStacks.BLOCKED_PREVIOUSPAGE.getItem());
-		inv.setItem(ItemStacks.BLOCKED_BACK.getInvSlot() - 1, ItemStacks.BLOCKED_BACK.getItem());
+		inv.setItem(type.getItems().get(1).getInvSlot() - 1, type.getItems().get(1).getItem());
+		inv.setItem(type.getItems().get(2).getInvSlot() - 1, type.getItems().get(2).getItem());
+		inv.setItem(type.getItems().get(3).getInvSlot() - 1, type.getItems().get(3).getItem());
 
 		int freeSlots = 0;
 		for (int i = 0; i < inv.getSize(); i++) {
@@ -58,10 +61,10 @@ public class BlockedPage {
 		}
 		freeSlots = freeSlots * site;
 		List<ItemStack> items = new ArrayList<>();
-		for (OfflinePlayer player : pu.getBlocked()) {
+		for (OfflinePlayer player : type.getGet()) {
 			ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 			SkullMeta SM = (SkullMeta) IS.getItemMeta();
-			SM.setDisplayName("§c" + player.getName());
+			SM.setDisplayName(type.getColor() + player.getName());
 			SM.setOwner(player.getName());
 			IS.setItemMeta(SM);
 			items.add(IS);
@@ -77,7 +80,8 @@ public class BlockedPage {
 		for (ItemStack item : items) {
 			inv.addItem(item);
 		}
-		player.openInventory(inv);
+		if (open)
+			player.openInventory(inv);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
 			@Override
@@ -85,6 +89,7 @@ public class BlockedPage {
 				player.updateInventory();
 			}
 		}, 5);
+		return inv;
 	}
 
 }

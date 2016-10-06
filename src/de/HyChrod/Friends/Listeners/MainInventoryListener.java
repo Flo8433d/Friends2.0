@@ -16,13 +16,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryPage;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
@@ -30,7 +30,7 @@ public class MainInventoryListener implements Listener {
 
 	private Friends plugin;
 
-	private static HashMap<Player, Integer> currentSite = new HashMap<>();
+	public static HashMap<Player, Integer> currentSite = new HashMap<>();
 
 	public MainInventoryListener(Friends friends) {
 		this.plugin = friends;
@@ -62,7 +62,7 @@ public class MainInventoryListener implements Listener {
 									if (currentSite.containsKey(p)) {
 										if (currentSite.get(p) > 0) {
 											int page = currentSite.get(p) - 1;
-											new InventoryPage(plugin, p, page, pu).open();
+											new InventoryPage(plugin, p, page, pu).open(true);
 											currentSite.put(p, page);
 											return;
 										}
@@ -71,19 +71,19 @@ public class MainInventoryListener implements Listener {
 									return;
 								}
 								if (e.getCurrentItem().getItemMeta().getDisplayName()
-										.equals(ItemStacks.MAIN_REQUESTS(new PlayerUtilities(p).getRequests().size())
+										.equals(ItemStacks.MAIN_REQUESTS(new PlayerUtilities(p).get(1).size())
 												.getItemMeta().getDisplayName())) {
-									InventoryBuilder.REQUESTS_INVENTORY(plugin, p);
+									InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.REQUEST, true);
 									return;
 								}
 								if (e.getCurrentItem().getItemMeta().getDisplayName()
-										.equals(ItemStacks.MAIN_BLOCKED(new PlayerUtilities(p).getBlocked().size())
+										.equals(ItemStacks.MAIN_BLOCKED(new PlayerUtilities(p).get(2).size())
 												.getItemMeta().getDisplayName())) {
-									InventoryBuilder.BLOCKED_INVENTORY(plugin, p);
+									InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, true);
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.MAIN_OPTIONSITEM.getItem())) {
-									InventoryBuilder.OPTIONS_INVENTORY(p);
+									InventoryBuilder.OPTIONS_INVENTORY(p, true);
 									return;
 								}
 								if (e.getCurrentItem().getType().equals(Material.SKULL)
@@ -93,7 +93,7 @@ public class MainInventoryListener implements Listener {
 									String friendsName = e.getCurrentItem().getItemMeta().getDisplayName()
 											.replace(" §7(§aOnline§7)", "").replace(" §7(§8Offline§7)", "");
 									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
-									InventoryBuilder.EDIT_INVENTORY(p);
+									InventoryBuilder.EDIT_INVENTORY(p, true);
 									if (currentSite.containsKey(p)) {
 										currentSite.remove(p);
 									}
@@ -102,20 +102,6 @@ public class MainInventoryListener implements Listener {
 							}
 						}
 					}
-				}
-			}
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClose(InventoryCloseEvent e) {
-		Player p = (Player) e.getPlayer();
-
-		if (e.getInventory() != null) {
-			if (e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-					FileManager.ConfigCfg.getString("Friends.GUI.Title")))) {
-				if (currentSite.containsKey(p)) {
-					currentSite.remove(p);
 				}
 			}
 		}
@@ -135,7 +121,7 @@ public class MainInventoryListener implements Listener {
 		int page = 1;
 		if (currentSite.containsKey(player))
 			page = currentSite.get(player) + 1;
-		new InventoryPage(plugin, player, page, pu).open();
+		new InventoryPage(plugin, player, page, pu).open(true);
 		currentSite.put(player, page);
 	}
 

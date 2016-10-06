@@ -38,7 +38,7 @@ public class InventoryPage {
 		this.plugin = plugin;
 	}
 
-	public void open() {
+	public Inventory open(boolean open) {
 		Inventory inv = Bukkit.createInventory(null, FileManager.ConfigCfg.getInt("Friends.GUI.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.Title")));
 
@@ -46,9 +46,9 @@ public class InventoryPage {
 			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.MAIN_PLACEHOLDER.getItem());
 		}
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.RequestsItem.InventorySlot") - 1,
-				ItemStacks.MAIN_REQUESTS(pu.getRequests().size()));
+				ItemStacks.MAIN_REQUESTS(pu.get(1).size()));
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.BlockedItem.InventorySlot") - 1,
-				ItemStacks.MAIN_BLOCKED(pu.getBlocked().size()));
+				ItemStacks.MAIN_BLOCKED(pu.get(2).size()));
 		inv.setItem(ItemStacks.MAIN_OPTIONSITEM.getInvSlot() - 1, ItemStacks.MAIN_OPTIONSITEM.getItem());
 		inv.setItem(ItemStacks.MAIN_NEXTPAGEITEM.getInvSlot() - 1, ItemStacks.MAIN_NEXTPAGEITEM.getItem());
 		inv.setItem(ItemStacks.MAIN_PREVIOUSPAGEITEM.getInvSlot() - 1, ItemStacks.MAIN_PREVIOUSPAGEITEM.getItem());
@@ -61,7 +61,7 @@ public class InventoryPage {
 		}
 		freeSlots = freeSlots * site;
 		List<ItemStack> items = new ArrayList<>();
-		for (OfflinePlayer player : pu.getFriends()) {
+		for (OfflinePlayer player : pu.get(0)) {
 			PlayerUtilities puT = new PlayerUtilities(player);
 			items.add(this.getHead(player, puT));
 		}
@@ -76,7 +76,8 @@ public class InventoryPage {
 		for (ItemStack item : items) {
 			inv.addItem(item);
 		}
-		player.openInventory(inv);
+		if (open)
+			player.openInventory(inv);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
 			@Override
@@ -84,6 +85,7 @@ public class InventoryPage {
 				player.updateInventory();
 			}
 		}, 5);
+		return inv;
 	}
 
 	private ItemStack getHead(OfflinePlayer player, PlayerUtilities pu) {
@@ -96,12 +98,16 @@ public class InventoryPage {
 			if (BungeeSQL_Manager.isOnline(player)) {
 				SM.setDisplayName(player.getName() + " §7(§aOnline§7)");
 				if (FileManager.ConfigCfg.getBoolean("Friends.ShowServer.Enable")) {
-					SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
-							FileManager.ConfigCfg.getString("Friends.ShowServer.Lore").replace("%SERVER%",
-									BungeeSQL_Manager.getServer(player)))));
+					SM.setLore(
+							Arrays.asList(
+									ChatColor.translateAlternateColorCodes('&',
+											FileManager.ConfigCfg.getString("Friends.ShowServer.Lore").replace(
+													"%SERVER%", String
+															.valueOf(BungeeSQL_Manager.get(player, "SERVER"))))));
 				}
 			} else {
-				int[] time = PlayerUtilities.getLastOnline(BungeeSQL_Manager.getLastOnline(player));
+				int[] time = PlayerUtilities
+						.getLastOnline(Long.valueOf(String.valueOf(BungeeSQL_Manager.get(player, "LASTONLINE"))));
 				if (FileManager.ConfigCfg.getBoolean("Friends.Options.LastOnline.Enable") && time != null
 						&& time.length >= 3) {
 					SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&',

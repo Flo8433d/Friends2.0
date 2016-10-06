@@ -19,19 +19,15 @@ import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
 
 public class InventoryBuilder {
 
-	public static void MAIN_INVENTORY(Friends plugin, Player p) {
-		new InventoryPage(plugin, p, 0, new PlayerUtilities(p)).open();
+	public static Inventory MAIN_INVENTORY(Friends plugin, Player p, boolean open) {
+		return new InventoryPage(plugin, p, 0, new PlayerUtilities(p)).open(open);
 	}
 
-	public static void REQUESTS_INVENTORY(Friends plugin, Player p) {
-		new RequestsPage(plugin, p, 0, new PlayerUtilities(p)).open();
+	public static Inventory INVENTORY(Friends plugin, Player p, InventoryTypes type, boolean open) {
+		return new Page(plugin, p, 0, new PlayerUtilities(p), type).open(open);
 	}
 
-	public static void BLOCKED_INVENTORY(Friends plugin, Player p) {
-		new BlockedPage(plugin, p, 0, new PlayerUtilities(p)).open();
-	}
-
-	public static void OPTIONS_INVENTORY(Player p) {
+	public static Inventory OPTIONS_INVENTORY(Player p, boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
 				FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
@@ -62,10 +58,12 @@ public class InventoryBuilder {
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot") - 1,
 				ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noChat", "§b"));
 
-		p.openInventory(inv);
+		if (open)
+			p.openInventory(inv);
+		return inv;
 	}
 
-	public static void EDIT_INVENTORY(Player p) {
+	public static Inventory EDIT_INVENTORY(Player p, boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
 				FileManager.ConfigCfg.getInt("Friends.GUI.FriendEditInv.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
@@ -82,10 +80,12 @@ public class InventoryBuilder {
 			inv.setItem(ItemStacks.EDIT_JUMP.getInvSlot() - 1, ItemStacks.EDIT_JUMP.getItem());
 		}
 		inv.setItem(ItemStacks.EDIT_BACK.getInvSlot() - 1, ItemStacks.EDIT_BACK.getItem());
-		p.openInventory(inv);
+		if (open)
+			p.openInventory(inv);
+		return inv;
 	}
 
-	public static void REMOVE_VERIFICATION_INVENTORY(Player p) {
+	public static Inventory REMOVE_VERIFICATION_INVENTORY(Player p, boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
 				FileManager.ConfigCfg.getInt("Friends.GUI.RemoveVerificationInv.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
@@ -99,10 +99,12 @@ public class InventoryBuilder {
 				ItemStacks.REMOVEVERIFICATION_CANCLE.getItem());
 		inv.setItem(ItemStacks.REMOVEVERIFICATION_CONFIRM.getInvSlot() - 1,
 				ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem());
-		p.openInventory(inv);
+		if (open)
+			p.openInventory(inv);
+		return inv;
 	}
 
-	public static void REQUESTEDIT_INVENTORY(Player p) {
+	public static Inventory REQUESTEDIT_INVENTORY(Player p, boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
 				FileManager.ConfigCfg.getInt("Friends.GUI.RequestEditInv.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
@@ -117,10 +119,12 @@ public class InventoryBuilder {
 		inv.setItem(ItemStacks.REQUEST_EDIT_DENY.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_DENY.getItem());
 		inv.setItem(ItemStacks.REQUEST_EDIT_BLOCK.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_BLOCK.getItem());
 		inv.setItem(ItemStacks.REQUEST_EDIT_BACK.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_BACK.getItem());
-		p.openInventory(inv);
+		if (open)
+			p.openInventory(inv);
+		return inv;
 	}
 
-	public static void BLOCKEDEDIT_INVENOTRY(Player p) {
+	public static Inventory BLOCKEDEDIT_INVENOTRY(Player p, boolean open) {
 		Inventory inv = Bukkit.createInventory(null,
 				FileManager.ConfigCfg.getInt("Friends.GUI.BlockedEditInv.InventorySize"),
 				ChatColor.translateAlternateColorCodes('&',
@@ -133,7 +137,20 @@ public class InventoryBuilder {
 		}
 		inv.setItem(ItemStacks.BLOCKED_EDIT_UNBLOCK.getInvSlot() - 1, ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem());
 		inv.setItem(ItemStacks.BLOCKED_EDIT_BACK.getInvSlot() - 1, ItemStacks.BLOCKED_EDIT_BACK.getItem());
-		p.openInventory(inv);
+		if (open)
+			p.openInventory(inv);
+		return inv;
+	}
+
+	public static void openInv(final Player p, final Inventory inv) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Friends.getInstance(), new Runnable() {
+
+			@Override
+			public void run() {
+				p.closeInventory();
+				p.openInventory(inv);
+			}
+		}, 2);
 	}
 
 }

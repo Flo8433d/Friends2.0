@@ -28,9 +28,7 @@ public class PlayerUtilities {
 	public File file;
 	public boolean sql = false;
 
-	private static HashMap<OfflinePlayer, LinkedList<OfflinePlayer>> friends = new HashMap<>();
-	private static HashMap<OfflinePlayer, LinkedList<OfflinePlayer>> requests = new HashMap<>();
-	private static HashMap<OfflinePlayer, LinkedList<OfflinePlayer>> blocked = new HashMap<>();
+	private static HashMap<OfflinePlayer, LinkedList<LinkedList<OfflinePlayer>>> userdata = new HashMap<>();
 	private static HashMap<OfflinePlayer, LinkedList<String>> options = new HashMap<>();
 
 	public PlayerUtilities(OfflinePlayer player) {
@@ -40,46 +38,56 @@ public class PlayerUtilities {
 		this.cfg = this.mgr.getConfig(this.file);
 		if (MySQL.isConnected())
 			this.sql = true;
-		if (!PlayerUtilities.friends.containsKey(player) && !PlayerUtilities.requests.containsKey(player)
-				&& !PlayerUtilities.blocked.containsKey(player)) {
+		if (!PlayerUtilities.userdata.containsKey(player)) {
 			this.loadData();
 		}
 	}
 
 	public static void fullSave(boolean sync) {
-		for (OfflinePlayer player : friends.keySet()) {
+		for (OfflinePlayer player : userdata.keySet()) {
 			new PlayerUtilities(player).saveData(sync);
 		}
 	}
 
-	public LinkedList<OfflinePlayer> getFriends() {
+	public LinkedList<OfflinePlayer> get(Integer i) {
 		if (Friends.bungeeMode) {
-			return SQL_Manager.getFriends(player);
+			return null;
 		}
-		LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
-		if (PlayerUtilities.friends.containsKey(this.player))
-			currentFriends = PlayerUtilities.friends.get(this.player);
-		return currentFriends;
+		LinkedList<OfflinePlayer> current = new LinkedList<>();
+		if (PlayerUtilities.userdata.containsKey(this.player)) {
+			LinkedList<LinkedList<OfflinePlayer>> hash = PlayerUtilities.userdata.get(this.player);
+			if (hash.size() > i)
+				current = PlayerUtilities.userdata.get(this.player).get(i);
+		}
+		return current;
 	}
 
-	public LinkedList<OfflinePlayer> getRequests() {
+	public void update(OfflinePlayer player, Integer i, boolean add) {
 		if (Friends.bungeeMode) {
-			return SQL_Manager.getRequests(player);
+			return;
 		}
-		LinkedList<OfflinePlayer> currentRequests = new LinkedList<>();
-		if (PlayerUtilities.requests.containsKey(this.player))
-			currentRequests = PlayerUtilities.requests.get(this.player);
-		return currentRequests;
-	}
+		LinkedList<OfflinePlayer> current = new LinkedList<>();
+		if (PlayerUtilities.userdata.containsKey(this.player)) {
+			LinkedList<LinkedList<OfflinePlayer>> hash = PlayerUtilities.userdata.get(this.player);
+			if (hash.size() > i)
+				current = PlayerUtilities.userdata.get(this.player).get(i);
+		}
+		if (current.contains(player) && !add)
+			current.remove(player);
+		if (!current.contains(player) && add)
+			current.add(player);
 
-	public LinkedList<OfflinePlayer> getBlocked() {
-		if (Friends.bungeeMode) {
-			return SQL_Manager.getBlocked(player);
+		LinkedList<LinkedList<OfflinePlayer>> hash = new LinkedList<>();
+		if (PlayerUtilities.userdata.containsKey(this.player))
+			hash = PlayerUtilities.userdata.get(this.player);
+		if (hash.size() <= i) {
+			while (hash.size() <= i) {
+				hash.add(new LinkedList<OfflinePlayer>());
+			}
 		}
-		LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
-		if (PlayerUtilities.blocked.containsKey(this.player))
-			currentBlocked = PlayerUtilities.blocked.get(this.player);
-		return currentBlocked;
+		hash.set(i, current);
+
+		PlayerUtilities.userdata.put(this.player, hash);
 	}
 
 	public LinkedList<String> getOptions() {
@@ -90,100 +98,6 @@ public class PlayerUtilities {
 		if (PlayerUtilities.options.containsKey(this.player))
 			currentOptions = PlayerUtilities.options.get(this.player);
 		return currentOptions;
-	}
-
-	public void addFriend(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> friends = this.getFriends();
-			friends.add(player);
-			SQL_Manager.setFriends(friends, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
-		if (PlayerUtilities.friends.containsKey(this.player))
-			currentFriends = PlayerUtilities.friends.get(this.player);
-		if (!currentFriends.contains(player))
-			currentFriends.add(player);
-		PlayerUtilities.friends.put(this.player, currentFriends);
-	}
-
-	public void removeFriend(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> friends = this.getFriends();
-			if (friends.contains(player))
-				friends.remove(player);
-			SQL_Manager.setFriends(friends, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
-		if (PlayerUtilities.friends.containsKey(this.player))
-			currentFriends = PlayerUtilities.friends.get(this.player);
-		if (currentFriends.contains(player))
-			currentFriends.remove(player);
-		PlayerUtilities.friends.put(this.player, currentFriends);
-	}
-
-	public void addRequest(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> requests = this.getRequests();
-			requests.add(player);
-			SQL_Manager.setRequests(requests, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentRequest = new LinkedList<>();
-		if (PlayerUtilities.requests.containsKey(this.player))
-			currentRequest = PlayerUtilities.requests.get(this.player);
-		if (!currentRequest.contains(player))
-			currentRequest.add(player);
-		PlayerUtilities.requests.put(this.player, currentRequest);
-	}
-
-	public void removeRequest(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> requests = this.getRequests();
-			if (requests.contains(player))
-				requests.remove(player);
-			SQL_Manager.setRequests(requests, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentRequest = new LinkedList<>();
-		if (PlayerUtilities.requests.containsKey(this.player))
-			currentRequest = PlayerUtilities.requests.get(this.player);
-		if (currentRequest.contains(player))
-			currentRequest.remove(player);
-		PlayerUtilities.requests.put(this.player, currentRequest);
-
-	}
-
-	public void addBlocked(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> blocked = this.getBlocked();
-			blocked.add(player);
-			SQL_Manager.setBlocked(blocked, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
-		if (PlayerUtilities.blocked.containsKey(this.player))
-			currentBlocked = PlayerUtilities.blocked.get(this.player);
-		if (!currentBlocked.contains(player))
-			currentBlocked.add(player);
-		PlayerUtilities.blocked.put(this.player, currentBlocked);
-	}
-
-	public void removeBlocked(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			LinkedList<OfflinePlayer> blocked = this.getBlocked();
-			if (blocked.contains(player))
-				blocked.remove(player);
-			SQL_Manager.setBlocked(blocked, this.player);
-			return;
-		}
-		LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
-		if (PlayerUtilities.blocked.containsKey(this.player))
-			currentBlocked = PlayerUtilities.blocked.get(this.player);
-		if (currentBlocked.contains(player))
-			currentBlocked.remove(player);
-		PlayerUtilities.blocked.put(this.player, currentBlocked);
 	}
 
 	public void toggleOption(String option) {
@@ -265,37 +179,35 @@ public class PlayerUtilities {
 	}
 
 	public void saveData(boolean sync) {
-		if (Friends.bungeeMode) {
+		if (Friends.bungeeMode)
 			return;
-		}
 		if (sql) {
-			SQL_Manager.setFriends(this.getFriends(), this.player);
-			SQL_Manager.setRequests(this.getRequests(), this.player);
-			SQL_Manager.setBlocked(this.getBlocked(), this.player);
+			SQL_Manager.set(this.get(0), this.player, "FRIENDS");
+			SQL_Manager.set(this.get(1), this.player, "REQUESTS");
+			SQL_Manager.set(this.get(2), this.player, "BLOCKED");
 			SQL_Manager.setOptions(this.player, this.getOptions());
 			return;
 		}
-		if (PlayerUtilities.friends.containsKey(this.player)) {
-			LinkedList<String> serializedFriends = new LinkedList<>();
-			for (OfflinePlayer randomFriend : PlayerUtilities.friends.get(this.player)) {
-				serializedFriends.add(randomFriend.getUniqueId().toString());
+		if (PlayerUtilities.userdata.containsKey(this.player)) {
+			for (int i = 0; i <= 2; i++) {
+				LinkedList<String> serialized = new LinkedList<>();
+				if (PlayerUtilities.userdata.get(this.player).size() > i) {
+					for (OfflinePlayer random : PlayerUtilities.userdata.get(this.player).get(i)) {
+						serialized.add(random.getUniqueId().toString());
+					}
+				}
+
+				String saveData = "";
+				if (i == 0)
+					saveData = "Friends";
+				if (i == 1)
+					saveData = "Requests";
+				if (i == 2)
+					saveData = "Blocked";
+
+				this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + "." + saveData,
+						serialized);
 			}
-			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Friends", serializedFriends);
-		}
-		if (PlayerUtilities.requests.containsKey(this.player)) {
-			LinkedList<String> serializedRequests = new LinkedList<>();
-			for (OfflinePlayer randomRequest : PlayerUtilities.requests.get(this.player)) {
-				serializedRequests.add(randomRequest.getUniqueId().toString());
-			}
-			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Requests",
-					serializedRequests);
-		}
-		if (PlayerUtilities.blocked.containsKey(this.player)) {
-			LinkedList<String> serializedBlocked = new LinkedList<>();
-			for (OfflinePlayer randomBlocked : PlayerUtilities.blocked.get(this.player)) {
-				serializedBlocked.add(randomBlocked.getUniqueId().toString());
-			}
-			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Blocked", serializedBlocked);
 		}
 		if (PlayerUtilities.options.containsKey(this.player)) {
 			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Options",
@@ -304,84 +216,56 @@ public class PlayerUtilities {
 	}
 
 	public void loadData() {
-		if (Friends.bungeeMode) {
+		if (Friends.bungeeMode)
 			return;
-		}
 		if (sql) {
-			LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
-			if (PlayerUtilities.friends.containsKey(this.player))
-				currentFriends = PlayerUtilities.friends.get(this.player);
-			for (OfflinePlayer players : SQL_Manager.getFriends(this.player)) {
-				if (!currentFriends.contains(players)) {
-					currentFriends.add(players);
-				}
+			String[] values = { "FRIENDS", "REQUESTS", "BLOCKED" };
+			for (int i = 0; i <= 2; i++) {
+				LinkedList<LinkedList<OfflinePlayer>> hash = new LinkedList<>();
+				if (PlayerUtilities.userdata.containsKey(this.player))
+					hash = PlayerUtilities.userdata.get(this.player);
+
+				hash.set(i, SQL_Manager.get(this.player, values[i]));
+				PlayerUtilities.userdata.put(this.player, hash);
 			}
-			PlayerUtilities.friends.put(this.player, currentFriends);
-			LinkedList<OfflinePlayer> currentRequests = new LinkedList<>();
-			if (PlayerUtilities.requests.containsKey(this.player))
-				currentRequests = PlayerUtilities.requests.get(this.player);
-			for (OfflinePlayer players : SQL_Manager.getRequests(this.player)) {
-				if (!currentRequests.contains(players)) {
-					currentRequests.add(players);
-				}
-			}
-			PlayerUtilities.requests.put(this.player, currentRequests);
-			LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
-			if (PlayerUtilities.blocked.containsKey(this.player))
-				currentBlocked = PlayerUtilities.blocked.get(this.player);
-			for (OfflinePlayer players : SQL_Manager.getBlocked(this.player)) {
-				if (!currentBlocked.contains(players)) {
-					currentBlocked.add(players);
-				}
-			}
-			PlayerUtilities.blocked.put(this.player, currentBlocked);
-			LinkedList<String> currentOptions = new LinkedList<>();
-			if (PlayerUtilities.options.containsKey(this.player))
-				currentOptions = PlayerUtilities.options.get(this.player);
-			for (String option : SQL_Manager.getOptions(this.player)) {
-				if (!currentOptions.contains(option)) {
-					currentOptions.add(option);
-				}
-			}
-			PlayerUtilities.options.put(this.player, currentOptions);
 			return;
 		}
-		if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Friends") != null) {
-			LinkedList<OfflinePlayer> currentFriends = new LinkedList<>();
-			if (PlayerUtilities.friends.containsKey(this.player))
-				currentFriends = PlayerUtilities.friends.get(this.player);
-			for (String uuid : this.cfg.getStringList("Players." + this.player.getUniqueId().toString() + ".Friends")) {
-				OfflinePlayer randomFriend = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
-				if (!currentFriends.contains(randomFriend)) {
-					currentFriends.add(randomFriend);
+
+		for (int i = 0; i <= 2; i++) {
+			String saveData = "";
+			if (i == 0)
+				saveData = "Friends";
+			if (i == 1)
+				saveData = "Requests";
+			if (i == 2)
+				saveData = "Blocked";
+
+			if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + "." + saveData) != null) {
+				LinkedList<OfflinePlayer> current = new LinkedList<>();
+				if (PlayerUtilities.userdata.containsKey(this.player)) {
+					LinkedList<LinkedList<OfflinePlayer>> hash = PlayerUtilities.userdata.get(this.player);
+					if (hash.size() > i)
+						current = PlayerUtilities.userdata.get(this.player).get(i);
 				}
-			}
-			PlayerUtilities.friends.put(this.player, currentFriends);
-		}
-		if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Requests") != null) {
-			LinkedList<OfflinePlayer> currentRequests = new LinkedList<>();
-			if (PlayerUtilities.requests.containsKey(this.player))
-				currentRequests = PlayerUtilities.requests.get(this.player);
-			for (String uuid : this.cfg
-					.getStringList("Players." + this.player.getUniqueId().toString() + ".Requests")) {
-				OfflinePlayer randomRequest = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
-				if (!currentRequests.contains(randomRequest)) {
-					currentRequests.add(randomRequest);
+				for (String uuid : this.cfg
+						.getStringList("Players." + this.player.getUniqueId().toString() + "." + saveData)) {
+					OfflinePlayer random = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+					if (!current.contains(random))
+						current.add(random);
 				}
-			}
-			PlayerUtilities.requests.put(this.player, currentRequests);
-		}
-		if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Blocked") != null) {
-			LinkedList<OfflinePlayer> currentBlocked = new LinkedList<>();
-			if (PlayerUtilities.blocked.containsKey(this.player))
-				currentBlocked = PlayerUtilities.blocked.get(this.player);
-			for (String uuid : this.cfg.getStringList("Players." + this.player.getUniqueId().toString() + ".Blocked")) {
-				OfflinePlayer randomBlocked = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
-				if (!currentBlocked.contains(randomBlocked)) {
-					currentBlocked.add(randomBlocked);
+
+				LinkedList<LinkedList<OfflinePlayer>> hash = new LinkedList<>();
+				if (PlayerUtilities.userdata.containsKey(this.player))
+					hash = PlayerUtilities.userdata.get(this.player);
+				if (hash.size() <= i) {
+					while (hash.size() <= i) {
+						hash.add(new LinkedList<OfflinePlayer>());
+					}
 				}
+				hash.set(i, current);
+
+				PlayerUtilities.userdata.put(this.player, hash);
 			}
-			PlayerUtilities.blocked.put(this.player, currentBlocked);
 		}
 		if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Options") != null) {
 			LinkedList<String> currentOptions = new LinkedList<>();

@@ -12,22 +12,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.HyChrod.Friends.Commands.FriendCommands;
 import de.HyChrod.Friends.Listeners.BlockedEditInventoryListener;
-import de.HyChrod.Friends.Listeners.BlockedInventoryListener;
 import de.HyChrod.Friends.Listeners.BungeeMessagingListener;
 import de.HyChrod.Friends.Listeners.ChangeWorldListener;
 import de.HyChrod.Friends.Listeners.ChatListener;
 import de.HyChrod.Friends.Listeners.DamageListener;
 import de.HyChrod.Friends.Listeners.EditInventoryListener;
-import de.HyChrod.Friends.Listeners.InteractListener;
+import de.HyChrod.Friends.Listeners.InventoryUtilListener;
 import de.HyChrod.Friends.Listeners.ItemListener;
-import de.HyChrod.Friends.Listeners.JoinListener;
+import de.HyChrod.Friends.Listeners.JoinQuitListener;
 import de.HyChrod.Friends.Listeners.MainInventoryListener;
 import de.HyChrod.Friends.Listeners.OptionsInventoryListener;
+import de.HyChrod.Friends.Listeners.PageListener;
 import de.HyChrod.Friends.Listeners.PlayerSwapHandItemsListener;
-import de.HyChrod.Friends.Listeners.QuitListener;
 import de.HyChrod.Friends.Listeners.RemoveVerificationInventoryListener;
 import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
-import de.HyChrod.Friends.Listeners.RequestsInventoryListener;
+import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
 import de.HyChrod.Friends.SQL.SQL_Manager;
 import de.HyChrod.Friends.Util.PlayerUtilities;
@@ -89,7 +88,7 @@ public class Friends extends JavaPlugin {
 		}
 
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener(this));
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener());
 		registerClasses();
 
 		if (!UpdateChecker.check() && FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates")) {
@@ -112,14 +111,12 @@ public class Friends extends JavaPlugin {
 	private void registerClasses() {
 		this.getCommand("Friends").setExecutor(new FriendCommands(this));
 
-		this.getServer().getPluginManager().registerEvents(new QuitListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new InventoryUtilListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new MainInventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new OptionsInventoryListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new RequestsInventoryListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new BlockedInventoryListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PageListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new EditInventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new RemoveVerificationInventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new RequestEditInventoryListener(this), this);
@@ -134,6 +131,7 @@ public class Friends extends JavaPlugin {
 		}
 
 		new SQL_Manager();
+		new BungeeSQL_Manager();
 	}
 
 	@Override

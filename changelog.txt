@@ -1,6 +1,10 @@
 v2.3.2
 
   Code improvements
+  For NO BungeeCord Server you now have the posibillity to Show the current world the Player is on under their name in the GUI
+  The admin can see the friendchat of other players by performing "/f toggle spychat" with the permission "- Friends.Commands.SpyChat"
+  You get a optional notification on join to see how many request you have open
+  If a player goes offline the head in the gui will turn into a skeleton to better define who's online and who's offline
 
 v2.2.4
 

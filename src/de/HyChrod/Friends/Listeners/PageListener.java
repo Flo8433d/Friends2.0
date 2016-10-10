@@ -17,13 +17,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
-import de.HyChrod.Friends.Util.Page;
+import de.HyChrod.Friends.Util.InventoryPage;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
 public class PageListener implements Listener {
@@ -38,45 +39,56 @@ public class PageListener implements Listener {
 
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInventoryClick(InventoryClickEvent e) {
+	public void onInventoryClick(InventoryClickEvent e) throws Exception {
 		final Player p = (Player) e.getWhoClicked();
 		if (e.getInventory() != null) {
 			InventoryTypes type = checkInventory(e.getInventory().getTitle());
+			try {
+				type.applyPlayer(p);
+			} catch (NullPointerException ex) {}
+			
 			if (type != null) {
 				e.setCancelled(true);
 				if (e.getCurrentItem() != null) {
 					if (e.getCurrentItem().hasItemMeta()) {
 						if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
-							if (e.getCurrentItem().equals(type.getItems().get(1).getItem())) {
+							
+							if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(1)).getItem())) {
 								PlayerUtilities pu = new PlayerUtilities(p);
 								Inventory inv = p.getOpenInventory().getTopInventory();
 								this.nextPage(p, pu, inv, type);
 								return;
 							}
-							if (e.getCurrentItem().equals(type.getItems().get(2).getItem())) {
+							if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(2)).getItem())) {
 								PlayerUtilities pu = new PlayerUtilities(p);
 
 								if (currentSite.containsKey(p)) {
 									if (currentSite.get(p) > 0) {
 										int page = currentSite.get(p) - 1;
-										new Page(plugin, p, page, pu, type).open(true);
+										new InventoryPage(plugin, p, page, pu, type).open(true);
 										currentSite.put(p, page);
 										return;
 									}
 								}
-								p.sendMessage(plugin.getString("Messages.GUI." + type.getS() + ".FirstPage"));
+								p.sendMessage(plugin.getString("Messages.GUI" + type.getS() + ".FirstPage"));
 								return;
 							}
-							if (e.getCurrentItem().equals(type.getItems().get(3).getItem())) {
-								InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
-								return;
-							}
+							
 							if (e.getCurrentItem().getType().equals(Material.SKULL)
 									|| e.getCurrentItem().getType().equals(Material.SKULL_ITEM)
 											&& !e.getCurrentItem().getItemMeta().getDisplayName()
 													.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+								
 								String friendsName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§3", "")
 										.replace("§c", "");
+								if(type.equals(InventoryTypes.MAIN)) {
+									friendsName = e.getCurrentItem().getItemMeta().getDisplayName()
+											.replace(" §7(§aOnline§7)", "").replace(" §7(§8Offline§7)", "");
+									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));
+									return;
+								}
+								
 								if (type.equals(InventoryTypes.REQUEST)) {
 									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
 									InventoryBuilder.openInv(p, InventoryBuilder.REQUESTEDIT_INVENTORY(p, false));
@@ -89,6 +101,28 @@ public class PageListener implements Listener {
 									currentSite.remove(p);
 								}
 								return;
+							}
+							
+							if(type.getItems().size() >= 5) {
+								
+								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(3)).getItem())) {
+									InventoryBuilder.openInv(p, InventoryBuilder.OPTIONS_INVENTORY(p, false));
+									return;
+								}
+								if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(4)))) {
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, false));
+									return;
+								}
+								if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(5)))) {
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.REQUEST, false));
+									return;
+								}
+								
+							} else {
+								if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(3)).getItem())) {
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+									return;
+								}
 							}
 						}
 					}
@@ -104,10 +138,13 @@ public class PageListener implements Listener {
 		if (title.equals(ChatColor.translateAlternateColorCodes('&',
 				FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title"))))
 			return InventoryTypes.BLOCKED;
+		if(title.equals(ChatColor.translateAlternateColorCodes('&', 
+				FileManager.ConfigCfg.getString("Friends.GUI.Title"))))
+			return InventoryTypes.MAIN;
 		return null;
 	}
 
-	private void nextPage(Player player, PlayerUtilities pu, Inventory inv, InventoryTypes type) {
+	private void nextPage(Player player, PlayerUtilities pu, Inventory inv, InventoryTypes type) throws Exception {
 		int freeSlots = 0;
 		for (int i = 0; i < inv.getSize(); i++) {
 			if (inv.getItem(i) == null) {
@@ -115,13 +152,13 @@ public class PageListener implements Listener {
 			}
 		}
 		if (freeSlots > 0) {
-			player.sendMessage(plugin.getString("Messages.GUI." + type.getS() + ".NoMorePages"));
+			player.sendMessage(plugin.getString("Messages.GUI" + type.getS() + ".NoMorePages"));
 			return;
 		}
 		int page = 1;
 		if (currentSite.containsKey(player))
 			page = currentSite.get(player) + 1;
-		new Page(plugin, player, page, pu, type).open(true);
+		new InventoryPage(plugin, player, page, pu, type).open(true);
 		currentSite.put(player, page);
 	}
 

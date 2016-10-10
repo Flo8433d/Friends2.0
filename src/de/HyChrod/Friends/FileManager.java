@@ -80,7 +80,7 @@ public class FileManager {
 		friends.saveDefaultConfig();
 		FileConfiguration cfg = this.getConfig("", "config.yml");
 
-		if (cfg.getString("Friends.FriendChat.FriendMSG") == null) {
+		if (cfg.getString("Friends.FriendChat.SpyChat.Enable") == null) {
 			try {
 				createBackup(getFile("", "config.yml"));
 			} catch (IOException e) {
@@ -108,10 +108,19 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.Commands.Reload.Reloaded") == null) {
+		if (cfg.getString("Messages.RequestNotification") == null) {
 			try {
 				createBackup(file);
-				cfg.set("Messages.Commands.Reload.Reloaded", "%PREFIX% &aThe plugin was successfully reloaded!");
+				cfg.set("Messages.Commands.Help.Page1.6", "%PREFIX% &3/f msg <Player> <Message> &f| Send a message");
+				cfg.set("Messages.Commands.Help.Page1.7", "%PREFIX% &c------------------------------------------");
+				cfg.set("Messages.Commands.Help.Page1.8", "%PREFIX% &3More Commands --> /f help 2");
+				cfg.set("Messages.Commands.Help.Page1.9", "%PREFIX% &c------------------------------------------");
+				cfg.set("Messages.Commands.Help.Page2.5", "%PREFIX% &3/f toggle spychat &f| Toggle spychat");
+				cfg.set("Messages.Commands.Help.Page2.6", "%PREFIX% &3/f list &f| See your friends");
+				cfg.set("Messages.Commands.Help.Page2.7", "%PREFIX% &3/f jump <Player> &f| Jump to a friend");
+				cfg.set("Messages.Commands.Toggle.ToggleSpyChat.Toggle", "%PREFIX% &aYou toggled spychat!");
+				cfg.set("Messages.Commands.Toggle.ToggleSpyChat.Disabled", "%PREFIX% &cThe spychat is disabled on this server!");
+				cfg.set("Messages.RequestNotification", "%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();

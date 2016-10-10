@@ -6,6 +6,8 @@
 */
 package de.HyChrod.Friends.Listeners;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -44,6 +46,9 @@ public class JoinQuitListener implements Listener {
 
 			}
 		}
+		
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.RequestNotification") && !pu.get(1).isEmpty())
+			p.sendMessage(plugin.getString("Messages.RequestNotification").replace("%REQUESTS%", String.valueOf(pu.get(1).size())));
 
 		if (FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
 			if (p.getInventory()
@@ -83,10 +88,11 @@ public class JoinQuitListener implements Listener {
 			BungeeSQL_Manager.set(p, 1, "ONLINE");
 			return;
 		}
-		for (OfflinePlayer player : pu.get(0)) {
+		for (String uuid : pu.get(0)) {
+			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.getOptions().contains("option_noChat")) {
+				if (!puT.get(3).contains("option_noChat")) {
 					Bukkit.getPlayer(player.getUniqueId())
 							.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
 				}
@@ -106,10 +112,11 @@ public class JoinQuitListener implements Listener {
 		pu.setLastOnline(System.currentTimeMillis());
 		pu.saveData(false);
 
-		for (OfflinePlayer player : pu.get(0)) {
+		for (String uuid : pu.get(0)) {
+			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.getOptions().contains("option_noChat")) {
+				if (!puT.get(3).contains("option_noChat")) {
 					Bukkit.getPlayer(player.getUniqueId())
 							.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
 				}

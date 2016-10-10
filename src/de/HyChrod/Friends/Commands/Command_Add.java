@@ -48,23 +48,23 @@ public class Command_Add {
 		PlayerUtilities puP = new PlayerUtilities(p);
 		PlayerUtilities puT = new PlayerUtilities(toAdd);
 
-		if (puT.get(0).contains(p)) {
+		if (puT.get(0).contains(p.getUniqueId().toString())) {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.AlreadyFriends"));
 			return false;
 		}
-		if (puT.get(1).contains(p)) {
+		if (puT.get(1).contains(p.getUniqueId().toString())) {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.AlreadyRequested"));
 			return false;
 		}
-		if (puT.get(2).contains(p)) {
+		if (puT.get(2).contains(p.getUniqueId().toString())) {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.Blocked.ToAdd"));
 			return false;
 		}
-		if (puP.get(2).contains(toAdd)) {
+		if (puP.get(2).contains(toAdd.getUniqueId().toString())) {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.Blocked.Requester"));
 			return false;
 		}
-		if (puT.getOptions().contains("option_noRequests")) {
+		if (puT.get(3).contains("option_noRequests")) {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.NoRequests"));
 			return false;
 		}
@@ -82,7 +82,7 @@ public class Command_Add {
 				return false;
 			}
 		}
-		puT.update(p, 1, true);
+		puT.update(p.getUniqueId().toString(), 1, true);
 		if (Friends.bungeeMode) {
 			Bukkit.getScheduler().runTaskLaterAsynchronously(Friends.getInstance(), new Runnable() {
 				public void run() {

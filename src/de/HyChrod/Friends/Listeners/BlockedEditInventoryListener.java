@@ -34,7 +34,7 @@ public class BlockedEditInventoryListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInventoryClick(InventoryClickEvent e) {
+	public void onInventoryClick(InventoryClickEvent e) throws Exception {
 		final Player p = (Player) e.getWhoClicked();
 		if (e.getInventory() != null) {
 			if (editing.containsKey(p)) {
@@ -48,7 +48,7 @@ public class BlockedEditInventoryListener implements Listener {
 							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								if (e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.update(editing.get(p), 2, false);
+									pu.update(editing.get(p).getUniqueId().toString(), 2, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Unblock.Unblock")
 											.replace("%PLAYER%", editing.get(p).getName()));
 									InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, true);

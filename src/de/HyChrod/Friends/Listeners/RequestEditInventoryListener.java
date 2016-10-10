@@ -35,7 +35,7 @@ public class RequestEditInventoryListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInventoryClick(InventoryClickEvent e) {
+	public void onInventoryClick(InventoryClickEvent e) throws Exception {
 		final Player p = (Player) e.getWhoClicked();
 		if (e.getInventory() != null) {
 
@@ -74,9 +74,9 @@ public class RequestEditInventoryListener implements Listener {
 										}
 									}
 
-									puP.update(inEdit, 0, true);
-									puT.update(p, 0, true);
-									puP.update(inEdit, 1, false);
+									puP.update(inEdit.getUniqueId().toString(), 0, true);
+									puT.update(p.getUniqueId().toString(), 0, true);
+									puP.update(inEdit.getUniqueId().toString(), 1, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter")
 											.replace("%PLAYER%", inEdit.getName()));
 									if (Friends.bungeeMode && !inEdit.isOnline()) {
@@ -93,7 +93,7 @@ public class RequestEditInventoryListener implements Listener {
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_DENY.getItem())) {
-									puP.update(inEdit, 1, false);
+									puP.update(inEdit.getUniqueId().toString(), 1, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Deny.Deny.Denier")
 											.replace("%PLAYER%", inEdit.getName()));
 									if (Friends.bungeeMode && !inEdit.isOnline()) {
@@ -110,17 +110,17 @@ public class RequestEditInventoryListener implements Listener {
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BLOCK.getItem())) {
-									if (inEdit.isOnline() && puP.get(0).contains(inEdit)) {
+									if (inEdit.isOnline() && puP.get(0).contains(inEdit.getUniqueId().toString())) {
 										Bukkit.getPlayer(inEdit.getUniqueId())
 												.sendMessage(plugin.getString("Messages.Commands.Block.Block.ToBlock")
 														.replace("%PLAYER%", p.getName()));
 									}
 
-									puP.update(inEdit, 2, true);
-									puP.update(inEdit, 0, false);
-									puP.update(inEdit, 1, false);
-									puT.update(p, 0, false);
-									puT.update(p, 1, false);
+									puP.update(inEdit.getUniqueId().toString(), 2, true);
+									puP.update(inEdit.getUniqueId().toString(), 0, false);
+									puP.update(inEdit.getUniqueId().toString(), 1, false);
+									puT.update(p.getUniqueId().toString(), 0, false);
+									puT.update(p.getUniqueId().toString(), 1, false);
 
 									p.sendMessage(plugin.getString("Messages.Commands.Block.Block.Blocker")
 											.replace("%PLAYER%", inEdit.getName()));

@@ -21,6 +21,7 @@ import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.Util.InventoryBuilder;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
@@ -57,7 +58,7 @@ public class EditInventoryListener implements Listener {
 
 									if (Friends.bungeeMode) {
 
-										if (puT.getOptions().contains("option_noJumping")) {
+										if (puT.get(3).contains("option_noJumping")) {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.Disabled"));
 											return;
 										}
@@ -73,7 +74,7 @@ public class EditInventoryListener implements Listener {
 										p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										return;
 									}
-									if (puT.getOptions().contains("option_noJumping")) {
+									if (puT.get(3).contains("option_noJumping")) {
 										p.sendMessage(plugin.getString("Messages.Commands.Jumping.Disabled"));
 										return;
 									}
@@ -94,8 +95,8 @@ public class EditInventoryListener implements Listener {
 										return;
 									}
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.update(editPlayer, 0, false);
-									puT.update(p, 0, false);
+									pu.update(editPlayer.getUniqueId().toString(), 0, false);
+									puT.update(p.getUniqueId().toString(), 0, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover")
 											.replace("%PLAYER%", editPlayer.getName()));
 									if (Friends.bungeeMode && !editPlayer.isOnline()) {
@@ -108,11 +109,11 @@ public class EditInventoryListener implements Listener {
 												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
 														.replace("%PLAYER%", p.getName()));
 									}
-									InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.EDIT_BACK.getItem())) {
-									InventoryBuilder.openInv(p, InventoryBuilder.MAIN_INVENTORY(plugin, p, false));
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
 									return;
 								}
 							}

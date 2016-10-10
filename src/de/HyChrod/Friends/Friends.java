@@ -20,7 +20,6 @@ import de.HyChrod.Friends.Listeners.EditInventoryListener;
 import de.HyChrod.Friends.Listeners.InventoryUtilListener;
 import de.HyChrod.Friends.Listeners.ItemListener;
 import de.HyChrod.Friends.Listeners.JoinQuitListener;
-import de.HyChrod.Friends.Listeners.MainInventoryListener;
 import de.HyChrod.Friends.Listeners.OptionsInventoryListener;
 import de.HyChrod.Friends.Listeners.PageListener;
 import de.HyChrod.Friends.Listeners.PlayerSwapHandItemsListener;
@@ -46,6 +45,7 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.Toggle.Chat
  * Friends.Commands.Toggle.Msg
  * Friends.Commands.Toggle.Jumping
+ * Friends.Commands.SpyChat (/f toggle spychat)
  * Friends.Commands.List
  * Friends.Commands.Jump
  * Friends.Commands.Msg
@@ -114,7 +114,6 @@ public class Friends extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new InventoryUtilListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new MainInventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new OptionsInventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PageListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new EditInventoryListener(this), this);

@@ -19,12 +19,8 @@ import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
 
 public class InventoryBuilder {
 
-	public static Inventory MAIN_INVENTORY(Friends plugin, Player p, boolean open) {
-		return new InventoryPage(plugin, p, 0, new PlayerUtilities(p)).open(open);
-	}
-
 	public static Inventory INVENTORY(Friends plugin, Player p, InventoryTypes type, boolean open) {
-		return new Page(plugin, p, 0, new PlayerUtilities(p), type).open(open);
+		return new InventoryPage(plugin, p, 0, new PlayerUtilities(p), type).open(open);
 	}
 
 	public static Inventory OPTIONS_INVENTORY(Player p, boolean open) {
@@ -45,18 +41,18 @@ public class InventoryBuilder {
 			inv.setItem(ItemStacks.OPTIONS_PRIVATEMESSAGES.getInvSlot() - 1,
 					ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")
-					- 1, ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noMsg", "§d"));
+					- 1, ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noMsg", "§d"));
 		}
 		if (FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
 			inv.setItem(ItemStacks.OPTIONS_JUMPING.getInvSlot() - 1, ItemStacks.OPTIONS_JUMPING.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsJumping.ButtonInventorySlot") - 1,
-					ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noJumping", "§c"));
+					ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noJumping", "§c"));
 		}
 
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsRequestsItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noRequests", "§a"));
+				ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noRequests", "§a"));
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.getOptions(), "option_noChat", "§b"));
+				ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noChat", "§b"));
 
 		if (open)
 			p.openInventory(inv);

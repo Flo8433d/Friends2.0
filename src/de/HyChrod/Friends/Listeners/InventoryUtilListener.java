@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 
 public class InventoryUtilListener implements Listener {
@@ -41,7 +42,7 @@ public class InventoryUtilListener implements Listener {
 									.equals(ChatColor.translateAlternateColorCodes('&',
 											FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")))
 									|| e.getItem().equals(ItemStacks.FRIENDITEM(((Player) e.getPlayer())))) {
-								InventoryBuilder.MAIN_INVENTORY(plugin, p, true);
+								InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
 								return;
 							}
 						}
@@ -71,18 +72,14 @@ public class InventoryUtilListener implements Listener {
 										EditInventoryListener.editing.get(p).getName()))))
 					EditInventoryListener.editing.remove(p);
 			}
-			if (MainInventoryListener.currentSite.containsKey(p)) {
-				if (e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-						FileManager.ConfigCfg.getString("Friends.GUI.Title")))) {
-					MainInventoryListener.currentSite.remove(p);
-				}
-			}
 			if (PageListener.currentSite.containsKey(p)) {
 				if (e.getInventory().getTitle()
 						.equals(ChatColor.translateAlternateColorCodes('&',
 								FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.Title")))
 						|| e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&',
-								FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title"))))
+								FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.Title")))
+						|| e.getInventory().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
+								FileManager.ConfigCfg.getString("Friends.GUI.Title"))))
 					PageListener.currentSite.remove(p);
 			}
 			if (RemoveVerificationInventoryListener.confirming.containsKey(p)) {

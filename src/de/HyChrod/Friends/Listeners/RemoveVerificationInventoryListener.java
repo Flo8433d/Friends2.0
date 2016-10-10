@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
@@ -53,8 +54,8 @@ public class RemoveVerificationInventoryListener implements Listener {
 								}
 								if (e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.update(toConfirm, 0, false);
-									puT.update(p, 0, false);
+									pu.update(toConfirm.getUniqueId().toString(), 0, false);
+									puT.update(p.getUniqueId().toString(), 0, false);
 									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover")
 											.replace("%PLAYER%", toConfirm.getName()));
 									if (Friends.bungeeMode && !toConfirm.isOnline()) {
@@ -67,7 +68,7 @@ public class RemoveVerificationInventoryListener implements Listener {
 												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
 														.replace("%PLAYER%", p.getName()));
 									}
-									InventoryBuilder.MAIN_INVENTORY(plugin, p, true);
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
 									return;
 								}
 							}

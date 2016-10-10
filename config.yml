@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 2.2.4 	#
+#    Plugin made by HyChrod, Version: 2.3.2 	#
 #												#
 #################################################
 Friends:
@@ -13,6 +13,13 @@ Friends:
     Code: "@friends"
     # This allows players to send private messages to their friends using command '/f msg <Player> <Message>'!
     FriendMSG: true
+    # If this is enabled player with special permissions are able to see the friendchat of other players
+    # This can be used to control the friendchat by admins
+    # Permission:
+    # - Friends.Commands.SpyChat
+    SpyChat:
+      Enable: true
+      Format: "&3%PLAYER% &6[FRIENDCHAT] &f| %MESSAGE%"
   
   # This options is for server networks and enables BungeeCord
   # To use BungeeMode you have to install "Friends - BungeeAddon" on your Proxi too
@@ -47,6 +54,14 @@ Friends:
     CanMoveItem: false
     # If this is enabled you have to confirm twice to remove a player from your friendlist!
     RemoveVerification: false
+    # If this is enabled the world the player is currently on will be shown under their name in the GUI!
+    # This only works if BungeeMode is disabled!
+    # If this is enabled the player gets notified on join if he has open friend requests
+    # The message can be changed in the messages.yml!
+    RequestNotification: true
+    ShowWorld:
+      Enable: true
+      Lore: "&3World: &f%WORLD%"
     LastOnline:
       Enable: true
       # Values: %days% %hours% %minutes% %seconds%
@@ -71,6 +86,9 @@ Friends:
     # Available sizes are: 9, 18, 27, 36, 45, 54!
     # WARNING! If you use another number as above, the gui will not work!!
     InventorySize: 54
+    FriendHead:
+      # If this is enabled the players head in your friend-inventory will change to a skeleton if he turns offline!
+      ChangeHeadIfOffline: true
     RequestsItem:
       Name: "&aCurrent Requests &7(&c%REQUESTS%&7)"
       ItemID: "388:0"
@@ -388,7 +406,7 @@ Friends:
   
 #################################################
 #												#
-#	You are not authorized to sell this Plugin	#
+#	You are not authorized to sell this plugin	#
 #	All rights reserved by HyChrod, 2016.		#
 #												#
 #################################################

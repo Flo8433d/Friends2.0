@@ -53,20 +53,20 @@ public class RequestEditInventoryListener implements Listener {
 								PlayerUtilities puT = new PlayerUtilities(inEdit);
 								PlayerUtilities puP = new PlayerUtilities(p);
 								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_ACCEPT.getItem())) {
-									if (puP.get(0).size() > FileManager.ConfigCfg
+									if (puP.get(0, true).size() > FileManager.ConfigCfg
 											.getInt("Friends.Options.FriendLimit")) {
 										if (!p.hasPermission("Friends.ExtraFriends")
-												|| puP.get(0).size() > FileManager.ConfigCfg
+												|| puP.get(0, true).size() > FileManager.ConfigCfg
 														.getInt("Friends.Options.FriendLimit+")) {
 											p.sendMessage(
 													plugin.getString("Messages.Commands.Accept.LimitReached.Accepter"));
 											return;
 										}
 									}
-									if (puT.get(0).size() > FileManager.ConfigCfg
+									if (puT.get(0, true).size() > FileManager.ConfigCfg
 											.getInt("Friends.Options.FriendLimit")) {
 										if (!p.hasPermission("Friends.ExtraFriends")
-												|| puT.get(0).size() > FileManager.ConfigCfg
+												|| puT.get(0, true).size() > FileManager.ConfigCfg
 														.getInt("Friends.Options.FriendLimit+")) {
 											p.sendMessage(plugin
 													.getString("Messages.Commands.Accept.LimitReached.Requester"));
@@ -110,7 +110,7 @@ public class RequestEditInventoryListener implements Listener {
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_BLOCK.getItem())) {
-									if (inEdit.isOnline() && puP.get(0).contains(inEdit.getUniqueId().toString())) {
+									if (inEdit.isOnline() && puP.get(0, false).contains(inEdit.getUniqueId().toString())) {
 										Bukkit.getPlayer(inEdit.getUniqueId())
 												.sendMessage(plugin.getString("Messages.Commands.Block.Block.ToBlock")
 														.replace("%PLAYER%", p.getName()));

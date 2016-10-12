@@ -6,7 +6,9 @@
 */
 package de.HyChrod.Friends.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -66,7 +68,7 @@ public enum ItemStacks {
 		if(name == null) {this.name = "§r";} else {
 			this.name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(name));
 		}
-		if(lore == null) {this.lore = null;} else {
+		if(lore == null) {this.lore = new ArrayList<>();} else {
 			this.lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(lore)).split("//"));
 		}
 		this.itemID = FileManager.ConfigCfg.getString(id).split(":");
@@ -142,11 +144,15 @@ public enum ItemStacks {
 		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
 	}
 	
-	public static ItemStack OPTIONSBUTTON(List<String> options, String option, String code) {
+	public static ItemStack OPTIONSBUTTON(LinkedList<Object> linkedList, String option, String code) {
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.ItemID").split(":");
 		String name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Name"));
-		List<String> lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
-		if(options.contains(option)) {
+		List<String> lore = new ArrayList<>();
+		if(FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore") != null 
+				&& !FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore").equalsIgnoreCase("")) {
+			lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
+		}
+		if(linkedList.contains(option)) {
 			IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
 			name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
 		}

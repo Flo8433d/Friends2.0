@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
+import de.HyChrod.Friends.SQL.MySQL;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
@@ -46,9 +47,11 @@ public class JoinQuitListener implements Listener {
 
 			}
 		}
-		
-		if(FileManager.ConfigCfg.getBoolean("Friends.Options.RequestNotification") && !pu.get(1).isEmpty())
-			p.sendMessage(plugin.getString("Messages.RequestNotification").replace("%REQUESTS%", String.valueOf(pu.get(1).size())));
+
+		if (FileManager.ConfigCfg.getBoolean("Friends.Options.RequestNotification") && !pu.get(1, true).isEmpty()) {
+			p.sendMessage(plugin.getString("Messages.RequestNotification").replace("%REQUESTS%",
+					String.valueOf(pu.get(1, true).size())));
+		}
 
 		if (FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
 			if (p.getInventory()
@@ -88,11 +91,11 @@ public class JoinQuitListener implements Listener {
 			BungeeSQL_Manager.set(p, 1, "ONLINE");
 			return;
 		}
-		for (String uuid : pu.get(0)) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+		for (Object uuid : pu.get(0, true)) {
+			OfflinePlayer player = getPlayerByObject(uuid);
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.get(3).contains("option_noChat")) {
+				if (!puT.get(3, false).contains("option_noChat")) {
 					Bukkit.getPlayer(player.getUniqueId())
 							.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
 				}
@@ -112,16 +115,20 @@ public class JoinQuitListener implements Listener {
 		pu.setLastOnline(System.currentTimeMillis());
 		pu.saveData(false);
 
-		for (String uuid : pu.get(0)) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+		for (Object uuid : pu.get(0, true)) {
+			OfflinePlayer player = getPlayerByObject(uuid);
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.get(3).contains("option_noChat")) {
+				if (!puT.get(3, false).contains("option_noChat")) {
 					Bukkit.getPlayer(player.getUniqueId())
 							.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
 				}
 			}
 		}
+	}
+	
+	public OfflinePlayer getPlayerByObject(Object obj) {
+		return MySQL.isConnected() ? ((OfflinePlayer)obj) : Bukkit.getOfflinePlayer(UUID.fromString(((String)obj)));
 	}
 
 }

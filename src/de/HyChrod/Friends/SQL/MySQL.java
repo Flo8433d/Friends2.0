@@ -56,7 +56,9 @@ public class MySQL {
 		if (isConnected()) {
 			try {
 				con.close();
+				con = null;
 			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}

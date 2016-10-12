@@ -41,28 +41,28 @@ public class OptionsInventoryListener implements Listener {
 						if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 							PlayerUtilities pu = new PlayerUtilities(p);
 							if (e.getCurrentItem().getItemMeta().getDisplayName()
-									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noRequests", "§a")
+									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noRequests", "§a")
 											.getItemMeta().getDisplayName())) {
 								pu.toggleOption("option_noRequests");
 								this.reOpenInv(p);
 								return;
 							}
 							if (e.getCurrentItem().getItemMeta().getDisplayName()
-									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noChat", "§b")
+									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noChat", "§b")
 											.getItemMeta().getDisplayName())) {
 								pu.toggleOption("option_noChat");
 								this.reOpenInv(p);
 								return;
 							}
 							if (e.getCurrentItem().getItemMeta().getDisplayName()
-									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noJumping", "§c")
+									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noJumping", "§c")
 											.getItemMeta().getDisplayName())) {
 								pu.toggleOption("option_noJumping");
 								this.reOpenInv(p);
 								return;
 							}
 							if (e.getCurrentItem().getItemMeta().getDisplayName()
-									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noMsg", "§d")
+									.equals(ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d")
 											.getItemMeta().getDisplayName())) {
 								pu.toggleOption("option_noMsg");
 								this.reOpenInv(p);

@@ -28,9 +28,8 @@ public class BungeeMessagingListener implements PluginMessageListener {
 
 	@Override
 	public synchronized void onPluginMessageReceived(String channel, Player player, byte[] message) {
-		if (!channel.equals("BungeeCord")) {
-			return;
-		}
+		if (!channel.equals("BungeeCord"))
+				return;
 
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subchannel = in.readUTF();
@@ -80,10 +79,7 @@ public class BungeeMessagingListener implements PluginMessageListener {
 	}
 
 	public static boolean isOnline(OfflinePlayer player) {
-		if (Friends.bungeeMode) {
-			return BungeeSQL_Manager.isOnline(player);
-		}
-		return player.isOnline();
+		return Friends.bungeeMode ? BungeeSQL_Manager.isOnline(player) : player.isOnline();
 	}
 
 	public static void sendToBungeeCord(Player p, String first, String second, String third) {

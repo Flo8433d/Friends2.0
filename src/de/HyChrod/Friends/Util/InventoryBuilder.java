@@ -41,18 +41,18 @@ public class InventoryBuilder {
 			inv.setItem(ItemStacks.OPTIONS_PRIVATEMESSAGES.getInvSlot() - 1,
 					ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")
-					- 1, ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noMsg", "§d"));
+					- 1, ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d"));
 		}
 		if (FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
 			inv.setItem(ItemStacks.OPTIONS_JUMPING.getInvSlot() - 1, ItemStacks.OPTIONS_JUMPING.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsJumping.ButtonInventorySlot") - 1,
-					ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noJumping", "§c"));
+					ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noJumping", "§c"));
 		}
 
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsRequestsItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noRequests", "§a"));
+				ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noRequests", "§a"));
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.get(3), "option_noChat", "§b"));
+				ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noChat", "§b"));
 
 		if (open)
 			p.openInventory(inv);
@@ -107,8 +107,7 @@ public class InventoryBuilder {
 						FileManager.ConfigCfg.getString("Friends.GUI.RequestEditInv.Title").replace("%PLAYER%",
 								RequestEditInventoryListener.editing.get(p).getName())));
 
-		for (String placeholder : FileManager.ConfigCfg
-				.getStringList("Friends.GUI.RequestEditInv.PlaceholderItems.ItemID")) {
+		for (String placeholder : FileManager.ConfigCfg.getStringList("Friends.GUI.RequestEditInv.PlaceholderItems.InventorySlots")) {
 			inv.setItem(Integer.valueOf(placeholder) - 1, ItemStacks.REQUESTS_EDIT_PLACEHOLDER.getItem());
 		}
 		inv.setItem(ItemStacks.REQUEST_EDIT_ACCEPT.getInvSlot() - 1, ItemStacks.REQUEST_EDIT_ACCEPT.getItem());

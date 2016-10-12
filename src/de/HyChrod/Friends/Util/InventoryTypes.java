@@ -20,7 +20,7 @@ public enum InventoryTypes {
 	private String s;
 	private String color;
 	private LinkedList<Object> items = new LinkedList<>();
-	private LinkedList<String> get = new LinkedList<>();
+	private LinkedList<Object> get = new LinkedList<>();
 
 	InventoryTypes(String s) {
 		this.s = s;
@@ -62,10 +62,10 @@ public enum InventoryTypes {
 	public void applyPlayer(Player player) {
 		if(s != null) {
 			if (s.equals(".RequestsInv")) {
-				get = new PlayerUtilities(player).get(1);
+				get = new PlayerUtilities(player).get(1, true);
 			}
 			if (s.equals(".BlockedInv")) {
-				get = new PlayerUtilities(player).get(2);
+				get = new PlayerUtilities(player).get(2, true);
 			}
 			if (s.equals("")) {
 				PlayerUtilities pu = new PlayerUtilities(player);
@@ -74,15 +74,15 @@ public enum InventoryTypes {
 					while(items.size() <= 5)
 						items.add(new ItemStack(Material.WOOD));
 				}
-				items.set(4, ItemStacks.MAIN_BLOCKED(pu.get(2).size()));
-				items.set(5, ItemStacks.MAIN_REQUESTS(pu.get(1).size()));
-				get = new PlayerUtilities(player).get(0);
+				items.set(4, ItemStacks.MAIN_BLOCKED(pu.get(2, true).size()));
+				items.set(5, ItemStacks.MAIN_REQUESTS(pu.get(1, true).size()));
+				get = new PlayerUtilities(player).get(0, true);
 			}
 			return;
 		}
 	}
 
-	public LinkedList<String> getGet() {
+	public LinkedList<Object> getGet() {
 		return get;
 	}
 

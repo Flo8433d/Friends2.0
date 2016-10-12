@@ -27,7 +27,7 @@ public class PlayerUtilities {
 	public boolean sql = false;
 
 	private static String[] values = { "FRIENDS", "REQUESTS", "BLOCKED", "OPTIONS" };
-	private static HashMap<OfflinePlayer, LinkedList<LinkedList<String>>> userdata = new HashMap<>();
+	private static HashMap<OfflinePlayer, LinkedList<LinkedList<Object>>> userdata = new HashMap<>();
 
 	public PlayerUtilities(OfflinePlayer player) {
 		this.player = player;
@@ -47,14 +47,13 @@ public class PlayerUtilities {
 		}
 	}
 
-	public LinkedList<String> get(Integer i) {
-		if (Friends.bungeeMode) {
-			return SQL_Manager.get(this.player.getUniqueId().toString(), values[i]);
-		}
+	public LinkedList<Object> get(Integer i, boolean players) {
+		if (Friends.bungeeMode) 
+			return SQL_Manager.get(this.player.getUniqueId().toString(), values[i], players);
 
-		LinkedList<String> current = new LinkedList<>();
+		LinkedList<Object> current = new LinkedList<>();
 		if (PlayerUtilities.userdata.containsKey(this.player)) {
-			LinkedList<LinkedList<String>> hash = PlayerUtilities.userdata.get(this.player);
+			LinkedList<LinkedList<Object>> hash = PlayerUtilities.userdata.get(this.player);
 			if (hash.size() > i)
 				current = PlayerUtilities.userdata.get(this.player).get(i);
 		}
@@ -62,7 +61,7 @@ public class PlayerUtilities {
 	}
 
 	public void update(String obj, Integer i, boolean add) {
-		LinkedList<String> current = this.get(i);
+		LinkedList<Object> current = this.get(i, false);
 
 		if (current.contains(obj) && !add)
 			current.remove(obj);
@@ -74,12 +73,12 @@ public class PlayerUtilities {
 			return;
 		}
 
-		LinkedList<LinkedList<String>> hash = new LinkedList<>();
+		LinkedList<LinkedList<Object>> hash = new LinkedList<>();
 		if (PlayerUtilities.userdata.containsKey(this.player))
 			hash = PlayerUtilities.userdata.get(this.player);
 		if (hash.size() <= i) {
 			while (hash.size() <= i) {
-				hash.add(new LinkedList<String>());
+				hash.add(new LinkedList<Object>());
 			}
 		}
 		hash.set(i, current);
@@ -87,7 +86,7 @@ public class PlayerUtilities {
 	}
 
 	public void toggleOption(String option) {
-		LinkedList<String> currentOptions = this.get(3);
+		LinkedList<Object> currentOptions = this.get(3, false);
 		if (currentOptions.contains(option)) {
 			this.update(option, 3, false);
 			return;
@@ -97,23 +96,16 @@ public class PlayerUtilities {
 	}
 
 	public void setLastOnline(Long timestamp) {
-		if (sql) {
+		if (sql)
 			SQL_Manager.setLastOnline(this.player.getUniqueId().toString(), System.currentTimeMillis());
-			return;
-		}
-		this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".LastOnline",
-				System.currentTimeMillis());
-		return;
+		else
+			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".LastOnline", System.currentTimeMillis());
 	}
 
 	public Long getLastOnline() {
-		if (sql) {
-			return SQL_Manager.getLastOnline(this.player.getUniqueId().toString());
-		}
-		if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".LastOnline") != null) {
-			return this.cfg.getLong("Players." + this.player.getUniqueId().toString() + ".LastOnline");
-		}
-		return (long) 0;
+		return sql ? SQL_Manager.getLastOnline(this.player.getUniqueId().toString()) 
+				: (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".LastOnline") != null)
+				? this.cfg.getLong("Players." + this.player.getUniqueId().toString() + ".LastOnline") : (long) 0;
 	}
 
 	public static int[] getLastOnline(Long value) {
@@ -157,12 +149,12 @@ public class PlayerUtilities {
 			return;
 		if (sql) {
 			for (int i = 0; i <= 3; i++)
-				SQL_Manager.set(this.get(i), this.player.getUniqueId().toString(), values[i]);
+				SQL_Manager.set(this.get(i, false), this.player.getUniqueId().toString(), values[i]);
 			return;
 		}
 		if (PlayerUtilities.userdata.containsKey(this.player)) {
 			for (int i = 0; i <= 3; i++) {
-				LinkedList<String> serialized = new LinkedList<>();
+				LinkedList<Object> serialized = new LinkedList<>();
 				if (PlayerUtilities.userdata.get(this.player).size() > i) {
 					serialized = PlayerUtilities.userdata.get(this.player).get(i);
 				}
@@ -177,15 +169,15 @@ public class PlayerUtilities {
 			return;
 		if (sql) {
 			for (int i = 0; i <= 3; i++) {
-				LinkedList<LinkedList<String>> hash = new LinkedList<>();
+				LinkedList<LinkedList<Object>> hash = new LinkedList<>();
 				if (PlayerUtilities.userdata.containsKey(this.player))
 					hash = PlayerUtilities.userdata.get(this.player);
 				if (hash.size() <= i) {
 					while (hash.size() <= i) {
-						hash.add(new LinkedList<String>());
+						hash.add(new LinkedList<Object>());
 					}
 				}
-				hash.set(i, SQL_Manager.get(this.player.getUniqueId().toString(), values[i]));
+				hash.set(i, SQL_Manager.get(this.player.getUniqueId().toString(), values[i], false));
 				PlayerUtilities.userdata.put(this.player, hash);
 			}
 			return;
@@ -193,9 +185,9 @@ public class PlayerUtilities {
 
 		for (int i = 0; i <= 3; i++) {
 			if (this.cfg.getString("Players." + this.player.getUniqueId().toString() + "." + values[i]) != null) {
-				LinkedList<String> current = new LinkedList<>();
+				LinkedList<Object> current = new LinkedList<>();
 				if (PlayerUtilities.userdata.containsKey(this.player)) {
-					LinkedList<LinkedList<String>> hash = PlayerUtilities.userdata.get(this.player);
+					LinkedList<LinkedList<Object>> hash = PlayerUtilities.userdata.get(this.player);
 					if (hash.size() > i)
 						current = PlayerUtilities.userdata.get(this.player).get(i);
 				}
@@ -205,12 +197,12 @@ public class PlayerUtilities {
 						current.add(uuid);
 				}
 
-				LinkedList<LinkedList<String>> hash = new LinkedList<>();
+				LinkedList<LinkedList<Object>> hash = new LinkedList<>();
 				if (PlayerUtilities.userdata.containsKey(this.player))
 					hash = PlayerUtilities.userdata.get(this.player);
 				if (hash.size() <= i) {
 					while (hash.size() <= i) {
-						hash.add(new LinkedList<String>());
+						hash.add(new LinkedList<Object>());
 					}
 				}
 				hash.set(i, current);

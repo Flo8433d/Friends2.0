@@ -28,6 +28,7 @@ import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
 import de.HyChrod.Friends.SQL.SQL_Manager;
+import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
 
@@ -50,6 +51,7 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.Jump
  * Friends.Commands.Msg
  * Friends.Commands.Reload
+ * Friends.Commands.Acceptall
  * 
  */
 public class Friends extends JavaPlugin {
@@ -99,6 +101,7 @@ public class Friends extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(this.prefix + " §aPlugin was loaded successfully!");
 		if (MySQL.isConnected()) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §2MySQL");
+			new AsyncMySQLReconnecter();
 		} else {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §3FlatFile");
 		}

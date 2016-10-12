@@ -12,7 +12,7 @@ Messages:
         3: "%PREFIX% &3/f block <Player> &f| Blocks a player"
         4: "%PREFIX% &3/f accept <Player> &f|Accepts a request"
         5: "%PREFIX% &3/f deny <Player> &f| Deny a request"
-        6: "%PREFIX% &3/f msg <Player> <Message> &f| Send a message"
+        6: "%PREFIX% &3/f acceptall &f| Accepts all requests"
         7: "%PREFIX% &c------------------------------------------"
         8: "%PREFIX% &3More Commands --> /f help 2"
         9: "%PREFIX% &c------------------------------------------"
@@ -24,9 +24,15 @@ Messages:
         4: "%PREFIX% &3/f toggle jumping &f| Toggle jumping"
         5: "%PREFIX% &3/f toggle spychat &f| Toggle spychat"
         6: "%PREFIX% &3/f list &f| See your friends"
-        7: "%PREFIX% &3/f jump <Player> &f| Jump to a friend"
-        8: "%PREFIX% &3/f info &f| See some informations"
+        7: "%PREFIX% &c------------------------------------------"
+        8: "%PREFIX% &3More Commands --> /f help 3"
         9: "%PREFIX% &c------------------------------------------"
+      Page3:
+        0: "%PREFIX% &c[&6Page3&c]------------------------------------"
+        1: "%PREFIX% &3/f jump <Player> &f| Jump to a friend"
+        2: "%PREFIX% &3/f info &f| See some informations"
+        3: "%PREFIX% &3/msg <Player> <Message> &f| Send a message"
+        4: "%PREFIX% &c------------------------------------------"
     Add:
       PlayerOffline: "%PREFIX% &cThis player seems to be offline!"
       AlreadyFriends: "%PREFIX% &cThis player is already your friend!"
@@ -71,6 +77,9 @@ Messages:
       Accept:
         Accepter: "%PREFIX% &3%PLAYER% &ais now your friend!"
         ToAccept: "%PREFIX% &3%PLAYER% &aaccepted your friendrequest!"
+    Acceptall:
+      NoRequests: "%PREFIX% &cYou don't have any request!"
+      Accept: "%PREFIX% &aYou accepted &3%COUNT% &arequests!"
     Deny:
       NoRequest: "%PREFIX% &cYou don't have a request from this player!"
       Deny:

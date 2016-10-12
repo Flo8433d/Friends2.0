@@ -58,7 +58,7 @@ public class EditInventoryListener implements Listener {
 
 									if (Friends.bungeeMode) {
 
-										if (puT.get(3).contains("option_noJumping")) {
+										if (puT.get(3, false).contains("option_noJumping")) {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.Disabled"));
 											return;
 										}
@@ -74,7 +74,7 @@ public class EditInventoryListener implements Listener {
 										p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										return;
 									}
-									if (puT.get(3).contains("option_noJumping")) {
+									if (puT.get(3, false).contains("option_noJumping")) {
 										p.sendMessage(plugin.getString("Messages.Commands.Jumping.Disabled"));
 										return;
 									}

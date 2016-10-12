@@ -34,7 +34,7 @@ public class DamageListener implements Listener {
 			Player p = (Player) e.getDamager();
 
 			PlayerUtilities pu = new PlayerUtilities(p);
-			if (pu.get(0).contains(toAdd.getUniqueId().toString())) {
+			if (pu.get(0, false).contains(toAdd.getUniqueId().toString())) {
 				if (FileManager.ConfigCfg.getBoolean("Friends.Options.FriendCanPvP")) {
 					return;
 				}

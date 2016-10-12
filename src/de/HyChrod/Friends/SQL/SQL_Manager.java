@@ -3,6 +3,10 @@ package de.HyChrod.Friends.SQL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 public class SQL_Manager {
 	
@@ -35,11 +39,11 @@ public class SQL_Manager {
 		return Boolean.valueOf(true);
 	}
 	
-	public static void set(LinkedList<String> data, String uuid, String value) {
+	public static void set(LinkedList<Object> data, String uuid, String value) {
 		if (playerExists(uuid)) {
 			String serialized = "";
-			for (String players : data) {
-				serialized = serialized + players + "//;";
+			for (Object players : data) {
+				serialized = serialized + String.valueOf(players) + "//;";
 			}
 			MySQL.update("UPDATE friends2_0 SET " + value + "='" + serialized + "' WHERE UUID='"
 					+ uuid + "';");
@@ -49,8 +53,8 @@ public class SQL_Manager {
 		}
 	}
 
-	public static LinkedList<String> get(String uuid, String value) {
-		LinkedList<String> data = new LinkedList<>();
+	public static LinkedList<Object> get(String uuid, String value, boolean players) {
+		LinkedList<Object> data = new LinkedList<>();
 		
 		if (playerExists(uuid)) {		
 			try {
@@ -58,10 +62,19 @@ public class SQL_Manager {
 				if ((rs.next()) && (String.valueOf(rs.getString(value))) == null) {
 
 				}
+				Integer valueToCheck = 20;
+				if(value.equals("OPTIONS")) 
+					valueToCheck = 6;
 				String[] uuids = rs.getString(value).split("//;");
 				for (int i = 0; i < uuids.length; i++) {
-					if (uuids[i].length() > 6)
-						data.add(uuids[i]);
+					if (uuids[i].length() > valueToCheck) {
+						if(players) {
+							OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuids[i]));
+							if(player != null && player.getName() != null && !player.getName().equalsIgnoreCase("null"))
+								data.add(player);
+						} else
+							data.add(uuids[i]);
+					}
 				}
 
 			} catch (Exception ex) {

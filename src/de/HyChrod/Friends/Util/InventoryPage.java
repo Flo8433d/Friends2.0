@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
+import de.HyChrod.Friends.SQL.MySQL;
 
 public class InventoryPage {
 
@@ -74,8 +75,12 @@ public class InventoryPage {
 		freeSlots = freeSlots * site;
 		List<ItemStack> items = new ArrayList<>();
 		
-		for (String uuid : type.getGet()) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+		for (Object uuid : type.getGet()) {
+			OfflinePlayer player = null;
+			if(MySQL.isConnected())
+				player = ((OfflinePlayer)uuid);
+			else
+				player = Bukkit.getOfflinePlayer(UUID.fromString(((String)uuid)));
 			if (type.equals(InventoryTypes.MAIN)) {
 				items.add(this.getHead(player, new PlayerUtilities(player)));
 			} else {
@@ -135,7 +140,7 @@ public class InventoryPage {
 			}
 			SM.setDisplayName(player.getName() + " §7(§8Offline§7)");
 			if (FileManager.ConfigCfg.getBoolean("Friends.Options.LastOnline.Enable") && time != null
-					&& time.length >= 3) {
+					&& time.length >= 3 && pu.getLastOnline() != 0) {
 				SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
 						FileManager.ConfigCfg.getString("Friends.Options.LastOnline.Format")
 								.replace("%days%", "" + time[3]).replace("%hours%", time[2] + "")

@@ -7,7 +7,6 @@
 package de.HyChrod.Friends.Listeners;
 
 import java.util.LinkedList;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,11 +41,11 @@ public class ChatListener implements Listener {
 				e.setCancelled(true);
 
 				PlayerUtilities pu = new PlayerUtilities(p);
-				for (String uuids : pu.get(0)) {
-					OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuids));
+				for (Object uuids : pu.get(0, true)) {
+					OfflinePlayer player = ((OfflinePlayer)uuids);
 					if (player.isOnline()) {
 						PlayerUtilities puT = new PlayerUtilities(player);
-						if (!puT.get(3).contains("option_noChat")) {
+						if (!puT.get(3, false).contains("option_noChat")) {
 							Bukkit.getPlayer(player.getUniqueId())
 									.sendMessage(plugin.getString("Messages.FriendChatFormat")
 											.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
@@ -56,7 +55,7 @@ public class ChatListener implements Listener {
 				}
 				if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.SpyChat.Enable")) {
 					for(Player spyer : spy) {
-						if(!p.equals(spyer) && (!pu.get(0).contains(spyer.getUniqueId().toString()) || pu.get(3).contains("options_noChat"))) {
+						if(!p.equals(spyer) && (!pu.get(0, false).contains(spyer.getUniqueId().toString()) || pu.get(3, false).contains("options_noChat"))) {
 							spyer.sendMessage(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendChat.SpyChat.Format"))
 									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()
 											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), "")));

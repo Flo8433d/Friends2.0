@@ -34,6 +34,7 @@ BungeeCord
 | /friends add <Player>      | Sends a friend-request to the player | - Friends.Commands.Add |
 | /friends remove <Player> | Removes a player form your friendlist  | - Friends.Commands.Remove |
 | /friends accept <Player> | Accepts a request  | - Friends.Commands.Accept |
+| /friends acceptall | Accepts all open requets | - Friends.Commands.Acceptall
 | /friends deny <Player> | Deny a request  | - Friends.Commands.Deny |
 | /friends block <Player> | Blocks a player  | - Friends.Commands.Block |
 | /friends unblock <Player> | Unlocks a player  | - Friends.CommandsUnblock |

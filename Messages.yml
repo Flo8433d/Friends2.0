@@ -116,6 +116,7 @@ Messages:
   FriendQuit: "%PREFIX% &3%PLAYER% &cis now offline!"
   FriendJoin: "%PREFIX% &3%PLAYER% &ais now online!"
   FriendChatFormat: "%PREFIX% &3%PLAYER% &c>> &f%MESSAGE%"
+  FriendChatDisabled: "%PREFIX% &cYou disabled the friendchat!"
   RequestNotification: "%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!"
   GUI:
     NoMorePages: "%PREFIX% &cThere are no more pages!"

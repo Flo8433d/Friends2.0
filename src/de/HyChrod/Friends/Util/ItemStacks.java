@@ -8,16 +8,13 @@ package de.HyChrod.Friends.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import de.HyChrod.Friends.FileManager;
 
@@ -113,62 +110,6 @@ public enum ItemStacks {
 		IM.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 		IM.addItemFlags(ItemFlag.HIDE_DESTROYS);
 		IM.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		IS.setItemMeta(IM);
-		return IS;
-	}
-	
-	public static ItemStack FRIENDITEM(Player player) {
-		if(FileManager.ConfigCfg.getBoolean("Friends.FriendItem.PlayersHead")) {
-			ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-			SkullMeta SM = (SkullMeta)IS.getItemMeta();
-			SM.setOwner(player.getName());
-			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")));
-			SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Lore")).split("//")));
-			IS.setItemMeta(SM);
-			return IS;
-		}
-		String[] IdByString = FileManager.ConfigCfg.getString("Friends.FriendItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname"));
-		return MainStack(IdByString, 1, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack MAIN_REQUESTS(Integer requests) {
-		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Name").replace("%REQUESTS%", ""+requests));
-		return MainStack(IdByString, requests, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack MAIN_BLOCKED(Integer blocked) {
-		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Name").replace("%BLOCKED%", ""+blocked));
-		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack OPTIONSBUTTON(LinkedList<Object> linkedList, String option, String code) {
-		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.ItemID").split(":");
-		String name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Name"));
-		List<String> lore = new ArrayList<>();
-		if(FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore") != null 
-				&& !FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore").equalsIgnoreCase("")) {
-			lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
-		}
-		if(linkedList.contains(option)) {
-			IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
-			name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
-		}
-		return MainStack(IdByString, 1, name, lore, code);
-	}
-	
-	@SuppressWarnings("deprecation")
-	private static ItemStack MainStack(String[] IdByString, int anzahl, String name, List<String> lore, String code) {
-		int id = Integer.valueOf(IdByString[0]);
-		int byt = 0;
-		if(IdByString.length > 1) {byt = Integer.valueOf(IdByString[1]);}
-		
-		ItemStack IS = new ItemStack(Material.getMaterial(id), anzahl, (byte) byt);
-		ItemMeta IM = IS.getItemMeta();
-		IM.setDisplayName(name + code);
-		IM.setLore(lore);
 		IS.setItemMeta(IM);
 		return IS;
 	}

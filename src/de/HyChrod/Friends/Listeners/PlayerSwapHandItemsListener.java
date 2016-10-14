@@ -12,7 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
-import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class PlayerSwapHandItemsListener implements Listener {
 
@@ -23,7 +23,7 @@ public class PlayerSwapHandItemsListener implements Listener {
 			if (e.getMainHandItem().hasItemMeta()) {
 				if (e.getMainHandItem().getItemMeta().hasDisplayName()) {
 					if (e.getMainHandItem().getItemMeta().getDisplayName()
-							.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}
@@ -33,7 +33,7 @@ public class PlayerSwapHandItemsListener implements Listener {
 			if (e.getOffHandItem().hasItemMeta()) {
 				if (e.getOffHandItem().getItemMeta().hasDisplayName()) {
 					if (e.getOffHandItem().getItemMeta().getDisplayName()
-							.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}

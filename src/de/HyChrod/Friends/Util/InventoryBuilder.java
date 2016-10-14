@@ -41,18 +41,18 @@ public class InventoryBuilder {
 			inv.setItem(ItemStacks.OPTIONS_PRIVATEMESSAGES.getInvSlot() - 1,
 					ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")
-					- 1, ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d"));
+					- 1, new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d"));
 		}
 		if (FileManager.ConfigCfg.getBoolean("Friends.Options.EnableJumping")) {
 			inv.setItem(ItemStacks.OPTIONS_JUMPING.getInvSlot() - 1, ItemStacks.OPTIONS_JUMPING.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsJumping.ButtonInventorySlot") - 1,
-					ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noJumping", "§c"));
+					new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noJumping", "§c"));
 		}
 
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsRequestsItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noRequests", "§a"));
+				new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noRequests", "§a"));
 		inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionsMessagesItems.ButtonInventorySlot") - 1,
-				ItemStacks.OPTIONSBUTTON(pu.get(3, false), "option_noChat", "§b"));
+				new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noChat", "§b"));
 
 		if (open)
 			p.openInventory(inv);

@@ -19,7 +19,7 @@ import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryTypes;
-import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class InventoryUtilListener implements Listener {
 
@@ -41,7 +41,7 @@ public class InventoryUtilListener implements Listener {
 							if (e.getItem().getItemMeta().getDisplayName()
 									.equals(ChatColor.translateAlternateColorCodes('&',
 											FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")))
-									|| e.getItem().equals(ItemStacks.FRIENDITEM(((Player) e.getPlayer())))) {
+									|| e.getItem().equals(new UtilitieItems().FRIENDITEM(((Player) e.getPlayer())))) {
 								InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
 								return;
 							}

@@ -22,10 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
-import de.HyChrod.Friends.SQL.MySQL;
-import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class JoinQuitListener implements Listener {
 
@@ -69,13 +68,13 @@ public class JoinQuitListener implements Listener {
 							|| !p.getInventory()
 									.getItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1)
 									.getItemMeta().getDisplayName()
-									.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName()))) {
+									.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName()))) {
 				for (int i = 0; i < p.getInventory().getSize(); i++) {
 					if (p.getInventory().getItem(i) != null) {
 						if (p.getInventory().getItem(i).hasItemMeta()) {
 							if (p.getInventory().getItem(i).getItemMeta().hasDisplayName()) {
 								if (p.getInventory().getItem(i).getItemMeta().getDisplayName()
-										.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+										.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 									p.getInventory().setItem(i, new ItemStack(Material.AIR));
 								}
 							}
@@ -84,7 +83,7 @@ public class JoinQuitListener implements Listener {
 				}
 			}
 			p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1,
-					ItemStacks.FRIENDITEM(p));
+					new UtilitieItems().FRIENDITEM(p));
 		}
 
 		if (Friends.bungeeMode) {
@@ -92,7 +91,9 @@ public class JoinQuitListener implements Listener {
 			return;
 		}
 		for (Object uuid : pu.get(0, true)) {
-			OfflinePlayer player = getPlayerByObject(uuid);
+			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
+			if(Friends.bungeeMode)
+				player = ((OfflinePlayer)uuid);
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
 				if (!puT.get(3, false).contains("option_noChat")) {
@@ -116,7 +117,9 @@ public class JoinQuitListener implements Listener {
 		pu.saveData(false);
 
 		for (Object uuid : pu.get(0, true)) {
-			OfflinePlayer player = getPlayerByObject(uuid);
+			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
+			if(Friends.bungeeMode)
+				player = ((OfflinePlayer)uuid);
 			if (player.isOnline()) {
 				PlayerUtilities puT = new PlayerUtilities(player);
 				if (!puT.get(3, false).contains("option_noChat")) {
@@ -125,10 +128,6 @@ public class JoinQuitListener implements Listener {
 				}
 			}
 		}
-	}
-	
-	public OfflinePlayer getPlayerByObject(Object obj) {
-		return MySQL.isConnected() ? ((OfflinePlayer)obj) : Bukkit.getOfflinePlayer(UUID.fromString(((String)obj)));
 	}
 
 }

@@ -108,7 +108,7 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.Commands.Acceptall.Accept") == null) {
+		if (cfg.getString("Messages.FriendChatDisabled") == null) {
 			try {
 				createBackup(file);
 				cfg.set("Messages.Commands.Help.Page1.6", "%PREFIX% &3/f acceptall &f| Accepts all requests");
@@ -125,6 +125,7 @@ public class FileManager {
 				cfg.set("Messages.RequestNotification", "%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!");			
 				cfg.set("Messages.Commands.Acceptall.NoRequests", "%PREFIX% &cYou don't have any request!");
 				cfg.set("Messages.Commands.Acceptall.Accept", "%PREFIX% &aYou accepted &3%COUNT% &arequests!");
+				cfg.set("Messages.FriendChatDisabled", "%PREFIX% &cYou disabled the friendchat!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -23,7 +23,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
-import de.HyChrod.Friends.SQL.MySQL;
 
 public class InventoryPage {
 
@@ -76,11 +75,9 @@ public class InventoryPage {
 		List<ItemStack> items = new ArrayList<>();
 		
 		for (Object uuid : type.getGet()) {
-			OfflinePlayer player = null;
-			if(MySQL.isConnected())
+			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(((String)uuid)));
+			if(Friends.bungeeMode)
 				player = ((OfflinePlayer)uuid);
-			else
-				player = Bukkit.getOfflinePlayer(UUID.fromString(((String)uuid)));
 			if (type.equals(InventoryTypes.MAIN)) {
 				items.add(this.getHead(player, new PlayerUtilities(player)));
 			} else {

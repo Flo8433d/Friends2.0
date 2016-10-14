@@ -15,8 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Commands.Command_Add;
-import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class DamageListener implements Listener {
 
@@ -47,7 +47,7 @@ public class DamageListener implements Listener {
 					if (p.getItemInHand().hasItemMeta()) {
 						if (p.getItemInHand().getItemMeta().hasDisplayName()) {
 							if (p.getItemInHand().getItemMeta().getDisplayName()
-									.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+									.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 								e.setCancelled(true);
 
 								new Command_Add(p, toAdd.getName());

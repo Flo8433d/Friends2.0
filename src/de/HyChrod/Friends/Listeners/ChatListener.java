@@ -7,6 +7,7 @@
 package de.HyChrod.Friends.Listeners;
 
 import java.util.LinkedList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,10 +40,25 @@ public class ChatListener implements Listener {
 		if (FileManager.ConfigCfg.getBoolean("Friends.FriendChat.Enable")) {
 			if (e.getMessage().startsWith(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"))) {
 				e.setCancelled(true);
-
+				
 				PlayerUtilities pu = new PlayerUtilities(p);
+				if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.SpyChat.Enable")) {
+					for(Player spyer : spy) {
+						if(!p.equals(spyer) && (!pu.get(0, false).contains(spyer.getUniqueId().toString()) || pu.get(3, false).contains("options_noChat"))) {
+							spyer.sendMessage(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendChat.SpyChat.Format"))
+									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()
+											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), "")));
+						}
+					}
+				}
+				if(pu.get(3, false).contains("option_noChat")) {
+					p.sendMessage(plugin.getString("Messages.FriendChatDisabled"));
+					return;
+				}
 				for (Object uuids : pu.get(0, true)) {
-					OfflinePlayer player = ((OfflinePlayer)uuids);
+					OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuids)));
+					if(Friends.bungeeMode)
+						player = ((OfflinePlayer)uuids);
 					if (player.isOnline()) {
 						PlayerUtilities puT = new PlayerUtilities(player);
 						if (!puT.get(3, false).contains("option_noChat")) {
@@ -50,15 +66,6 @@ public class ChatListener implements Listener {
 									.sendMessage(plugin.getString("Messages.FriendChatFormat")
 											.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
 											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
-						}
-					}
-				}
-				if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.SpyChat.Enable")) {
-					for(Player spyer : spy) {
-						if(!p.equals(spyer) && (!pu.get(0, false).contains(spyer.getUniqueId().toString()) || pu.get(3, false).contains("options_noChat"))) {
-							spyer.sendMessage(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendChat.SpyChat.Format"))
-									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()
-											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), "")));
 						}
 					}
 				}

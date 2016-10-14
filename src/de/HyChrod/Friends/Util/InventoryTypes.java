@@ -74,8 +74,8 @@ public enum InventoryTypes {
 					while(items.size() <= 5)
 						items.add(new ItemStack(Material.WOOD));
 				}
-				items.set(4, ItemStacks.MAIN_BLOCKED(pu.get(2, true).size()));
-				items.set(5, ItemStacks.MAIN_REQUESTS(pu.get(1, true).size()));
+				items.set(4, new UtilitieItems().MAIN_BLOCKED(pu.get(2, true).size()));
+				items.set(5, new UtilitieItems().MAIN_REQUESTS(pu.get(1, true).size()));
 				get = new PlayerUtilities(player).get(0, true);
 			}
 			return;

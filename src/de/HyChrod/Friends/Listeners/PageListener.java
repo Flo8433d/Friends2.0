@@ -26,6 +26,7 @@ import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.InventoryPage;
 import de.HyChrod.Friends.Util.PlayerUtilities;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class PageListener implements Listener {
 
@@ -77,7 +78,7 @@ public class PageListener implements Listener {
 							if (e.getCurrentItem().getType().equals(Material.SKULL)
 									|| e.getCurrentItem().getType().equals(Material.SKULL_ITEM)
 											&& !e.getCurrentItem().getItemMeta().getDisplayName()
-													.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+													.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 								
 								String friendsName = e.getCurrentItem().getItemMeta().getDisplayName().replace("§3", "")
 										.replace("§c", "");

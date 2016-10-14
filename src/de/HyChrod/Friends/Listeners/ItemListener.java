@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import de.HyChrod.Friends.FileManager;
-import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class ItemListener implements Listener {
 
@@ -31,7 +31,7 @@ public class ItemListener implements Listener {
 			if (e.getItemDrop().getItemStack().hasItemMeta()) {
 				if (e.getItemDrop().getItemStack().getItemMeta().hasDisplayName()) {
 					if (e.getItemDrop().getItemStack().getItemMeta().getDisplayName()
-							.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}
@@ -48,7 +48,7 @@ public class ItemListener implements Listener {
 			if (e.getCurrentItem().hasItemMeta()) {
 				if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 					if (e.getCurrentItem().getItemMeta().getDisplayName()
-							.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}
@@ -65,7 +65,7 @@ public class ItemListener implements Listener {
 			if (e.getItemInHand().hasItemMeta()) {
 				if (e.getItemInHand().getItemMeta().hasDisplayName()) {
 					if (e.getItemInHand().getItemMeta().getDisplayName()
-							.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}
@@ -84,7 +84,7 @@ public class ItemListener implements Listener {
 				if (e.getDrops().get(i).hasItemMeta()) {
 					if (e.getDrops().get(i).getItemMeta().hasDisplayName()) {
 						if (e.getDrops().get(i).getItemMeta().getDisplayName()
-								.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+								.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 							e.getDrops().remove(i);
 						}
 					}
@@ -104,7 +104,7 @@ public class ItemListener implements Listener {
 					if (p.getInventory().getItem(i).hasItemMeta()) {
 						if (p.getInventory().getItem(i).getItemMeta().hasDisplayName()) {
 							if (p.getInventory().getItem(i).getItemMeta().getDisplayName()
-									.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+									.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 								return;
 							}
 						}
@@ -112,7 +112,7 @@ public class ItemListener implements Listener {
 				}
 			}
 			p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot"),
-					ItemStacks.FRIENDITEM(p));
+					new UtilitieItems()	.FRIENDITEM(p));
 		}
 	}
 

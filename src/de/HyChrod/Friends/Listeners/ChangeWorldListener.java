@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.HyChrod.Friends.FileManager;
-import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class ChangeWorldListener implements Listener {
 
@@ -29,7 +29,7 @@ public class ChangeWorldListener implements Listener {
 			if (FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from)
 					&& !FileManager.ConfigCfg.getString("Friends.DisabledWorlds").contains(to)) {
 				p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1,
-						ItemStacks.FRIENDITEM(p));
+						new UtilitieItems().FRIENDITEM(p));
 				return;
 			}
 			if (!FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds").contains(from)
@@ -39,7 +39,7 @@ public class ChangeWorldListener implements Listener {
 						if (p.getInventory().getItem(i).hasItemMeta()) {
 							if (p.getInventory().getItem(i).getItemMeta().hasDisplayName()) {
 								if (p.getInventory().getItem(i).getItemMeta().getDisplayName()
-										.equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+										.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 									p.getInventory().setItem(i, new ItemStack(Material.AIR));
 								}
 							}

@@ -1,7 +1,0 @@
-name: Friends2_0
-version: 2.3.3-BETA
-author: HyChrod
-main: de.HyChrod.Friends.Friends
-commands:
-  Friends:
-    aliases: [f, F, freund, freunde, friend]

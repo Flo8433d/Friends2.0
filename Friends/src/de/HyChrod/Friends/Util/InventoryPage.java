@@ -167,7 +167,8 @@ public class InventoryPage {
 								.replace("%minutes%", "" + time[1]).replace("%seconds%", "" + time[0]))));
 			}
 		} else if (player.isOnline() && !Friends.bungeeMode) {
-			SM.setDisplayName(player.getName() + " §7(§aOnline§7)");
+			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', 
+					FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOnline").replace("%PLAYER%", player.getName())));
 			if (FileManager.ConfigCfg.getBoolean("Friends.Options.ShowWorld.Enable"))
 				SM.setLore(
 						Arrays.asList(

@@ -89,7 +89,7 @@ public class PageListener implements Listener {
 								for(int i = 0; i <= 3; i++)
 									for(int a = 0; a < toReplace.get(i).length; a++)
 										friendsName = friendsName.replace(ChatColor.translateAlternateColorCodes('&', toReplace.get(i)[a]), "");
-								
+
 								if(type.equals(InventoryTypes.MAIN)) {
 									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
 									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));

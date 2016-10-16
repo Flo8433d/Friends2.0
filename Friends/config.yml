@@ -1,0 +1,418 @@
+#################################################
+#												#
+#    Plugin made by HyChrod, Version: 2.3.4 	#
+#												#
+#################################################
+Friends:
+  Prefix: "&6Friends &7|"
+  CheckForUpdates: true
+  
+  FriendChat:
+    Enable: true
+    # The message have to start with this to write in the friend chat!
+    Code: "@friends"
+    # This allows players to send private messages to their friends using command '/f msg <Player> <Message>'!
+    FriendMSG: true
+    # If this is enabled player with special permissions are able to see the friendchat of other players
+    # This can be used to control the friendchat by admins
+    # Permission:
+    # - Friends.Commands.SpyChat
+    SpyChat:
+      Enable: true
+      Format: "&3%PLAYER% &6[FRIENDCHAT] &f| %MESSAGE%"
+  
+  # This options is for server networks and enables BungeeCord
+  # To use BungeeMode you have to install "Friends - BungeeAddon" on your Proxi too
+  # You can find the Addon here:
+  # <https://www.spigotmc.org/resources/friends2-0-mc1-8-1-10-bungeecord-addon.28909/>
+  BungeeMode: false
+  # If this is enabled the server the player is currently on will be shown under their name in the GUI!
+  # Only available if BungeeMode is activated
+  ShowServer:
+    Enable: true
+    Lore: "&3Server: &f%SERVER%"
+  
+  # Here you can change some options!
+  Options:
+    # This is the limit of friends
+    FriendLimit: 25
+    # With a permission players have a higher limit
+    # Permission:
+    # - Friends.ExtraFriends
+    FriendLimit+: 50
+    # You can disable the jump function
+    EnableJumping: true
+    # If this is disabled, friends can't hit each other!
+    FriendCanPvP: false
+    # If this is enabled, players can hit others with the friend-item to send a request!
+    HitToRequest: true
+    # If this is enabled, players can drop the friend-item!
+    CanDropItem: false
+    # If this is enabled, players can place the friend-item!
+    CanPlaceItem: false
+    # If this is enabled, players can move the friend-item in their inventory!
+    CanMoveItem: false
+    # If this is enabled you have to confirm twice to remove a player from your friendlist!
+    RemoveVerification: false
+    # If this is enabled the world the player is currently on will be shown under their name in the GUI!
+    # This only works if BungeeMode is disabled!
+    # If this is enabled the player gets notified on join if he has open friend requests
+    # The message can be changed in the messages.yml!
+    RequestNotification: true
+    ShowWorld:
+      Enable: true
+      Lore: "&3World: &f%WORLD%"
+    LastOnline:
+      Enable: true
+      # Values: %days% %hours% %minutes% %seconds%
+      Format: "&cLast Online: &3%days% Days, %hours% Hours and %minutes% Minutes ago"
+  
+  FriendItem:
+    ItemID: "397:3"
+    # The item will have the skin of the player
+    PlayersHead: true
+    Displayname: "&6Friends &7(Rightclick)"
+    # You can separate the lines with '//'!
+    Lore: "&7Rightclick this item to open//&7the friends-gui!"
+    InventorySlot: 8
+    # If this is disabled players won't get the item on join!
+    GiveOnJoin: true
+    
+  GUI:
+    # If you disable this all posibilities to open the gui will be removed!
+    Enable: true
+    # Change the title of the main-gui!
+    Title: "&aFriends:"
+    # Available sizes are: 9, 18, 27, 36, 45, 54!
+    # WARNING! If you use another number as above, the gui will not work!!
+    InventorySize: 54
+    FriendHead:
+      # If this is enabled the players head in your friend-inventory will change to a skeleton if he turns offline!
+      ChangeHeadIfOffline: true
+      NameOnline: "&f%PLAYER% &a(Online)"
+      NameOffline: "&f%PLAYER% &8(Offline)"
+    RequestsItem:
+      Name: "&aCurrent Requests &7(&c%REQUESTS%&7)"
+      ItemID: "388:0"
+      # You can separate the lines with "//"!
+      Lore: "&7Click here to see your//&7current Friend-Requests!"
+      InventorySlot: 46
+    BlockedItem:
+      Name: "&cBlocked Players &7(&c%BLOCKED%&7)"
+      ItemID: "46:0"
+      # You can separate the lines with "//"!
+      Lore: "&7Click here to see all Players//&7you have currently blocked!"
+      InventorySlot: 47
+    OptionsItem:
+      Name: "&3Options"
+      ItemID: "404:0"
+      # You can separate the lines with "//"!
+      Lore: "&7Click here to change your options!"
+      InventorySlot: 48
+    NextPageItem:
+      Name: "&6Next Page"
+      ItemID: "262:0"
+      # You can separate the lines with "//"!
+      Lore: "&7Click to show the next page of friends!"
+      InventorySlot: 54
+    PreviousPageItem:
+      Name: "&6Previous Page"
+      ItemID: "262:0"
+      # You can separate the lines with "//"!
+      Lore: "&7Click to show the previous page of friends!"
+      InventorySlot: 53
+    PlaceholderItem:
+      ItemID: "160:7"
+      InventorySlots:
+      - 52
+      - 51
+      - 50
+      - 49
+    
+    #
+    # Edit the Requests-Inv of the GUI
+    #
+    RequestsInv:
+      Title: "&aRequests:"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 54
+      PlayerHead:
+        Name: "&3%PLAYER%"
+      NextPageItem:
+        Name: "&6Next Page"
+        ItemID: "262:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to show the next page of requests!"
+        InventorySlot: 54
+      PreviousPageItem:
+        Name: "&6Previous Page"
+        ItemID: "262:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to show the previous page of requests!"
+        InventorySlot: 53
+      BackItem:
+        Name: "&3Back to the main menu"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the main GUI!"
+        InventorySlot: 46
+      PlaceholderItem:
+        ItemID: "160:7"
+        InventorySlots:
+        - 52
+        - 51
+        - 50
+        - 49
+        - 48
+        - 47
+    
+    #
+    # Edit the Request-Edit-Inv
+    #
+    RequestEditInv:
+      Title: "&3%PLAYER%"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 36
+      Accept:
+        Name: "&2Accept request"
+        ItemID: "35:5"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to accept the request!"
+        InventorySlot: 12
+      Deny:
+        Name: "&cDeny request"
+        ItemID: "35:14"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to deny the request!"
+        InventorySlot: 14
+      Block:
+        Name: "&4Block player"
+        ItemID: "35:15"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to block this player!"
+        InventorySlot: 16
+      BackItem:
+        Name: "&8Back to the main-menu!"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the request-menu!"
+        InventorySlot: 36
+      PlaceholderItems:
+        ItemID: "160:7"
+        InventorySlots:
+        - 35
+        - 34
+        - 33
+        - 32
+        - 31
+        - 30
+        - 29
+        - 28
+    #
+    # RemoveVerification-Inv
+    #
+    RemoveVerificationInv:
+      Title: "&cAre you sure?"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 27
+      ConfirmItem:
+        Name: "&6Remove Player"
+        ItemID: "35:14"
+        # You can separate the lines with "//"!
+        Lore: "&7Remove this player from your friend-list!"
+        InventorySlot: 11
+      CancelItem:
+        Name: "&7Cancel"
+        ItemID: "35:8"
+        # You can separate the lines with "//"!
+        Lore: ""
+        InventorySlot: 17
+      PlaceholderItem:
+        ItemID: "160:7"
+        InventorySlots: []
+    
+    #
+    # Edit the Blocked-Player-Inv of the GUI
+    #    
+    BlockedInv:
+      Title: "&cBlocked Players:"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 54
+      PlayerHead:
+        Name: "&c&PLAYER%"
+      NextPageItem:
+        Name: "&6Next Page"
+        ItemID: "262:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to show the next page of blocked players!"
+        InventorySlot: 54
+      PreviousPageItem:
+        Name: "&6Previous Page"
+        ItemID: "262:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to show the previous page of blocked players!"
+        InventorySlot: 53
+      BackItem:
+        Name: "&3Back to the main menu"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the main GUI!"
+        InventorySlot: 46
+      PlaceholderItem:
+        ItemID: "160:7"
+        InventorySlots:
+        - 52
+        - 51
+        - 50
+        - 49
+        - 48
+        - 47
+    
+    #
+    # Edit the Blocked-Edit-Inv of the GUI
+    #
+    BlockedEditInv:
+      Title: "&c%PLAYER%"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 36
+      UnblockItem:
+        Name: "&2Unblock this player"
+        ItemID: "35:5"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to unblock this player!"
+        InventorySlot: 14
+      BackItem:
+        Name: "&8Back to the main-menu!"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the blocked-players menu!"
+        InventorySlot: 36
+      PlaceholderItem:
+        ItemID: "160:7"
+        InventorySlots:
+        - 35
+        - 34
+        - 33
+        - 32
+        - 31
+        - 30
+        - 29
+        - 28
+    
+    #
+    # Edit the Options-Inv of the GUI
+    #
+    OptionsInv:
+      Title: "&3Options:"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 45
+      OptionsRequestsItems:
+        Name: "&aRequests"
+        ItemID: "397:3"
+        # You can separate the lines with "//"!
+        Lore: "&7If this function is disabled//&7players can't send you requests!"
+        InventorySlot: 11
+        ButtonInventorySlot: 20
+      OptionsMessagesItems:
+        Name: "&3Friend-Chat"
+        ItemID: "339:0"
+        # You can separate the lines with "//"!
+        Lore: "&7If this function is disabled//&7you can't see the friend-chat!"
+        InventorySlot: 13
+        ButtonInventorySlot: 22
+      OptionsJumping:
+        Name: "&dJumping"
+        ItemID: "368:0"
+        # You can separate the lines with "//"!
+        Lore: "&7If this function is disabled//&7your friends can't jump to you!"
+        InventorySlot: 17
+        ButtonInventorySlot: 26
+      OptionPrivateMessages:
+        Name: "&6Private Messages"
+        ItemID: "288:0"
+        # You can separate the lines with "//"!
+        Lore: "&7If this function is disabled//&7you can't receive any private messages"
+        InventorySlot: 15
+        ButtonInventorySlot: 24
+      ButtonOff:
+        Name: "&7Currently (&cDisabled&7)"
+        ItemID: "351:8"
+        # You can separate the lines with "//"!
+      ButtonOn:
+        Name: "&7Currently (&aEnabled&7)"
+        ItemID: "351:10"
+        # You can separate the lines with "//"!
+        Lore: ""
+      BackItem:
+        Name: "&8Back to the main-menu!"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the main menu!"
+        InventorySlot: 45
+      PlaceholderItems:
+        ItemID: "160:7"
+        InventorySlots:
+        - 44
+        - 43
+        - 42
+        - 41
+        - 40
+        - 39
+        - 38
+        - 37
+    
+    #
+    # Edit the Friends-Edit-Inv of the GUI
+    #
+    FriendEditInv:
+      Title: "&6&l%FRIEND%"
+      # Available sizes are: 9, 18, 27, 36, 45, 54!
+      # WARNING! If you use another number as above, the gui will not work!!
+      InventorySize: 36
+      RemoveItem:
+        Name: "&cRemove from Friends"
+        ItemID: "35:14"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to remove this friend//&7from your friendlist!"
+        InventorySlot: 13
+      # INFO! This will only work if you enabled "EnableJumping" above!
+      JumpItem:
+        Name: "&dJump to friend"
+        ItemID: "368:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to jump to this friend!"
+        InventorySlot: 15
+      BackItem:
+        Name: "&8Back to the main-menu!"
+        ItemID: "330:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to go back to the main menu!"
+        InventorySlot: 36
+      PlaceholderItems:
+        ItemID: "160:7"
+        InventorySlots:
+        - 35
+        - 34
+        - 33
+        - 32
+        - 31
+        - 30
+        - 29
+        - 28
+  
+  # Put in the name of worlds where players should not use the friend-item!
+  DisabledWorlds:
+  - world_nether
+  
+#################################################
+#												#
+#	You are not authorized to sell this plugin	#
+#	All rights reserved by HyChrod, 2016.		#
+#												#
+#################################################

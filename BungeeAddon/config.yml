@@ -1,0 +1,32 @@
+#################################################
+#												#
+#    Plugin made by HyChrod, Version: 1.0.0 	#
+#												#
+#################################################
+
+Friends:
+  Prefix: "&6Friends &7|"
+  CheckForUpdates: true
+
+  # Here you can change some options!
+  Options:
+    # This is the limit of friends
+    FriendLimit: 25
+    # With a permission players have a higher limit
+    # Permission:
+    # - Friends.ExtraFriends
+    FriendLimit+: 50
+    # You can disable the jump function
+    EnableJumping: true
+    
+  FriendChat:
+    Enable: true
+    # The message have to start with this to write in the friend chat!
+    Code: "@friends"
+
+#################################################
+#												#
+#	You are not authorized to sell this Plugin	#
+#	All rights reserved by HyChrod, 2016.		#
+#												#
+#################################################

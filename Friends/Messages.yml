@@ -1,0 +1,129 @@
+Messages:
+  Commands:
+    NoPlayer: "%PREFIX% &cOnly players can perform this command!"
+    NoPerm: "%PREFIX% &cYou don't have permissions to do that!"
+    Unknown: "%PREFIX% &cUnknown Command! --> /f help"
+    WrongUsage: "%PREFIX% &cWrong usage! --> %COMMAND%"
+    Help:
+      Page1:
+        0: "%PREFIX% &c[&6Page1&c]------------------------------------"
+        1: "%PREFIX% &3/f add <Player> &f| Adds a friend"
+        2: "%PREFIX% &3/f remove <Player> &f| Removes a friend"
+        3: "%PREFIX% &3/f block <Player> &f| Blocks a player"
+        4: "%PREFIX% &3/f accept <Player> &f|Accepts a request"
+        5: "%PREFIX% &3/f deny <Player> &f| Deny a request"
+        6: "%PREFIX% &3/f acceptall &f| Accepts all requests"
+        7: "%PREFIX% &c------------------------------------------"
+        8: "%PREFIX% &3More Commands --> /f help 2"
+        9: "%PREFIX% &c------------------------------------------"
+      Page2:
+        0: "%PREFIX% &c[&6Page2&c]------------------------------------"
+        1: "%PREFIX% &3/f unblock <Player> &f| Unblocks a player"
+        2: "%PREFIX% &3/f toggle requests &f| Toggle requests"
+        3: "%PREFIX% &3/f toggle <chat|msg> &f| Toggles chat or msg"
+        4: "%PREFIX% &3/f toggle jumping &f| Toggle jumping"
+        5: "%PREFIX% &3/f toggle spychat &f| Toggle spychat"
+        6: "%PREFIX% &3/f list &f| See your friends"
+        7: "%PREFIX% &c------------------------------------------"
+        8: "%PREFIX% &3More Commands --> /f help 3"
+        9: "%PREFIX% &c------------------------------------------"
+      Page3:
+        0: "%PREFIX% &c[&6Page3&c]------------------------------------"
+        1: "%PREFIX% &3/f jump <Player> &f| Jump to a friend"
+        2: "%PREFIX% &3/f info &f| See some informations"
+        3: "%PREFIX% &3/msg <Player> <Message> &f| Send a message"
+        4: "%PREFIX% &c------------------------------------------"
+    Add:
+      PlayerOffline: "%PREFIX% &cThis player seems to be offline!"
+      AlreadyFriends: "%PREFIX% &cThis player is already your friend!"
+      AlreadyRequested: "%PREFIX% &cYou've already send this player a request!"
+      SendSelf: "%PREFIX% &cYou can't send yourself a request!"
+      Blocked:
+        ToAdd: "%PREFIX% &cYou can't send this player a request!"
+        Requester: "%PREFIX% &cYou have blocked this player!"
+      NoRequests: "%PREFIX% &cThis player disabled the friend-requests!"
+      LimitReached:
+        Requester: "%PREFIX% &cYou have reached the maximum amount of friends!"
+        ToAdd: "%PREFIX% &cThis player reached the maximum amount of friends!"
+      Add:
+        Requester: "%PREFIX% &aYou send a friendrequest to &3%PLAYER%&a!"
+        ToAdd: 
+          0: "%PREFIX% &c---------------------------------------------"
+          1: "%PREFIX% &aYou get a friendrequest from &3%PLAYER%&a!"
+          2: "%PREFIX% &2%ACCEPT_BUTTON% &c%DENY_BUTTON%"
+          3: "%PREFIX% &c---------------------------------------------"
+        AcceptButton: "&2[Accept ✔]"
+        AcceptHover: "&2Click here to accept the request!"
+        DenyButton: "&c[Deny ✖]"
+        DenyHover: "&cClick here to deny the requst!"
+    Remove:
+      NoFriends: "%PREFIX% &cThis player isn't your friend!"
+      Remove:
+        Remover: "%PREFIX% &7You removed &3%PLAYER% &7from your friendlist!"
+        ToRemove: "%PREFIX% &7You're no longer a friend of &3%PLAYER%&7!"
+    Block:
+      AlreadyBlocked: "%PREFIX% &cYou've already blocked this player!"
+      Block:
+        Blocker: "%PREFIX% &7You have blocked &3%PLAYER%&7!"
+        ToBlock: "%PREFIX% &7You're no longer a friend of &3%PLAYER%&7!"
+    Unblock:
+      NotBlocked: "%PREFIX% &cYou haven't blocked this player!"
+      Unblock: "%PREFIX% &7You removed &3%PLAYER% &7from your blacklist!"
+    Accept:
+      NoRequest: "%PREFIX% &cYou don't have a request from this player!"
+      LimitReached:
+        Requester: "%PREFIX% &cThis player reached the maximum amount of friends!"
+        Accepter: "%PREFIX% &cYou have reached the maximum amount of friends!"
+      Accept:
+        Accepter: "%PREFIX% &3%PLAYER% &ais now your friend!"
+        ToAccept: "%PREFIX% &3%PLAYER% &aaccepted your friendrequest!"
+    Acceptall:
+      NoRequests: "%PREFIX% &cYou don't have any request!"
+      Accept: "%PREFIX% &aYou accepted &3%COUNT% &arequests!"
+    Deny:
+      NoRequest: "%PREFIX% &cYou don't have a request from this player!"
+      Deny:
+        Denier: "%PREFIX% &7You denied the request from &3%PLAYER%&7!"
+        ToDeny: "%PREFIX% &3%PLAYER% &7denied your request!"
+    Toggle:
+      NoOption: "%PREFIX% &cUnknown Option! -> <requests|chat|jumping>"
+      ToggleRequests: "%PREFIX% &aYou toggled the requests!"
+      ToggleChat: "%PREFIX% &aYou toggled the friendchat!"
+      ToggleJumping: "%PREFIX% &aYou toggled jumping!"
+      ToggleMsg: "%PREFIX% &aYou toggled private messaging!"
+      ToggleSpyChat: 
+        Toggle: "%PREFIX% &aYou toggled the spychat on this server!"
+        Disabled: "%PREFIX% &cThe spychat is disabled!"
+    List:
+      List: "%PREFIX% &3Online(&c%ONLINE_COUNT%&3): &a%ONLINE%\n%PREFIX% &3Offline(&c%OFFLINE_COUNT%&3): &7%OFFLINE%"
+    Jumping: 
+      PlayerOffline: "%PREFIX% &cThis player seems to be offline!"
+      NoFriend: "%PREFIX% &cThe player you want to jump to have to be your friend!"
+      Disabled: "%PREFIX% &cThis player deactivated jumping!"
+      Jump:
+        Jumper: "%PREFIX% &aYou jumped to &3%PLAYER%&a!"
+        ToJump: "%PREFIX% &aYour friend &3%PLAYER% &ajumped to your location!"
+    MSG:
+      Denied: "%PREFIX% &cYou can't send private messages!"
+      NoFriends: "%PREFIX% &cThe player have to be your friend to send him a private message!"
+      PlayerOffline: "%PREFIX% &cThis player seems to be offline!"
+      Disabled: "%PREFIX% &cThis player disabled private messages!"
+      DisabledSelf: "%PREFIX% &cYou disabled the private messages!"
+      Send: "&f[%PREFIX%&f] &6You &f-> &6%PLAYER%: &f%MESSAGE%"
+      Format: "&f[%PREFIX%&f] &6%PLAYER% &f-> &6You: &f%MESSAGE%"
+    Reload:
+      Reloaded: "%PREFIX% &aThe plugin was successfully reloaded!"
+  FriendQuit: "%PREFIX% &3%PLAYER% &cis now offline!"
+  FriendJoin: "%PREFIX% &3%PLAYER% &ais now online!"
+  FriendChatFormat: "%PREFIX% &3%PLAYER% &c>> &f%MESSAGE%"
+  FriendChatDisabled: "%PREFIX% &cYou disabled the friendchat!"
+  RequestNotification: "%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!"
+  GUI:
+    NoMorePages: "%PREFIX% &cThere are no more pages!"
+    FirstPage: "%PREFIX% &cYou are already on the first page!"
+    RequestsInv:
+      NoMorePages: "%PREFIX% &cThere are no more pages!"
+      FirstPage: "%PREFIX% &cYou are already on the first page!"
+    BlockedInv:
+      NoMorePages: "%PREFIX% &cThere are no more pages!"
+      FirstPage: "%PREFIX% &cYou are already on the first page!"

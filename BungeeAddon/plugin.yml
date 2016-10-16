@@ -1,0 +1,5 @@
+name: Friends2.0-BungeeAddon
+version: 1.1.1-BETA
+author: HyChrod
+main: de.HyChrod.Friends.Friends
+commands:

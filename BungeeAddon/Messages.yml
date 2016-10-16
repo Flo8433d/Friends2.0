@@ -1,0 +1,4 @@
+Messages:
+  FriendQuit: "%PREFIX% &3%PLAYER% &cis now offline!"
+  FriendJoin: "%PREFIX% &3%PLAYER% &ais now online!"
+  FriendChatFormat: "%PREFIX% &3%PLAYER% &c>> &f%MESSAGE%"

@@ -6,17 +6,15 @@
 */
 package de.HyChrod.Friends.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import de.HyChrod.Friends.FileManager;
 
@@ -38,11 +36,13 @@ public enum ItemStacks {
 	OPTIONS_CHAT("Friends.GUI.OptionsInv.OptionsMessagesItems.Name", "Friends.GUI.OptionsInv.OptionsMessagesItems.Lore", "Friends.GUI.OptionsInv.OptionsMessagesItems.ItemID", "Friends.GUI.OptionsInv.OptionsMessagesItems.InventorySlot", 1),
 	OPTIONS_JUMPING("Friends.GUI.OptionsInv.OptionsJumping.Name", "Friends.GUI.OptionsInv.OptionsJumping.Lore", "Friends.GUI.OptionsInv.OptionsJumping.ItemID", "Friends.GUI.OptionsInv.OptionsJumping.InventorySlot", 1),
 	OPTIONS_PRIVATEMESSAGES("Friends.GUI.OptionsInv.OptionPrivateMessages.Name", "Friends.GUI.OptionsInv.OptionPrivateMessages.Lore", "Friends.GUI.OptionsInv.OptionPrivateMessages.ItemID", "Friends.GUI.OptionsInv.OptionPrivateMessages.InventorySlot", 1),
+	OPTIONS_PARTYINVITES("Friends.GUI.OptionsInv.OptionsPartyInvites.Name", "Friends.GUI.OptionsInv.OptionsPartyInvites.Lore", "Friends.GUI.OptionsInv.OptionsPartyInvites.ItemID", "Friends.GUI.OptionsInv.OptionsPartyInvites.InventorySlot", 1),
 	OPTIONS_BACK("Friends.GUI.OptionsInv.BackItem.Name", "Friends.GUI.OptionsInv.BackItem.Lore", "Friends.GUI.OptionsInv.BackItem.ItemID", "Friends.GUI.OptionsInv.BackItem.InventorySlot", 1),
 	OPTIONS_PLACEHOLDER(null, null, "Friends.GUI.OptionsInv.PlaceholderItems.ItemID", null, 1),
 	EDIT_REMOVE("Friends.GUI.FriendEditInv.RemoveItem.Name", "Friends.GUI.FriendEditInv.RemoveItem.Lore", "Friends.GUI.FriendEditInv.RemoveItem.ItemID", "Friends.GUI.FriendEditInv.RemoveItem.InventorySlot", 1),
 	EDIT_JUMP("Friends.GUI.FriendEditInv.JumpItem.Name", "Friends.GUI.FriendEditInv.JumpItem.Lore", "Friends.GUI.FriendEditInv.JumpItem.ItemID", "Friends.GUI.FriendEditInv.JumpItem.InventorySlot", 1),
 	EDIT_BACK("Friends.GUI.FriendEditInv.BackItem.Name", "Friends.GUI.FriendEditInv.BackItem.Lore", "Friends.GUI.FriendEditInv.BackItem.ItemID", "Friends.GUI.FriendEditInv.BackItem.InventorySlot", 1),
+	EDIT_PARTY("Friends.GUI.FriendEditInv.PartyItem.Name", "Friends.GUI.FriendEditInv.PartyItem.Lore", "Friends.GUI.FriendEditInv.PartyItem.ItemID", "Friends.GUI.FriendEditInv.PartyItem.InventorySlot", 1),
 	EDIT_PLACEHOLDER(null, null, "Friends.GUI.FriendEditInv.PlaceholderItems.ItemID", null, 1),
 	REMOVEVERIFICATION_CONFIRM("Friends.GUI.RemoveVerificationInv.ConfirmItem.Name", "Friends.GUI.RemoveVerificationInv.ConfirmItem.Lore", "Friends.GUI.RemoveVerificationInv.ConfirmItem.ItemID", "Friends.GUI.RemoveVerificationInv.ConfirmItem.InventorySlot", 1),
 	REMOVEVERIFICATION_CANCLE("Friends.GUI.RemoveVerificationInv.CancelItem.Name", "Friends.GUI.RemoveVerificationInv.CancelItem.Lore", "Friends.GUI.RemoveVerificationInv.CancelItem.ItemID", "Friends.GUI.RemoveVerificationInv.CancelItem.InventorySlot", 1),
@@ -55,10 +55,6 @@ public enum ItemStacks {
 	BLOCKED_EDIT_UNBLOCK("Friends.GUI.BlockedEditInv.UnblockItem.Name", "Friends.GUI.BlockedEditInv.UnblockItem.Lore", "Friends.GUI.BlockedEditInv.UnblockItem.ItemID", "Friends.GUI.BlockedEditInv.UnblockItem.InventorySlot", 1),
 	BLOCKED_EDIT_BACK("Friends.GUI.BlockedEditInv.BackItem.Name", "Friends.GUI.BlockedEditInv.BackItem.Lore", "Friends.GUI.BlockedEditInv.BackItem.ItemID", "Friends.GUI.BlockedEditInv.BackItem.InventorySlot", 1),
 	BLOCKED_EDIT_PLACEHOLDER(null, null, "Friends.GUI.BlockedEditInv.PlaceholderItem.ItemID", null, 1);
-
-	
-	private static FileManager mgr = new FileManager();
-	private static FileConfiguration cfg = mgr.getConfig("", "config.yml");
 	
 	private String name;
 	private List<String> lore;
@@ -67,19 +63,17 @@ public enum ItemStacks {
 	private Integer invSlot = 0;
 	
 	ItemStacks(String name, String lore, String id, String invSlot, Integer amount) {
-		FileManager mgr = new FileManager();
-		FileConfiguration cfg = mgr.getConfig("", "config.yml");
 		
 		if(name == null) {this.name = "§r";} else {
-			this.name = ChatColor.translateAlternateColorCodes('&', cfg.getString(name));
+			this.name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(name));
 		}
-		if(lore == null) {this.lore = null;} else {
-			this.lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString(lore)).split("//"));
+		if(lore == null) {this.lore = new ArrayList<>();} else {
+			this.lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString(lore)).split("//"));
 		}
-		this.itemID = cfg.getString(id).split(":");
+		this.itemID = FileManager.ConfigCfg.getString(id).split(":");
 		this.amount = amount;
 		if(invSlot != null && invSlot.length() > 5) {
-			this.invSlot = Integer.valueOf(cfg.getString(invSlot));
+			this.invSlot = Integer.valueOf(FileManager.ConfigCfg.getString(invSlot));
 		}
 	}
 	
@@ -118,58 +112,6 @@ public enum ItemStacks {
 		IM.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 		IM.addItemFlags(ItemFlag.HIDE_DESTROYS);
 		IM.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		IS.setItemMeta(IM);
-		return IS;
-	}
-	
-	public static ItemStack FRIENDITEM(Player player) {
-		if(cfg.getBoolean("Friends.FriendItem.PlayersHead")) {
-			ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-			SkullMeta SM = (SkullMeta)IS.getItemMeta();
-			SM.setOwner(player.getName());
-			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Displayname")));
-			SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Lore")).split("//")));
-			IS.setItemMeta(SM);
-			return IS;
-		}
-		String[] IdByString = cfg.getString("Friends.FriendItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Displayname"));
-		return MainStack(IdByString, 1, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.FriendItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack MAIN_REQUESTS(Integer requests) {
-		String[] IdByString = cfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.RequestsItem.Name").replace("%REQUESTS%", ""+requests));
-		return MainStack(IdByString, requests, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack MAIN_BLOCKED(Integer blocked) {
-		String[] IdByString = cfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
-		String name =  ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.BlockedItem.Name").replace("%BLOCKED%", ""+blocked));
-		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
-	}
-	
-	public static ItemStack OPTIONSBUTTON(List<String> options, String option, String code) {
-		String[] IdByString = cfg.getString("Friends.GUI.OptionsInv.ButtonOn.ItemID").split(":");
-		String name = ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOn.Name"));
-		List<String> lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOn.Lore")).split("//"));
-		if(options.contains(option)) {
-			IdByString = cfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
-			name = ChatColor.translateAlternateColorCodes('&', cfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
-		}
-		return MainStack(IdByString, 1, name, lore, code);
-	}
-	
-	@SuppressWarnings("deprecation")
-	private static ItemStack MainStack(String[] IdByString, int anzahl, String name, List<String> lore, String code) {
-		int id = Integer.valueOf(IdByString[0]);
-		int byt = 0;
-		if(IdByString.length > 1) {byt = Integer.valueOf(IdByString[1]);}
-		
-		ItemStack IS = new ItemStack(Material.getMaterial(id), anzahl, (byte) byt);
-		ItemMeta IM = IS.getItemMeta();
-		IM.setDisplayName(name + code);
-		IM.setLore(lore);
 		IS.setItemMeta(IM);
 		return IS;
 	}

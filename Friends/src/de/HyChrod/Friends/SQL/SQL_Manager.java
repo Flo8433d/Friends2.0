@@ -1,230 +1,111 @@
-/*
-*
-* This class was made by VortexTM
-* All rights reserved, 2016
-*
-*/
 package de.HyChrod.Friends.SQL;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 public class SQL_Manager {
-
-	public static Boolean playerExists(OfflinePlayer player) {
+	
+	public static Boolean playerExists(String uuid) {
 		try {
 			ResultSet rs = MySQL
-					.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "'");
+					.query("SELECT * FROM friends2_0 WHERE UUID= '" + uuid + "'");
 			if (rs.next()) {
-				return rs.getString("UUID") != null;
+				if (rs.getString("UUID") != null) {
+					return Boolean.valueOf(true);
+				}
+				return Boolean.valueOf(false);
 			}
-			return false;
+			return Boolean.valueOf(false);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return Boolean.valueOf(false);
 	}
 
-	public static Boolean createPlayer(OfflinePlayer player) {
-		if (!(playerExists(player))) {
+	public static Boolean createPlayer(String uuid) {
+		if (!playerExists(uuid).booleanValue()) {
 			MySQL.update("INSERT INTO friends2_0(UUID, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE) VALUES ('"
-					+ player.getUniqueId().toString() + "', '', '', '','','');");
-			if (playerExists(player)) {
-				return true;
+					+ uuid + "', '', '', '','','');");
+			if (playerExists(uuid)) {
+				return Boolean.valueOf(true);
 			}
-			return false;
+			return Boolean.valueOf(false);
 		}
-		return true;
+		return Boolean.valueOf(true);
+	}
+	
+	public static void set(LinkedList<Object> data, String uuid, String value) {
+		if (playerExists(uuid)) {
+			String serialized = "";
+			for (Object players : data) {
+				serialized = serialized + String.valueOf(players) + "//;";
+			}
+			MySQL.update("UPDATE friends2_0 SET " + value + "='" + serialized + "' WHERE UUID='"
+					+ uuid + "';");
+		} else {
+			createPlayer(uuid);
+			set(data, uuid, value);
+		}
 	}
 
-	public static LinkedList<OfflinePlayer> getFriends(OfflinePlayer player) {
-		LinkedList<OfflinePlayer> friends = new LinkedList<>();
-		if (playerExists(player)) {
+	public static LinkedList<Object> get(String uuid, String value, boolean players) {
+		LinkedList<Object> data = new LinkedList<>();
+		
+		if (playerExists(uuid)) {		
 			try {
-				ResultSet rs = MySQL
-						.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("FRIENDS")) == null))
-					;
+				ResultSet rs = MySQL.query("SELECT * FROM friends2_0 WHERE UUID= '" + uuid + "';");
+				if ((rs.next()) && (String.valueOf(rs.getString(value))) == null) {
 
-				String[] uuids = rs.getString("FRIENDS").split("//;");
+				}
+				Integer valueToCheck = 20;
+				if(value.equals("OPTIONS")) 
+					valueToCheck = 6;
+				String[] uuids = rs.getString(value).split("//;");
 				for (int i = 0; i < uuids.length; i++) {
-					if (uuids[i].length() > 20) {
-						friends.add(Bukkit.getOfflinePlayer(UUID.fromString(uuids[i])));
+					if (uuids[i].length() > valueToCheck) {
+						if(players) {
+							OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuids[i]));
+							if(player != null && player.getName() != null && !player.getName().equalsIgnoreCase("null"))
+								data.add(player);
+						} else
+							data.add(uuids[i]);
 					}
 				}
 
-			} catch (Exception e) {
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-		}
-		return friends;
+		}	
+		return data;
 	}
 
-	public static Long getLastOnline(OfflinePlayer player) {
-		Long timeStamp = (long) 0;
-		if (playerExists(player)) {
+	public static Long getLastOnline(String uuid) {
+		Long timeStamp = Long.valueOf(0L);
+		if (playerExists(uuid)) {
 			try {
 				ResultSet rs = MySQL
-						.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("LASTONLINE")) == null))
-					;
-
-				timeStamp = Long.parseLong(rs.getString("LASTONLINE"));
-			} catch (Exception ex) {
+						.query("SELECT * FROM friends2_0 WHERE UUID= '" + uuid + "';");
+				if ((rs.next()) && (String.valueOf(rs.getString("LASTONLINE")) == null)) {
+				}
+				timeStamp = Long.valueOf(Long.parseLong(rs.getString("LASTONLINE")));
+			} catch (Exception localException) {
 			}
 		}
 		return timeStamp;
 	}
 
-	public static void setLastOnline(OfflinePlayer player, Long timeStamp) {
-		if (playerExists(player)) {
+	public static void setLastOnline(String uuid, Long timeStamp) {
+		if (playerExists(uuid)) {
 			MySQL.update("UPDATE friends2_0 SET LASTONLINE='" + timeStamp.toString() + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
+					+ uuid + "';");
 			return;
-		} else {
-			createPlayer(player);
-			setLastOnline(player, timeStamp);
 		}
-		return;
+		createPlayer(uuid);
+		setLastOnline(uuid, timeStamp);
 	}
-
-	public static LinkedList<OfflinePlayer> getRequests(OfflinePlayer player) {
-		LinkedList<OfflinePlayer> friends = new LinkedList<>();
-		if (playerExists(player)) {
-
-			try {
-				ResultSet rs = MySQL
-						.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("REQUESTS")) == null))
-					;
-
-				String[] uuids = rs.getString("REQUESTS").split("//;");
-				for (int i = 0; i < uuids.length; i++) {
-
-					if (uuids[i].length() > 20) {
-
-						friends.add(Bukkit.getOfflinePlayer(UUID.fromString(uuids[i])));
-					}
-
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return friends;
-	}
-
-	public static LinkedList<OfflinePlayer> getBlocked(OfflinePlayer player) {
-		LinkedList<OfflinePlayer> friends = new LinkedList<>();
-		if (playerExists(player)) {
-			try {
-				ResultSet rs = MySQL
-						.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("BLOCKED")) == null))
-					;
-
-				String[] uuids = rs.getString("BLOCKED").split("//;");
-				for (int i = 0; i < uuids.length; i++) {
-					if (uuids[i].length() > 20) {
-						friends.add(Bukkit.getOfflinePlayer(UUID.fromString(uuids[i])));
-					}
-				}
-
-			} catch (Exception e) {
-			}
-		}
-		return friends;
-	}
-
-	public static void setBlocked(List<OfflinePlayer> currentBlocked, OfflinePlayer player) {
-		if (playerExists(player)) {
-
-			String serializedBlocked = "";
-			for (OfflinePlayer blocked : currentBlocked) {
-				serializedBlocked = serializedBlocked + blocked.getUniqueId().toString() + "//;";
-			}
-			MySQL.update("UPDATE friends2_0 SET BLOCKED='" + serializedBlocked + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-
-		} else {
-			createPlayer(player);
-			setBlocked(currentBlocked, player);
-		}
-	}
-
-	public static void setRequests(List<OfflinePlayer> currentRequests, OfflinePlayer player) {
-		if (playerExists(player)) {
-
-			String serializedRequests = "";
-			for (OfflinePlayer requests : currentRequests) {
-				serializedRequests = serializedRequests + requests.getUniqueId().toString() + "//;";
-			}
-			MySQL.update("UPDATE friends2_0 SET REQUESTS='" + serializedRequests + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-
-		} else {
-			createPlayer(player);
-			setRequests(currentRequests, player);
-		}
-	}
-
-	public static void setFriends(final List<OfflinePlayer> currentFriends, final OfflinePlayer player) {
-		if (playerExists(player)) {
-			String serializedFriends = "";
-			for (OfflinePlayer friends : currentFriends) {
-				serializedFriends = serializedFriends + friends.getUniqueId().toString() + "//;";
-			}
-			MySQL.update("UPDATE friends2_0 SET FRIENDS='" + serializedFriends + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-		} else {
-			createPlayer(player);
-			setFriends(currentFriends, player);
-		}
-	}
-
-	public static void setOptions(OfflinePlayer player, List<String> options) {
-		if (playerExists(player)) {
-
-			String serializedOptions = "";
-			for (String option : options) {
-				if (option.length() > 5) {
-					serializedOptions = serializedOptions + "//;" + option;
-				}
-			}
-
-			MySQL.update("UPDATE friends2_0 SET OPTIONS='" + serializedOptions + "' WHERE UUID='"
-					+ player.getUniqueId().toString() + "';");
-		} else {
-			createPlayer(player);
-			setOptions(player, options);
-		}
-		return;
-	}
-
-	public static LinkedList<String> getOptions(OfflinePlayer player) {
-		LinkedList<String> options = new LinkedList<>();
-		if (playerExists(player)) {
-			try {
-				ResultSet rs = MySQL
-						.query("SELECT * FROM friends2_0 WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (String.valueOf(rs.getString("OPTIONS")) == null))
-					;
-
-				String[] option = rs.getString("OPTIONS").split("//;");
-				for (int i = 0; i < option.length; i++) {
-					options.add(option[i]);
-				}
-
-			} catch (Exception e) {
-			}
-		}
-		return options;
-	}
-
 }

@@ -12,26 +12,28 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
-import de.HyChrod.Friends.Util.ItemStacks;
+import de.HyChrod.Friends.Util.UtilitieItems;
 
 public class PlayerSwapHandItemsListener implements Listener {
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSpawn(PlayerSwapHandItemsEvent e) {
 		Player p = e.getPlayer();
-		if(e.getMainHandItem() != null) {
-			if(e.getMainHandItem().hasItemMeta()) {
-				if(e.getMainHandItem().getItemMeta().hasDisplayName()) {
-					if(e.getMainHandItem().getItemMeta().getDisplayName().equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+		if (e.getMainHandItem() != null) {
+			if (e.getMainHandItem().hasItemMeta()) {
+				if (e.getMainHandItem().getItemMeta().hasDisplayName()) {
+					if (e.getMainHandItem().getItemMeta().getDisplayName()
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}
 			}
 		}
-		if(e.getOffHandItem() != null) {
-			if(e.getOffHandItem().hasItemMeta()) {
-				if(e.getOffHandItem().getItemMeta().hasDisplayName()) {
-					if(e.getOffHandItem().getItemMeta().getDisplayName().equals(ItemStacks.FRIENDITEM(p).getItemMeta().getDisplayName())) {
+		if (e.getOffHandItem() != null) {
+			if (e.getOffHandItem().hasItemMeta()) {
+				if (e.getOffHandItem().getItemMeta().hasDisplayName()) {
+					if (e.getOffHandItem().getItemMeta().getDisplayName()
+							.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 						e.setCancelled(true);
 					}
 				}

@@ -8,78 +8,60 @@ package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Util.InventoryBuilder;
+import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 
 public class BlockedEditInventoryListener implements Listener {
-	
+
 	private Friends plugin;
-	private FileManager mgr = new FileManager();
-	private FileConfiguration cfg = this.mgr.getConfig("", "config.yml");
-	
+
 	public static HashMap<Player, OfflinePlayer> editing = new HashMap<>();
-	
+
 	public BlockedEditInventoryListener(Friends friends) {
 		this.plugin = friends;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onInventoryClick(InventoryClickEvent e) {
+	public void onInventoryClick(InventoryClickEvent e) throws Exception {
 		final Player p = (Player) e.getWhoClicked();
-		if(e.getInventory() != null) {
-			if(editing.containsKey(p)) {
-				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
+		if (e.getInventory() != null) {
+			if (editing.containsKey(p)) {
+				if (e.getInventory().getTitle()
+						.equals(ChatColor.translateAlternateColorCodes('&',
+								FileManager.ConfigCfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%",
+										editing.get(p).getName())))) {
 					e.setCancelled(true);
-					if(e.getCurrentItem() != null) {
-						if(e.getCurrentItem().hasItemMeta()) {
-							if(e.getCurrentItem().getItemMeta().hasDisplayName()) {
-								if(e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem())) {
+					if (e.getCurrentItem() != null) {
+						if (e.getCurrentItem().hasItemMeta()) {
+							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
+								if (e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem())) {
 									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.removeBlocked(editing.get(p));
-									p.sendMessage(plugin.getString("Messages.Commands.Unblock.Unblock").replace("%PLAYER%", editing.get(p).getName()));
-									InventoryBuilder.BLOCKED_INVENTORY(plugin, p);
+									pu.update(editing.get(p).getUniqueId().toString(), 2, false);
+									p.sendMessage(plugin.getString("Messages.Commands.Unblock.Unblock")
+											.replace("%PLAYER%", editing.get(p).getName()));
+									InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, true);
 									return;
 								}
-								if(e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_BACK.getItem())) {
-									Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-										public void run() {
-											p.closeInventory();
-											InventoryBuilder.BLOCKED_INVENTORY(plugin, p);
-										}
-									}, 2);
+								if (e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_BACK.getItem())) {
+									InventoryBuilder.openInv(p,
+											InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, false));
 									return;
 								}
 							}
 						}
 					}
-				}
-			}
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClose(InventoryCloseEvent e) {
-		Player p = (Player) e.getPlayer();
-		if(e.getInventory() != null) {
-			if(editing.containsKey(p)) {
-				if(e.getInventory().getTitle().equals(ChatColor.translateAlternateColorCodes('&', 
-						this.cfg.getString("Friends.GUI.BlockedEditInv.Title").replace("%PLAYER%", editing.get(p).getName())))) {
-					editing.remove(p);
 				}
 			}
 		}

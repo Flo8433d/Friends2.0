@@ -1,5 +1,38 @@
+v2.4.0
+
+  -- CONFIG RESET --
+  PartySystem!
+
+v2.3.4
+
+  -- CONFIG RESET --
+  Playerheads in inventory are sorted by online/offline
+  You can change the name of the playerheads in all inventorys (Request/Blocked/Main)
+  Bugfix with BungeeCord
+
+v2.3.3
+
+  MySQL Bugfix
+  Added command "/friends acceptall"
+  You can send requests to offline players
+
+v2.3.2
+
+  -- CONFIG RESET --
+  Code improvements
+  For NO BungeeCord Server you now have the posibillity to Show the current world the Player is on under their name in the GUI
+  The admin can see the friendchat of other players by performing "/f toggle spychat" with the permission "- Friends.Commands.SpyChat"
+  You get a optional notification on join to see how many request you have open
+  If a player goes offline the head in the gui will turn into a skeleton to better define who's online and who's offline
+
+v2.2.4
+
+  Added a file-backup system to keep changes by adding new stuff
+  Implementing a reload command to commit changes
+
 v2.2.3
 
+  -- CONFIG RESET --
   Fixed some bugs with bungeecord
   Added private messaging -> /f msg <Player> <Message>
 
@@ -9,6 +42,7 @@ v2.2.0
 
 v2.1.0
    
+   -- CONFIG RESET --
    Complete new Code again
    Removed Async MySQL
    Added normal SQL

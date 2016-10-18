@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 2.2.4 	#
+#    Plugin made by HyChrod, Version: 2.4.0 	#
 #												#
 #################################################
 Friends:
@@ -13,9 +13,16 @@ Friends:
     Code: "@friends"
     # This allows players to send private messages to their friends using command '/f msg <Player> <Message>'!
     FriendMSG: true
+    # If this is enabled player with special permissions are able to see the friendchat of other players
+    # This can be used to control the friendchat by admins
+    # Permission:
+    # - Friends.Commands.SpyChat
+    SpyChat:
+      Enable: true
+      Format: "&3%PLAYER% &6[FRIENDCHAT] &f| %MESSAGE%"
   
-  # This options is for server networks and enables BungeeCord
-  # To use BungeeMode you have to install "Friends - BungeeAddon" on your Proxi too
+  # This options are for server networks and enables BungeeCord
+  # To use BungeeMode you have to install "Friends - BungeeAddon" on your Proxy too
   # You can find the Addon here:
   # <https://www.spigotmc.org/resources/friends2-0-mc1-8-1-10-bungeecord-addon.28909/>
   BungeeMode: false
@@ -24,6 +31,14 @@ Friends:
   ShowServer:
     Enable: true
     Lore: "&3Server: &f%SERVER%"
+    
+  # These options are for an optional partysystem
+  # To use the partysystem you have to install my Party plugin on your Proxy too
+  # Make sure you also enabled bungeemode!
+  # You can find the plugin here:
+  # <https://www.spigotmc.org/resources/party.30609/>
+  PartySystem:
+    Enable: false
   
   # Here you can change some options!
   Options:
@@ -47,6 +62,14 @@ Friends:
     CanMoveItem: false
     # If this is enabled you have to confirm twice to remove a player from your friendlist!
     RemoveVerification: false
+    # If this is enabled the world the player is currently on will be shown under their name in the GUI!
+    # This only works if BungeeMode is disabled!
+    # If this is enabled the player gets notified on join if he has open friend requests
+    # The message can be changed in the messages.yml!
+    RequestNotification: true
+    ShowWorld:
+      Enable: true
+      Lore: "&3World: &f%WORLD%"
     LastOnline:
       Enable: true
       # Values: %days% %hours% %minutes% %seconds%
@@ -71,6 +94,11 @@ Friends:
     # Available sizes are: 9, 18, 27, 36, 45, 54!
     # WARNING! If you use another number as above, the gui will not work!!
     InventorySize: 54
+    FriendHead:
+      # If this is enabled the players head in your friend-inventory will change to a skeleton if he turns offline!
+      ChangeHeadIfOffline: true
+      NameOnline: "&f%PLAYER% &a(Online)"
+      NameOffline: "&f%PLAYER% &8(Offline)"
     RequestsItem:
       Name: "&aCurrent Requests &7(&c%REQUESTS%&7)"
       ItemID: "388:0"
@@ -117,6 +145,8 @@ Friends:
       # Available sizes are: 9, 18, 27, 36, 45, 54!
       # WARNING! If you use another number as above, the gui will not work!!
       InventorySize: 54
+      PlayerHead:
+        Name: "&3%PLAYER%"
       NextPageItem:
         Name: "&6Next Page"
         ItemID: "262:0"
@@ -220,6 +250,8 @@ Friends:
       # Available sizes are: 9, 18, 27, 36, 45, 54!
       # WARNING! If you use another number as above, the gui will not work!!
       InventorySize: 54
+      PlayerHead:
+        Name: "&c&PLAYER%"
       NextPageItem:
         Name: "&6Next Page"
         ItemID: "262:0"
@@ -293,29 +325,36 @@ Friends:
         ItemID: "397:3"
         # You can separate the lines with "//"!
         Lore: "&7If this function is disabled//&7players can't send you requests!"
-        InventorySlot: 11
-        ButtonInventorySlot: 20
+        InventorySlot: 10
+        ButtonInventorySlot: 19
       OptionsMessagesItems:
         Name: "&3Friend-Chat"
         ItemID: "339:0"
         # You can separate the lines with "//"!
         Lore: "&7If this function is disabled//&7you can't see the friend-chat!"
-        InventorySlot: 13
-        ButtonInventorySlot: 22
+        InventorySlot: 12
+        ButtonInventorySlot: 21
       OptionsJumping:
         Name: "&dJumping"
         ItemID: "368:0"
         # You can separate the lines with "//"!
         Lore: "&7If this function is disabled//&7your friends can't jump to you!"
-        InventorySlot: 17
-        ButtonInventorySlot: 26
+        InventorySlot: 16
+        ButtonInventorySlot: 25
       OptionPrivateMessages:
         Name: "&6Private Messages"
         ItemID: "288:0"
         # You can separate the lines with "//"!
-        Lore: "&7If this function is disabled//&7you can't receive any private messages"
-        InventorySlot: 15
-        ButtonInventorySlot: 24
+        Lore: "&7If this function is disabled//&7you can't receive any//&7private messages"
+        InventorySlot: 14
+        ButtonInventorySlot: 23
+      OptionsPartyInvites:
+        Name: "&9Party-Invites"
+        ItemID: "401:0"
+        # You can separate the lines with "//"!
+        Lore: "&7If this function is disabled//&7you can't receive any party invites"
+        InventorySlot: 18
+        ButtonInventorySlot: 27
       ButtonOff:
         Name: "&7Currently (&cDisabled&7)"
         ItemID: "351:8"
@@ -356,20 +395,26 @@ Friends:
         ItemID: "35:14"
         # You can separate the lines with "//"!
         Lore: "&7Click here to remove this friend//&7from your friendlist!"
-        InventorySlot: 13
+        InventorySlot: 12
       # INFO! This will only work if you enabled "EnableJumping" above!
       JumpItem:
         Name: "&dJump to friend"
         ItemID: "368:0"
         # You can separate the lines with "//"!
         Lore: "&7Click here to jump to this friend!"
-        InventorySlot: 15
+        InventorySlot: 14
       BackItem:
         Name: "&8Back to the main-menu!"
         ItemID: "330:0"
         # You can separate the lines with "//"!
         Lore: "&7Click here to go back to the main menu!"
         InventorySlot: 36
+      PartyItem:
+        Name: "&9Send party invite"
+        ItemID: "401:0"
+        # You can separate the lines with "//"!
+        Lore: "&7Click here to send this//&7player a party invite!"
+        InventorySlot: 16      
       PlaceholderItems:
         ItemID: "160:7"
         InventorySlots:
@@ -383,12 +428,23 @@ Friends:
         - 28
   
   # Put in the name of worlds where players should not use the friend-item!
+  # If this feature is enabled you have to disable 'EnabledWorlds'!
   DisabledWorlds:
-  - world_nether
+    Enable: true
+    Worlds:
+    - world_nether
+    
+  # Put in the name of worlds where players can use the friend-item!
+  # The friend-item will be removed on all other worlds!
+  # If this feature is enabled you have to disable 'DisabledWorlds'!
+  EnabledWorlds:
+    Enable: false
+    Worlds:
+    - world_nether
   
 #################################################
 #												#
-#	You are not authorized to sell this Plugin	#
+#	You are not authorized to sell this plugin	#
 #	All rights reserved by HyChrod, 2016.		#
 #												#
 #################################################

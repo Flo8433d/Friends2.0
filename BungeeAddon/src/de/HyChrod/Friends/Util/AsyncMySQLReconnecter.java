@@ -6,18 +6,19 @@
 */
 package de.HyChrod.Friends.Util;
 
-import org.bukkit.Bukkit;
+import java.util.concurrent.TimeUnit;
 
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.MySQL;
+import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class AsyncMySQLReconnecter {
 	
-	public static Integer scheduler;
+	public static ScheduledTask scheduler;
 	
-	@SuppressWarnings("deprecation")
 	public AsyncMySQLReconnecter() {
-		scheduler = Bukkit.getScheduler().scheduleAsyncRepeatingTask(Friends.getInstance(), new Runnable() {
+		scheduler = BungeeCord.getInstance().getScheduler().schedule(Friends.getInstance(), new Runnable() {
 			
 			@Override
 			public void run() {
@@ -28,7 +29,7 @@ public class AsyncMySQLReconnecter {
 					MySQL.connect();
 				}
 			}
-		}, 20*5, 20*60*5);
+		}, 20*60*5, 20*60*5, TimeUnit.SECONDS);
 	}
 
 }

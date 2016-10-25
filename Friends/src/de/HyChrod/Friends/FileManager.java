@@ -108,24 +108,10 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.FriendChatDisabled") == null) {
+		if (cfg.getString("Messages.Commands.Help.WrongSite") == null) {
 			try {
 				createBackup(file);
-				cfg.set("Messages.Commands.Help.Page1.6", "%PREFIX% &3/f acceptall &f| Accepts all requests");
-				cfg.set("Messages.Commands.Help.Page2.7", "%PREFIX% &c------------------------------------------");
-				cfg.set("Messages.Commands.Help.Page2.7", "%PREFIX% &3More Commands --> /f help 3");
-				cfg.set("Messages.Commands.Help.Page2.7", "%PREFIX% &c------------------------------------------");
-				cfg.set("Messages.Commands.Help.Page3.0", "%PREFIX% &c[&6Page3&c]------------------------------------");
-				cfg.set("Messages.Commands.Help.Page3.1", "%PREFIX% &3/f jump <Player> &f| Jump to a friend");
-				cfg.set("Messages.Commands.Help.Page3.2", "%PREFIX% &3/f info &f| See some informations");
-				cfg.set("Messages.Commands.Help.Page3.3", "%PREFIX% &3/f msg <Player> <Message> &f| Send a message");
-				cfg.set("Messages.Commands.Help.Page3.4", "%PREFIX% &c------------------------------------------");
-				cfg.set("Messages.Commands.Toggle.ToggleSpyChat.Toggle", "%PREFIX% &aYou toggled spychat!");
-				cfg.set("Messages.Commands.Toggle.ToggleSpyChat.Disabled", "%PREFIX% &cThe spychat is disabled on this server!");
-				cfg.set("Messages.RequestNotification", "%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!");			
-				cfg.set("Messages.Commands.Acceptall.NoRequests", "%PREFIX% &cYou don't have any request!");
-				cfg.set("Messages.Commands.Acceptall.Accept", "%PREFIX% &aYou accepted &3%COUNT% &arequests!");
-				cfg.set("Messages.FriendChatDisabled", "%PREFIX% &cYou disabled the friendchat!");
+				cfg.set("Messages.Commands.Help.WrongSite", "%PREFIX% &cThis site does not exist!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();

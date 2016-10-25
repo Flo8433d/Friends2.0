@@ -1,6 +1,6 @@
 /*
 *
-* This class was made by HyChrod
+#* This class was made by HyChrod
 * All rights reserved, 2016
 *
 */
@@ -64,7 +64,7 @@ public class FriendCommands implements CommandExecutor {
 		}
 		final Player p = (Player) sender;
 		if (p.hasPermission("Friends.Use")) {
-
+			
 			if (args.length == 0) {
 				if (FileManager.ConfigCfg.getBoolean("Friends.GUI.Enable")) {
 					InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
@@ -73,24 +73,21 @@ public class FriendCommands implements CommandExecutor {
 				p.performCommand("friends help");
 				return true;
 			}
-			if (args.length == 1 && args[0].equalsIgnoreCase("help")
-					|| (args.length == 2 && args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("1"))) {
-				for (int i = 0; i <= 9; i++) {
-					p.sendMessage(plugin.getString("Messages.Commands.Help.Page1." + i));
+			
+			if(args[0].equalsIgnoreCase("help")) {	
+				if(args.length == 1) {
+					for(String value : FileManager.MessagesCfg.getConfigurationSection("Messages.Commands.Help.Page1").getKeys(false))
+						p.sendMessage(plugin.getString("Messages.Commands.Help.Page1." + value));
+					return true;
 				}
-				return true;
-			}
-			if (args.length == 2 && args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("2")) {
-				for (int i = 0; i <= 9; i++) {
-					p.sendMessage(plugin.getString("Messages.Commands.Help.Page2." + i));
+				String page = args[1];
+				if(FileManager.MessagesCfg.getString("Messages.Commands.Help.Page" + page) == null) {
+					p.sendMessage(plugin.getString("Messages.Commands.Help.WrongSite"));
+					return false;
 				}
-				return true;
-			}
-			if (args.length == 2 && args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("3")) {
-				for (int i = 0; i <= 4; i++) {
-					p.sendMessage(plugin.getString("Messages.Commands.Help.Page3." + i));
-				}
-				return true;
+				for(String value : FileManager.MessagesCfg.getConfigurationSection("Messages.Commands.Help.Page" + page).getKeys(false))
+					p.sendMessage(plugin.getString("Messages.Commands.Help.Page" + page + "." + value));
+				return false;
 			}
 
 			/*

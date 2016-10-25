@@ -38,15 +38,21 @@ public class UtilitieItems {
 	}
 	
 	public ItemStack MAIN_REQUESTS(Integer requests) {
+		int rqs = requests;
+		if(rqs > 64) 
+			rqs = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
 		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Name").replace("%REQUESTS%", ""+requests));
-		return MainStack(IdByString, requests, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
+		return MainStack(IdByString, rqs, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.Lore")).split("//")), "§a");
 	}
 	
 	public ItemStack MAIN_BLOCKED(Integer blocked) {
+		int blq = blocked;
+		if(blq > 64) 
+			blq = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
 		String name =  ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Name").replace("%BLOCKED%", ""+blocked));
-		return MainStack(IdByString, blocked, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
+		return MainStack(IdByString, blq, name, Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.Lore")).split("//")), "§a");
 	}
 	
 	public ItemStack OPTIONSBUTTON(LinkedList<Object> linkedList, String option, String code) {

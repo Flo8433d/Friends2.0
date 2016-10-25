@@ -6,6 +6,8 @@
 */
 package de.HyChrod.Friends;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +31,7 @@ import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
 import de.HyChrod.Friends.SQL.SQL_Manager;
 import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
+import de.HyChrod.Friends.Util.Metrics;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
 
@@ -108,6 +111,12 @@ public class Friends extends JavaPlugin {
 		if (bungeeMode) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §9§n< BungeeMode >");
 		}
+		
+		try {
+	        Metrics metrics = new Metrics(this);
+	        metrics.start();
+	    } catch (IOException e) {
+	    }
 		return;
 	}
 

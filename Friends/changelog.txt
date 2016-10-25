@@ -1,3 +1,8 @@
+v2.4.1
+
+  Bugfix with request- and blockedcount
+  You can edit the helppage
+
 v2.4.0
 
   -- CONFIG RESET --

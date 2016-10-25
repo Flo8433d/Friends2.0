@@ -36,8 +36,8 @@ public class LoginListener implements Listener {
 			@Override
 			public void run() {
 				try {
-					BungeeSQL_Manager.setOnline(e.getPlayer().getUniqueId().toString(), Integer.valueOf(1));
-					BungeeSQL_Manager.setServer(e.getPlayer().getUniqueId().toString(), BungeeCord.getInstance().getPlayer(e.getPlayer().getUniqueId()).getServer().getInfo().getName());
+					BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), Integer.valueOf(1), "ONLINE");
+					BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), BungeeCord.getInstance().getPlayer(e.getPlayer().getUniqueId()).getServer().getInfo().getName(), "SERVER");
 				} catch (Exception ex) {}
 			}
 		}, 1, TimeUnit.SECONDS);
@@ -62,8 +62,8 @@ public class LoginListener implements Listener {
 	@EventHandler
 	public void onQuit(PlayerDisconnectEvent e) {
 		ProxiedPlayer p = e.getPlayer();
-		BungeeSQL_Manager.setOnline(p.getUniqueId().toString(), Integer.valueOf(0));
-		BungeeSQL_Manager.setLastOnline(p.getUniqueId().toString(), Long.valueOf(System.currentTimeMillis()));
+		BungeeSQL_Manager.set(p.getUniqueId().toString(), Integer.valueOf(0), "ONLINE");
+		BungeeSQL_Manager.set(p.getUniqueId().toString(), Long.valueOf(System.currentTimeMillis()), "LASTONLINE");
 		PlayerUtilities pu = new PlayerUtilities(p.getUniqueId().toString());
 		for (String player : pu.getFriends()) {
 			if (BungeeCord.getInstance().getPlayer(UUID.fromString(player)) != null) {

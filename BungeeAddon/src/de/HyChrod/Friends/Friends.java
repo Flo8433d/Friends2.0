@@ -88,9 +88,9 @@ public class Friends extends Plugin {
 				MySQL.disconnect();
 			}
 			for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
-				BungeeSQL_Manager.setLastOnline(player.getUniqueId().toString(),
-						Long.valueOf(System.currentTimeMillis()));
-				BungeeSQL_Manager.setOnline(player.getUniqueId().toString(), Integer.valueOf(0));
+				BungeeSQL_Manager.set(player.getUniqueId().toString(),
+						Long.valueOf(System.currentTimeMillis()), "LASTONLINE");
+				BungeeSQL_Manager.set(player.getUniqueId().toString(), Integer.valueOf(0), "ONLINE");
 			}
 		} catch (Exception localException) {
 		}

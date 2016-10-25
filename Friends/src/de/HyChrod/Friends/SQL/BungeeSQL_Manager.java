@@ -57,7 +57,9 @@ public class BungeeSQL_Manager {
 						"SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
 				if ((!rs.next()) || (String.valueOf(rs.getString(value)) == null))
 					;
-
+				
+				if(value.equals("LASTONLINE") && rs.getObject(value).equals(""))
+					return 0;
 				return rs.getObject(value);
 
 			} catch (Exception ex) {
@@ -70,13 +72,14 @@ public class BungeeSQL_Manager {
 
 	public static boolean isOnline(OfflinePlayer player) {
 		if (playerExists(player)) {
-			
+
 			try {
 				ResultSet rs = MySQL.query(
 						"SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + player.getUniqueId().toString() + "';");
-				if ((!rs.next()) || (Integer.valueOf(rs.getInt("ONLINE")) == null));
+				if ((!rs.next()) || (Integer.valueOf(rs.getInt("ONLINE")) == null))
+					;
 				Integer value = rs.getInt("ONLINE");
-				
+
 				return value != 0;
 
 			} catch (Exception e) {

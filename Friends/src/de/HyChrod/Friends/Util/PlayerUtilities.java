@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
+import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
 import de.HyChrod.Friends.SQL.SQL_Manager;
 
@@ -103,6 +104,8 @@ public class PlayerUtilities {
 	}
 
 	public Long getLastOnline() {
+		if(Friends.bungeeMode)
+			return Long.valueOf(String.valueOf(BungeeSQL_Manager.get(player, "LASTONLINE")));
 		return sql ? SQL_Manager.getLastOnline(this.player.getUniqueId().toString()) 
 				: (this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".LastOnline") != null)
 				? this.cfg.getLong("Players." + this.player.getUniqueId().toString() + ".LastOnline") : (long) 0;

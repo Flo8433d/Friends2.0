@@ -5,6 +5,7 @@ Messages:
     Unknown: "%PREFIX% &cUnknown Command! --> /f help"
     WrongUsage: "%PREFIX% &cWrong usage! --> %COMMAND%"
     Help:
+      WrongSite: "%PREFIX% &cThis site does not exist!"
       Page1:
         0: "%PREFIX% &c[&6Page1&c]------------------------------------"
         1: "%PREFIX% &3/f add <Player> &f| Adds a friend"
@@ -92,7 +93,7 @@ Messages:
       ToggleJumping: "%PREFIX% &aYou toggled jumping!"
       ToggleMsg: "%PREFIX% &aYou toggled private messaging!"
       ToggleSpyChat: 
-        Toggle: "%PREFIX% &aYou toggled the spychat on this server!"
+        Toggle: "%PREFIX% &aThe spychat is now: &7%VALUE%!"
         Disabled: "%PREFIX% &cThe spychat is disabled!"
     List:
       List: "%PREFIX% &3Online(&c%ONLINE_COUNT%&3): &a%ONLINE%\n%PREFIX% &3Offline(&c%OFFLINE_COUNT%&3): &7%OFFLINE%"

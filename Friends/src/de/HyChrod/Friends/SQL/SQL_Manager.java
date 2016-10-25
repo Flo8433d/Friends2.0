@@ -16,27 +16,23 @@ public class SQL_Manager {
 					.query("SELECT * FROM friends2_0 WHERE UUID= '" + uuid + "'");
 			if (rs.next()) {
 				if (rs.getString("UUID") != null) {
-					return Boolean.valueOf(true);
+					return true;
 				}
-				return Boolean.valueOf(false);
+				return false;
 			}
-			return Boolean.valueOf(false);
+			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return Boolean.valueOf(false);
+		return false;
 	}
 
-	public static Boolean createPlayer(String uuid) {
+	public static void createPlayer(String uuid) {
 		if (!playerExists(uuid).booleanValue()) {
 			MySQL.update("INSERT INTO friends2_0(UUID, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE) VALUES ('"
 					+ uuid + "', '', '', '','','');");
-			if (playerExists(uuid)) {
-				return Boolean.valueOf(true);
-			}
-			return Boolean.valueOf(false);
 		}
-		return Boolean.valueOf(true);
+		return;
 	}
 	
 	public static void set(LinkedList<Object> data, String uuid, String value) {

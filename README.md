@@ -30,6 +30,7 @@ BungeeCord
 
 | Commands      | Description   | Permission  |
 | ------------- |:-------------:| -----:|
+| /friends | Opens the gui | - Friends.Use|
 | /friends help     | Shows all commands | - Friends.Use |
 | /friends add <Player>      | Sends a friend-request to the player | - Friends.Commands.Add |
 | /friends remove <Player> | Removes a player form your friendlist  | - Friends.Commands.Remove |

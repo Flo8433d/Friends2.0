@@ -80,7 +80,7 @@ public class FileManager {
 		friends.saveDefaultConfig();
 		FileConfiguration cfg = this.getConfig("", "config.yml");
 
-		if (cfg.getString("Friends.EnabledWorlds.Enable") == null) {
+		if (cfg.getString("Friends.Options.Status.Delay.Enable") == null) {
 			try {
 				createBackup(getFile("", "config.yml"));
 			} catch (IOException e) {
@@ -108,10 +108,12 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.Commands.Help.WrongSite") == null) {
+		if (cfg.getString("Messages.Status.TooFast") == null) {
 			try {
 				createBackup(file);
 				cfg.set("Messages.Commands.Help.WrongSite", "%PREFIX% &cThis site does not exist!");
+				cfg.set("Messages.Status.TooFast", "%PREFIX% &cYou can only change your status every 10 minutes!");
+				cfg.set("Messages.Status.ChangeStatus", "%PREFIX% &aYou successfully changed your status!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();

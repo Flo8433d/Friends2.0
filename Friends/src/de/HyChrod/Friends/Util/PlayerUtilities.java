@@ -26,10 +26,11 @@ public class PlayerUtilities {
 	public FileConfiguration cfg;
 	public File file;
 	public boolean sql = false;
-
+	
 	private static String[] values = { "FRIENDS", "REQUESTS", "BLOCKED", "OPTIONS" };
 	private static HashMap<OfflinePlayer, LinkedList<LinkedList<Object>>> userdata = new HashMap<>();
-
+	private static HashMap<OfflinePlayer, String> status = new HashMap<>();
+	
 	public PlayerUtilities(OfflinePlayer player) {
 		this.player = player;
 		this.mgr = new FileManager();
@@ -46,6 +47,20 @@ public class PlayerUtilities {
 		for (OfflinePlayer player : userdata.keySet()) {
 			new PlayerUtilities(player).saveData(sync);
 		}
+	}
+	
+	public String getStatus() {
+		if(Friends.bungeeMode)
+			return SQL_Manager.getStatus(this.player.getUniqueId().toString());
+		return status.containsKey(this.player) ? status.get(this.player) : null;
+	}
+	
+	public void setStatus(String s) {
+		if(Friends.bungeeMode) {
+			SQL_Manager.setStatus(this.player.getUniqueId().toString(), s);
+			return;
+		}
+		status.put(this.player, s);
 	}
 
 	public LinkedList<Object> get(Integer i, boolean players) {
@@ -153,6 +168,8 @@ public class PlayerUtilities {
 		if (sql) {
 			for (int i = 0; i <= 3; i++)
 				SQL_Manager.set(this.get(i, false), this.player.getUniqueId().toString(), values[i]);
+			if(status.containsKey(this.player))
+				SQL_Manager.setStatus(this.player.getUniqueId().toString(), status.get(this.player));
 			return;
 		}
 		if (PlayerUtilities.userdata.containsKey(this.player)) {
@@ -164,6 +181,8 @@ public class PlayerUtilities {
 				this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + "." + values[i],
 						serialized);
 			}
+			if(status.containsKey(this.player))
+				this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Status", status.get(this.player));
 		}
 	}
 
@@ -183,6 +202,8 @@ public class PlayerUtilities {
 				hash.set(i, SQL_Manager.get(this.player.getUniqueId().toString(), values[i], false));
 				PlayerUtilities.userdata.put(this.player, hash);
 			}
+			if(SQL_Manager.getStatus(this.player.getUniqueId().toString()) != null)
+				status.put(this.player, SQL_Manager.getStatus(this.player.getUniqueId().toString()));
 			return;
 		}
 
@@ -213,6 +234,8 @@ public class PlayerUtilities {
 				PlayerUtilities.userdata.put(this.player, hash);
 			}
 		}
+		if(this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Status") != null)
+			status.put(this.player, this.cfg.getString("Players." + this.player.getUniqueId().toString() + ".Status"));
 	}
 
 }

@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 2.4.0 	#
+#    Plugin made by HyChrod, Version: 2.4.3 	#
 #												#
 #################################################
 Friends:
@@ -62,6 +62,8 @@ Friends:
     CanMoveItem: false
     # If this is enabled you have to confirm twice to remove a player from your friendlist!
     RemoveVerification: false
+    # If this is enabled you get a notification when a friend joins or quits the server!
+    JoinQuitMessages: true
     # If this is enabled the world the player is currently on will be shown under their name in the GUI!
     # This only works if BungeeMode is disabled!
     # If this is enabled the player gets notified on join if he has open friend requests
@@ -74,6 +76,13 @@ Friends:
       Enable: true
       # Values: %days% %hours% %minutes% %seconds%
       Format: "&cLast Online: &3%days% Days, %hours% Hours and %minutes% Minutes ago"
+    # The status players can set under their name in the gui
+    Status:
+      Delay:
+        # Enable or disbale the delay between changing your status
+        Enable: true
+        # Time in seconds
+        TimeStamp: 600
   
   FriendItem:
     ItemID: "397:3"

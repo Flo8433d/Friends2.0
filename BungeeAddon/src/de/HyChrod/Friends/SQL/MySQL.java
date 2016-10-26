@@ -7,23 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import de.HyChrod.Friends.FileManager;
-
 public class MySQL {
 	
-	public static String host, port, database, username, passwort;
+	public static String host;
+	public static String port;
+	public static String database;
+	public static String username;
+	public static String passwort;
 	public static Connection con;
 
 	public static void connect() {
 		if (!isConnected()) {
-			
-			if(host == null || port == null || database == null || username == null || passwort == null)
-				new FileManager().readMySQLData();
-			
 			try {
-				con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, passwort);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username,
+						passwort);
+			} catch (SQLException localSQLException) {
 			}
 		}
 	}
@@ -34,27 +32,25 @@ public class MySQL {
 				PreparedStatement ps = getConnection().prepareStatement(
 						"CREATE TABLE IF NOT EXISTS friends2_0_BUNGEE(UUID VARCHAR(50), ONLINE INT, SERVER TEXT, LASTONLINE TEXT)");
 				ps.executeUpdate();
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (Exception localException) {
 			}
 		}
 	}
 
 	public static void disconnect() {
 		if (isConnected()) {
-			
 			try {
 				con.close();
-				con = null;
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (SQLException localSQLException) {
 			}
 		}
 	}
 
 	public static boolean isConnected() {
-		return con != null;
+		if (con == null) {
+			return false;
+		}
+		return true;
 	}
 
 	public static Connection getConnection() {
@@ -73,7 +69,6 @@ public class MySQL {
 
 	public static ResultSet query(String qry) {
 		ResultSet rs = null;
-
 		try {
 			Statement st = con.createStatement();
 			rs = st.executeQuery(qry);

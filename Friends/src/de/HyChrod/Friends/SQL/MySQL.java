@@ -34,8 +34,11 @@ public class MySQL {
 		if (isConnected()) {
 			try {
 				PreparedStatement ps = getConnection().prepareStatement(
-						"CREATE TABLE IF NOT EXISTS friends2_0(UUID VARCHAR(50), FRIENDS TEXT, BLOCKED TEXT, REQUESTS TEXT, OPTIONS TEXT, LASTONLINE TEXT)");
+						"CREATE TABLE IF NOT EXISTS friends2_0(UUID VARCHAR(50), FRIENDS TEXT, BLOCKED TEXT, REQUESTS TEXT, OPTIONS TEXT, LASTONLINE TEXT, STATUS TEXT)");
 				ps.executeUpdate();
+				
+				PreparedStatement ps1 = getConnection().prepareStatement("ALTER TABLE friends2_0 ADD COLUMN STATUS TEXT AFTER LASTONLINE;");
+				ps1.executeUpdate();
 			} catch (Exception ex) {
 			}
 		}

@@ -1,3 +1,11 @@
+v2.4.3
+
+  -- CONFIG RESET --
+  Bugfix with friendlimit
+  Bugfix with online/offline
+  You can enable/disable Join-,Quitmessages
+  New status function
+
 v2.4.1
 
   Bugfix with request- and blockedcount

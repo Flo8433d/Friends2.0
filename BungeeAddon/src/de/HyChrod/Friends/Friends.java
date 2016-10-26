@@ -11,6 +11,7 @@ import de.HyChrod.Friends.Listeners.ChatListener;
 import de.HyChrod.Friends.Listeners.LoginListener;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
+import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
 import de.HyChrod.Friends.Util.UpdateChecker;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
@@ -40,6 +41,7 @@ public class Friends extends Plugin {
 		this.prefix = ChatColor.translateAlternateColorCodes('&', this.ConfigCfg.getString("Friends.Prefix"));
 		this.mgr.readMySQLData();
 		try {
+			MySQL.connect();
 			MySQL.performBungee();
 			if (!MySQL.isConnected()) {
 				System.out.println("Friends | ");
@@ -58,6 +60,7 @@ public class Friends extends Plugin {
 				System.out.println("Friends | ");
 				return;
 			}
+			new AsyncMySQLReconnecter();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

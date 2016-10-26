@@ -250,13 +250,15 @@ public class FriendCommands implements CommandExecutor {
 								return false;
 							}
 						}
-						if (puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
-							if (!p.hasPermission("Friends.ExtraFriends") || puT.get(0, true)
-									.size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-								p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
-								return false;
+						if (puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit"))
+							if(toAccept.isOnline()) {
+								Player toCheck = Bukkit.getPlayer(toAccept.getName());
+								if (!toCheck.hasPermission("Friends.ExtraFriends") || puT.get(0, true)
+										.size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
+									p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
+									return false;
+								}
 							}
-						}
 
 						puP.update(toAccept.getUniqueId().toString(), 0, true);
 						puT.update(p.getUniqueId().toString(), 0, true);
@@ -264,9 +266,7 @@ public class FriendCommands implements CommandExecutor {
 						p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter").replace("%PLAYER%",
 								toAccept.getName()));
 						if (BungeeMessagingListener.isOnline(toAccept)) {
-							sendMessage(p, toAccept.getName(),
-									plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%",
-											p.getName()));
+							sendMessage(p, toAccept.getName(), plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
 						}
 						return true;
 					}
@@ -278,6 +278,9 @@ public class FriendCommands implements CommandExecutor {
 				return false;
 			}
 
+			/*
+			 * ACCEPTALL
+			 */
 			if (args[0].equalsIgnoreCase("acceptall")) {
 				if (!checkPerm(p, "Friends.Commands.Acceptall"))
 					return false;
@@ -291,21 +294,20 @@ public class FriendCommands implements CommandExecutor {
 					int i = 0;
 					for (Object requests : pu.get(1, true)) {
 						i++;
-						OfflinePlayer player = null;
+						OfflinePlayer ToAccept = null;
 						if (Friends.bungeeMode)
-							player = ((OfflinePlayer) requests);
+							ToAccept = ((OfflinePlayer) requests);
 						else
-							player = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
-						PlayerUtilities tu = new PlayerUtilities(player);
-						pu.update(player.getUniqueId().toString(), 0, true);
+							ToAccept = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
+											
+						PlayerUtilities tu = new PlayerUtilities(ToAccept);
+						pu.update(ToAccept.getUniqueId().toString(), 0, true);
 						tu.update(p.getUniqueId().toString(), 0, true);
-						pu.update(player.getUniqueId().toString(), 1, false);
+						pu.update(ToAccept.getUniqueId().toString(), 1, false);
 						p.sendMessage(plugin.getString("Messages.Commands.Acceptall.Accept").replace("%COUNT%",
 								String.valueOf(i)));
-						if (BungeeMessagingListener.isOnline(player)) {
-							sendMessage(p, player.getName(),
-									plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%",
-											p.getName()));
+						if (BungeeMessagingListener.isOnline(ToAccept)) {
+							sendMessage(p, ToAccept.getName(),plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
 						}
 					}
 					return true;

@@ -7,17 +7,6 @@
 Friends:
   Prefix: "&6Friends &7|"
   CheckForUpdates: true
-
-  # Here you can change some options!
-  Options:
-    # This is the limit of friends
-    FriendLimit: 25
-    # With a permission players have a higher limit
-    # Permission:
-    # - Friends.ExtraFriends
-    FriendLimit+: 50
-    # You can disable the jump function
-    EnableJumping: true
     
   FriendChat:
     Enable: true

@@ -36,7 +36,6 @@ public class LoginListener implements Listener {
 			@Override
 			public void run() {
 				try {
-					BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), Integer.valueOf(1), "ONLINE");
 					BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), BungeeCord.getInstance().getPlayer(e.getPlayer().getUniqueId()).getServer().getInfo().getName(), "SERVER");
 				} catch (Exception ex) {}
 			}

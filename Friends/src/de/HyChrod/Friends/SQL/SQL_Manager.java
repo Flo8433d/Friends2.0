@@ -29,8 +29,8 @@ public class SQL_Manager {
 
 	public static void createPlayer(String uuid) {
 		if (!playerExists(uuid).booleanValue()) {
-			MySQL.update("INSERT INTO friends2_0(UUID, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE) VALUES ('"
-					+ uuid + "', '', '', '','','');");
+			MySQL.update("INSERT INTO friends2_0(UUID, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE, STATUS) VALUES ('"
+					+ uuid + "', '', '', '','','','');");
 		}
 		return;
 	}
@@ -48,16 +48,40 @@ public class SQL_Manager {
 			set(data, uuid, value);
 		}
 	}
+	
+	public static String getStatus(String uuid) {
+		String status = null;
+		if(playerExists(uuid))
+			try {
+				ResultSet rs = MySQL.query("SELECT * FROM friends2_0 WHERE UUID = '" + uuid + "'");
+				
+				if(rs.next())
+					if(rs.getString("STATUS") != null)
+						if(!rs.getString("STATUS").equalsIgnoreCase("null"))
+							status = rs.getString("STATUS");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		return status;
+	}
+	
+	public static void setStatus(String uuid, String status) {
+		if(playerExists(uuid))
+			MySQL.update("UPDATE friends2_0 SET STATUS = '" + status + "' WHERE UUID ='" + uuid + "';");
+		else {
+			createPlayer(uuid);
+			setStatus(uuid, status);
+		}
+	}
 
 	public static LinkedList<Object> get(String uuid, String value, boolean players) {
 		LinkedList<Object> data = new LinkedList<>();
 		
-		if (playerExists(uuid)) {		
+		if (playerExists(uuid)) {	
 			try {
 				ResultSet rs = MySQL.query("SELECT * FROM friends2_0 WHERE UUID= '" + uuid + "';");
-				if ((rs.next()) && (String.valueOf(rs.getString(value))) == null) {
-
-				}
+				if ((rs.next()) && (String.valueOf(rs.getString(value))) == null);
+				
 				Integer valueToCheck = 20;
 				if(value.equals("OPTIONS")) 
 					valueToCheck = 6;

@@ -135,18 +135,16 @@ public class InventoryPage {
 		SkullMeta SM = (SkullMeta) IS.getItemMeta();
 		SM.setOwner(player.getName());
 		
+		List<String> lore = new ArrayList<>();
+		
 		boolean b_online = false;
 		if (Friends.bungeeMode) {
 			if (BungeeSQL_Manager.isOnline(player)) {
 				SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', 
 						FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOnline").replace("%PLAYER%", player.getName())));
 				if (FileManager.ConfigCfg.getBoolean("Friends.ShowServer.Enable")) {
-					SM.setLore(
-							Arrays.asList(
-									ChatColor.translateAlternateColorCodes('&',
-											FileManager.ConfigCfg.getString("Friends.ShowServer.Lore").replace(
-													"%SERVER%", String
-															.valueOf(BungeeSQL_Manager.get(player, "SERVER"))))));
+					lore = new ArrayList<String>(Arrays.asList(ChatColor.translateAlternateColorCodes('&',FileManager.ConfigCfg.getString("Friends.ShowServer.Lore")
+							.replace("%SERVER%", String.valueOf(BungeeSQL_Manager.get(player, "SERVER"))))));
 				}
 				b_online = true;
 			}
@@ -161,7 +159,7 @@ public class InventoryPage {
 					FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOffline").replace("%PLAYER%", player.getName())));
 			if (FileManager.ConfigCfg.getBoolean("Friends.Options.LastOnline.Enable") && time != null
 					&& time.length >= 3 && pu.getLastOnline() != 0) {
-				SM.setLore(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
+				lore = new ArrayList<String>(Arrays.asList(ChatColor.translateAlternateColorCodes('&',
 						FileManager.ConfigCfg.getString("Friends.Options.LastOnline.Format")
 								.replace("%days%", "" + time[3]).replace("%hours%", time[2] + "")
 								.replace("%minutes%", "" + time[1]).replace("%seconds%", "" + time[0]))));
@@ -170,15 +168,35 @@ public class InventoryPage {
 			SM.setDisplayName(ChatColor.translateAlternateColorCodes('&', 
 					FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOnline").replace("%PLAYER%", player.getName())));
 			if (FileManager.ConfigCfg.getBoolean("Friends.Options.ShowWorld.Enable"))
-				SM.setLore(
-						Arrays.asList(
-								ChatColor.translateAlternateColorCodes('&',
-										FileManager.ConfigCfg.getString("Friends.Options.ShowWorld.Lore").replace(
-												"%WORLD%", Bukkit.getPlayer(player.getUniqueId()).getWorld()
-														.getName()))));
+				lore = new ArrayList<String>(Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.Options.ShowWorld.Lore")
+						.replace("%WORLD%", Bukkit.getPlayer(player.getUniqueId()).getWorld().getName()))));
 		}
+		if(pu.getStatus() != null && pu.getStatus().length() >= 1) {
+			lore.add("");
+			for(String s : splitStatus(pu.getStatus())) {
+				lore.add(s);
+			}
+		}
+		SM.setLore(lore);
 		IS.setItemMeta(SM);
 		return IS;
+	}
+	
+	private List<String> splitStatus(String s) {
+		List<String> splitted = new ArrayList<>();
+		String substring = "§e§o''";
+		int counter = 0;
+		for(int i = 0; i < s.length(); i++) {
+			substring = substring + s.charAt(i);
+			counter++;
+			if(counter >= 30 && !Character.isAlphabetic(s.charAt(i)) || counter >= 45) {
+				counter = 0;
+				splitted.add(substring);
+				substring = "§e";
+			}
+		}
+		splitted.add(substring + "''");
+		return splitted;
 	}
 
 }

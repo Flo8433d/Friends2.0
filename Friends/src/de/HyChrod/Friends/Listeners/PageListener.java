@@ -86,9 +86,24 @@ public class PageListener implements Listener {
 								toReplace.put(1, FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOffline").split("%PLAYER%"));
 								toReplace.put(2, FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.PlayerHead.Name").split("%PLAYER%"));
 								toReplace.put(3, FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.PlayerHead.Name").split("%PLAYER%"));
-								for(int i = 0; i <= 3; i++)
-									for(int a = 0; a < toReplace.get(i).length; a++)
-										friendsName = friendsName.replace(ChatColor.translateAlternateColorCodes('&', toReplace.get(i)[a]), "");
+								for(int i = 0; i <= 3; i++) {
+									for(int a = 0; a < toReplace.get(i).length; a++) {
+										String replaceString = toReplace.get(i)[a];
+										friendsName = friendsName.replace(ChatColor.translateAlternateColorCodes('&', replaceString), "");
+										
+										for(int b = 0; b <= 3; b++) {
+											for(int c = 0; c < toReplace.get(b).length; c++) {
+												String[] contraString = toReplace.get(b);
+												String othersString = contraString[c];											
+												if(othersString.contains(replaceString)) {
+													othersString = othersString.replace(replaceString, "");
+												}	
+												contraString[c] = othersString;
+												toReplace.put(b, contraString);
+											}
+										}
+									}
+								}
 
 								if(type.equals(InventoryTypes.MAIN)) {
 									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));

@@ -58,9 +58,9 @@ Messages:
           '1': '%PREFIX% &aYou get a friendrequest from &3%PLAYER%&a!'
           '2': '%PREFIX% &2%ACCEPT_BUTTON% &c%DENY_BUTTON%'
           '3': '%PREFIX% &c---------------------------------------------'
-        AcceptButton: "&2[Accept \xe2\u0153\u201d]"
+        AcceptButton: "&2[Accept ✔]"
         AcceptHover: '&2Click here to accept the request!'
-        DenyButton: "&c[Deny \xe2\u0153\u2013]"
+        DenyButton: "&c[Deny ✖]"
         DenyHover: '&cClick here to deny the requst!'
     Remove:
       NoFriends: '%PREFIX% &cThis player isn''t your friend!'
@@ -105,6 +105,7 @@ Messages:
       PlayerOffline: '%PREFIX% &cThis player seems to be offline!'
       NoFriend: '%PREFIX% &cThe player you want to jump to have to be your friend!'
       Disabled: '%PREFIX% &cThis player deactivated jumping!'
+      DisabledWorld: "%PREFIX% &cYou can't jump to this player at the moment!"
       Jump:
         Jumper: '%PREFIX% &aYou jumped to &3%PLAYER%&a!'
         ToJump: '%PREFIX% &aYour friend &3%PLAYER% &ajumped to your location!'
@@ -136,3 +137,6 @@ Messages:
   Status:
     TooFast: '%PREFIX% &cYou can only change your status every 10 minutes!'
     ChangeStatus: '%PREFIX% &aYou successfully changed your status!'
+    Clear:
+      UnknownPlayer: "%PREFIX% &cThis player has'nt choosed a status yet!"
+      Clear: "%PREFIX% &3%PLAYER%&a's status was cleared!"

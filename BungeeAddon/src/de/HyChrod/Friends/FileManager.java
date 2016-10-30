@@ -56,9 +56,9 @@ public class FileManager {
 	public void setStandartConfig() {
 		Configuration cfg = this.getConfig("", "config.yml");
 		
-		cfg.set("Friends.Prefix", "&6Friends &7|");
-		cfg.set("Friends.Options.EnableJumping", true);
-		saveFile(cfg, this.getFile("", "config.yml"));
+		if(cfg.get("Friends.Prefix") == null) {
+			saveFile(cfg, this.getFile("", "config.yml"));
+		}
 	}
 	
 	public void setStandartMySQL() {

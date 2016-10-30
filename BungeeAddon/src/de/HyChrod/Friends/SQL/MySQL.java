@@ -47,10 +47,14 @@ public class MySQL {
 	}
 
 	public static boolean isConnected() {
-		if (con == null) {
+		try {
+			if (con == null || con.isClosed()) {
+				return false;
+			}
+			return true;
+		} catch (Exception ex) {
 			return false;
 		}
-		return true;
 	}
 
 	public static Connection getConnection() {

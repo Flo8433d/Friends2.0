@@ -1,3 +1,10 @@
+v2.4.4
+
+  MySQL Bugfix
+  Bugfix with the name in FriendEditInv
+  Added command /status clear <Player> to remove the status of a specified player (- Friends.Commands.Status.Clear)
+  Bugfix with BungeeCord
+
 v2.4.3
 
   -- CONFIG RESET --

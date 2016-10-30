@@ -470,6 +470,14 @@ public class FriendCommands implements CommandExecutor {
 								BungeeMessagingListener.sendToBungeeCord(p, "Connect", server, null);
 								return true;
 							}
+							if(FileManager.ConfigCfg.getBoolean("Friends.DisabledWorlds.Enable")) {
+								if(FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds.Worlds").contains(Bukkit.getPlayer(toJump.getName())
+										.getWorld().getName())) {
+									p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledWorld"));
+									return false;
+								}
+							}
+							
 							p.teleport((Player) toJump);
 							return true;
 

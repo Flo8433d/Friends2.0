@@ -108,12 +108,15 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.Status.TooFast") == null) {
+		if (cfg.getString("Messages.Commands.Jumping.DisabledWorld") == null) {
 			try {
 				createBackup(file);
+				cfg.set("Messages.Commands.Jumping.DisabledWorld", "%PREFIX% &cYou can't jump to this player at the moment!");
 				cfg.set("Messages.Commands.Help.WrongSite", "%PREFIX% &cThis site does not exist!");
 				cfg.set("Messages.Status.TooFast", "%PREFIX% &cYou can only change your status every 10 minutes!");
 				cfg.set("Messages.Status.ChangeStatus", "%PREFIX% &aYou successfully changed your status!");
+				cfg.set("Messages.Status.Clear.UnknownPlayer", "%PREFIX% &cThis player has'nt choosed a status yet!");
+				cfg.set("Messages.Status.Clear.Clear", "%PREFIX% &3%PLAYER%&a's status was cleared!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();

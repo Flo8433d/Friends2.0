@@ -57,6 +57,7 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.Reload
  * Friends.Commands.Acceptall
  * Friends.Commands.Status
+ * Friends.Commands.Status.Clear
  * 
  */
 public class Friends extends JavaPlugin {

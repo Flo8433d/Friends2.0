@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
+import de.HyChrod.Friends.SQL.SQL_Manager;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
 import de.HyChrod.Friends.Util.UtilitieItems;
@@ -98,6 +99,7 @@ public class JoinQuitListener implements Listener {
 
 		if (Friends.bungeeMode) {
 			BungeeSQL_Manager.set(p, 1, "ONLINE");
+			SQL_Manager.setName(p.getUniqueId().toString(), p.getName());
 			return;
 		}
 		

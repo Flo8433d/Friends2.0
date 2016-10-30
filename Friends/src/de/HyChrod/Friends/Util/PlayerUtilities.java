@@ -47,6 +47,9 @@ public class PlayerUtilities {
 		for (OfflinePlayer player : userdata.keySet()) {
 			new PlayerUtilities(player).saveData(sync);
 		}
+		for(OfflinePlayer player : status.keySet()) {
+			new PlayerUtilities(player).saveData(sync);
+		}
 	}
 	
 	public String getStatus() {

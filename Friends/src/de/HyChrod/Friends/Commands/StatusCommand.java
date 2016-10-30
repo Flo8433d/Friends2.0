@@ -8,6 +8,8 @@ package de.HyChrod.Friends.Commands;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,6 +28,7 @@ public class StatusCommand implements CommandExecutor {
 		this.plugin = friends;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {
@@ -43,6 +46,21 @@ public class StatusCommand implements CommandExecutor {
 			return false;
 		}
 		
+		if(args[0].equalsIgnoreCase("clear") && p.hasPermission("Friends.Commands.Status.Clear")) {
+			if(args.length != 2) {
+				p.sendMessage(plugin.getString("Messages.Commands.WrongUsage").replace("%COMMAND%", "/status clear <Player>"));
+				return false;
+			}
+			if(!Bukkit.getOfflinePlayer(args[1]).hasPlayedBefore()) {
+				p.sendMessage(plugin.getString("Messages.Status.Clear.UnknownPlayer"));
+				return false;
+			}
+			OfflinePlayer toClear = Bukkit.getOfflinePlayer(args[1]);
+			PlayerUtilities tU = new PlayerUtilities(toClear);
+			tU.setStatus("");
+			p.sendMessage(plugin.getString("Messages.Status.Clear.Clear").replace("%PLAYER%", toClear.getName()));
+			return true;
+		}
 		String msg = "";
 		for(int i = 0; i < args.length; i++) {
 			msg = msg + args[i] + " ";

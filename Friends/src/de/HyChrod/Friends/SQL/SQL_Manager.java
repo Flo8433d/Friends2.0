@@ -29,8 +29,8 @@ public class SQL_Manager {
 
 	public static void createPlayer(String uuid) {
 		if (!playerExists(uuid).booleanValue()) {
-			MySQL.update("INSERT INTO friends2_0(UUID, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE, STATUS) VALUES ('"
-					+ uuid + "', '', '', '','','','');");
+			MySQL.update("INSERT INTO friends2_0(UUID, NAME, FRIENDS, BLOCKED, REQUESTS, OPTIONS, LASTONLINE, STATUS) VALUES ('"
+					+ uuid + "', '', '', '','','','','');");
 		}
 		return;
 	}
@@ -49,6 +49,22 @@ public class SQL_Manager {
 		}
 	}
 	
+	public static String getName(String uuid) {
+		String name = null;
+		if(playerExists(uuid))
+			try {
+				ResultSet rs = MySQL.query("SELECT * FROM friends2_0 WHERE UUID = '" + uuid + "'");
+				
+				if(rs.next())
+					if(rs.getString("NAME") != null)
+						if(!rs.getString("NAME").equalsIgnoreCase("null"))
+							name = rs.getString("NAME");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		return name;
+	}
+	
 	public static String getStatus(String uuid) {
 		String status = null;
 		if(playerExists(uuid))
@@ -63,6 +79,15 @@ public class SQL_Manager {
 				ex.printStackTrace();
 			}
 		return status;
+	}
+	
+	public static void setName(String uuid, String name) {
+		if(playerExists(uuid))
+			MySQL.update("UPDATE friends2_0 SET NAME = '" + name + "' WHERE UUID = '" + uuid + "';");
+		else {
+			createPlayer(uuid);
+			setName(uuid, name);
+		}
 	}
 	
 	public static void setStatus(String uuid, String status) {

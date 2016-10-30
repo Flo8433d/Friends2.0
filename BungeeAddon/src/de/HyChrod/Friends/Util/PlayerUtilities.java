@@ -24,8 +24,4 @@ public class PlayerUtilities {
 	public List<String> getOptions() {
 		return SQL_Manager.getOptions(this.uuid);
 	}
-
-	public void setLastOnline(Long timestamp) {
-		SQL_Manager.setLastOnline(this.uuid, Long.valueOf(System.currentTimeMillis()));
-	}
 }

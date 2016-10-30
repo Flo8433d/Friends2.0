@@ -47,6 +47,6 @@ BungeeCord
 | /friends toggle spychat | Allows admins to see the friendchat of others | - Friends.Commands.SpyChat |
 | /friends info | See some additional informations  | / |
 | /friends reload | Reload the plugin to commit changes | - Friends.Commands.Reload |
-| /friends msg [Player] | Sends a private message | - Friends.Commands.Msg
+| /friends msg [Player] (Message] | Sends a private message | - Friends.Commands.Msg
 | /status [Message] | Sets a status | - Friends.Commands.Status |
 | /status clear [Player] | Clears the status of specified player | - Friends.Commands.Status.Clear |

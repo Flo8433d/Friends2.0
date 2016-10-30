@@ -32,13 +32,13 @@ BungeeCord
 | ------------- |:-------------:| -----:|
 | /friends | Opens the gui | - Friends.Use|
 | /friends help     | Shows all commands | - Friends.Use |
-| /friends add <Player>      | Sends a friend-request to the player | - Friends.Commands.Add |
-| /friends remove <Player> | Removes a player form your friendlist  | - Friends.Commands.Remove |
-| /friends accept <Player> | Accepts a request  | - Friends.Commands.Accept |
+| /friends add [Player]      | Sends a friend-request to the player | - Friends.Commands.Add |
+| /friends remove [Player] | Removes a player form your friendlist  | - Friends.Commands.Remove |
+| /friends accept [Player] | Accepts a request  | - Friends.Commands.Accept |
 | /friends acceptall | Accepts all open requets | - Friends.Commands.Acceptall
-| /friends deny <Player> | Deny a request  | - Friends.Commands.Deny |
-| /friends block <Player> | Blocks a player  | - Friends.Commands.Block |
-| /friends unblock <Player> | Unlocks a player  | - Friends.CommandsUnblock |
+| /friends deny [Player] | Deny a request  | - Friends.Commands.Deny |
+| /friends block [Player] | Blocks a player  | - Friends.Commands.Block |
+| /friends unblock [Player] | Unlocks a player  | - Friends.CommandsUnblock |
 | /friends list | Shows all your current friends  | - Friends.Commands.List |
 | /friends toggle requests | Enable or disable requests  | - Friends.Commands.Toggle.Requests |
 | /friends toggle chat | Enable or disable the friend-chat  | - Friends.Commands.Toggle.Chat |
@@ -47,5 +47,5 @@ BungeeCord
 | /friends toggle spychat | Allows admins to see the friendchat of others | - Friends.Commands.SpyChat |
 | /friends info | See some additional informations  | / |
 | /friends reload | Reload the plugin to commit changes | - Friends.Commands.Reload |
-| /status <Message> | Sets a status | - Friends.Commands.Status |
-| /status clear <Player> | Clears the status of specified player | - Friends.Commands.Status.Clear |
+| /status [Message] | Sets a status | - Friends.Commands.Status |
+| /status clear [Player] | Clears the status of specified player | - Friends.Commands.Status.Clear |

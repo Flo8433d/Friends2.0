@@ -94,7 +94,7 @@ public class Friends extends JavaPlugin {
 			this.getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-
+		
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener());
 		registerClasses();

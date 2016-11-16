@@ -104,19 +104,29 @@ public class PageListener implements Listener {
 										}
 									}
 								}
+								String[] cSplit = friendsName.split("§");
+								String serialized = "";
+								for(int i = 0; i < cSplit.length; i++) {
+									String toAdd = cSplit[i];
+									if(cSplit[i].length() >= 1 && (i != 0))
+										toAdd = cSplit[i].substring(1, cSplit[i].length());
+									serialized = serialized + toAdd;
+								}
 
 								if(type.equals(InventoryTypes.MAIN)) {
-									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									Bukkit.broadcastMessage(serialized);
+									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
 									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));
 									return;
 								}
 								
 								if (type.equals(InventoryTypes.REQUEST)) {
-									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
 									InventoryBuilder.openInv(p, InventoryBuilder.REQUESTEDIT_INVENTORY(p, false));
 								}
 								if (type.equals(InventoryTypes.BLOCKED)) {
-									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
+									Bukkit.broadcastMessage(serialized);
+									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
 									InventoryBuilder.openInv(p, InventoryBuilder.BLOCKEDEDIT_INVENOTRY(p, false));
 								}
 								if (currentSite.containsKey(p)) {

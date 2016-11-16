@@ -427,7 +427,7 @@ public class FriendCommands implements CommandExecutor {
 							offline = offline + friend.getName() + ", ";
 					}
 
-					p.sendMessage(plugin.getString("Messages.Commands.List.List")
+					p.sendMessage(plugin.getString("Messages.Commands.List")
 							.replace("%ONLINE_COUNT%", String.valueOf(online.split(",").length - 1))
 							.replace("%OFFLINE_COUNT%", String.valueOf(offline.split(",").length - 1))
 							.replace("%ONLINE%", online).replace("%OFFLINE%", offline));

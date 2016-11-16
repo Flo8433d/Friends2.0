@@ -1,3 +1,7 @@
+v2.4.7
+  
+  Fixed a bug where you can't remove player from your blockedlist in the GUI
+
 v2.4.4
 
   MySQL Bugfix

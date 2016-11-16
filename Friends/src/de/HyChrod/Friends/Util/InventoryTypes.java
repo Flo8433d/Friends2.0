@@ -73,8 +73,8 @@ public enum InventoryTypes {
 			if (s.equals("")) {
 				PlayerUtilities pu = new PlayerUtilities(player);
 				
-				if(items.size() <= 5) {
-					while(items.size() <= 5)
+				if(items.size() <= 6) {
+					while(items.size() <= 6)
 						items.add(new ItemStack(Material.WOOD));
 				}
 				items.set(4, new UtilitieItems().MAIN_BLOCKED(pu.get(2, true).size()));

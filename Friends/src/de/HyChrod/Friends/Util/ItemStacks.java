@@ -37,6 +37,7 @@ public enum ItemStacks {
 	OPTIONS_JUMPING("Friends.GUI.OptionsInv.OptionsJumping.Name", "Friends.GUI.OptionsInv.OptionsJumping.Lore", "Friends.GUI.OptionsInv.OptionsJumping.ItemID", "Friends.GUI.OptionsInv.OptionsJumping.InventorySlot", 1),
 	OPTIONS_PRIVATEMESSAGES("Friends.GUI.OptionsInv.OptionPrivateMessages.Name", "Friends.GUI.OptionsInv.OptionPrivateMessages.Lore", "Friends.GUI.OptionsInv.OptionPrivateMessages.ItemID", "Friends.GUI.OptionsInv.OptionPrivateMessages.InventorySlot", 1),
 	OPTIONS_PARTYINVITES("Friends.GUI.OptionsInv.OptionsPartyInvites.Name", "Friends.GUI.OptionsInv.OptionsPartyInvites.Lore", "Friends.GUI.OptionsInv.OptionsPartyInvites.ItemID", "Friends.GUI.OptionsInv.OptionsPartyInvites.InventorySlot", 1),
+	OPTIONS_STATUSITEM("Friends.GUI.OptionsInv.StatusItem.Name", null, "Friends.GUI.OptionsInv.StatusItem.ItemID", "Friends.GUI.OptionsInv.StatusItem.InventorySlot", 1),
 	OPTIONS_BACK("Friends.GUI.OptionsInv.BackItem.Name", "Friends.GUI.OptionsInv.BackItem.Lore", "Friends.GUI.OptionsInv.BackItem.ItemID", "Friends.GUI.OptionsInv.BackItem.InventorySlot", 1),
 	OPTIONS_PLACEHOLDER(null, null, "Friends.GUI.OptionsInv.PlaceholderItems.ItemID", null, 1),
 	EDIT_REMOVE("Friends.GUI.FriendEditInv.RemoveItem.Name", "Friends.GUI.FriendEditInv.RemoveItem.Lore", "Friends.GUI.FriendEditInv.RemoveItem.ItemID", "Friends.GUI.FriendEditInv.RemoveItem.InventorySlot", 1),
@@ -97,8 +98,12 @@ public enum ItemStacks {
 		return invSlot;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack getItem() {
+		return getItem(name, lore, itemID, amount);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemStack getItem(String name, List<String> lore, String[] itemID, Integer amount) {
 		int id = Integer.valueOf(itemID[0]);
 		int byt = 0;
 		if(itemID.length > 1) {byt = Integer.valueOf(itemID[1]);}

@@ -105,7 +105,7 @@ Messages:
       PlayerOffline: '%PREFIX% &cThis player seems to be offline!'
       NoFriend: '%PREFIX% &cThe player you want to jump to have to be your friend!'
       Disabled: '%PREFIX% &cThis player deactivated jumping!'
-      DisabledWorld: "%PREFIX% &cYou can't jump to this player at the moment!"
+      DisabledWorld: "%PREFIX% &cYou can''t jump to this player at the moment!"
       Jump:
         Jumper: '%PREFIX% &aYou jumped to &3%PLAYER%&a!'
         ToJump: '%PREFIX% &aYour friend &3%PLAYER% &ajumped to your location!'
@@ -138,5 +138,5 @@ Messages:
     TooFast: '%PREFIX% &cYou can only change your status every 10 minutes!'
     ChangeStatus: '%PREFIX% &aYou successfully changed your status!'
     Clear:
-      UnknownPlayer: "%PREFIX% &cThis player has'nt choosed a status yet!"
-      Clear: "%PREFIX% &3%PLAYER%&a's status was cleared!"
+      UnknownPlayer: "%PREFIX% &cThis player has''nt choosed a status yet!"
+      Clear: "%PREFIX% &3%PLAYER%&a''s status was cleared!"

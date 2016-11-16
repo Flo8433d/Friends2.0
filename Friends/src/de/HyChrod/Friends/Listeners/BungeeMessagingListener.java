@@ -33,7 +33,7 @@ public class BungeeMessagingListener implements PluginMessageListener {
 
 		ByteArrayDataInput in = ByteStreams.newDataInput(message);
 		String subchannel = in.readUTF();
-
+		
 		if (subchannel.equals("AddingPlayer")) {
 			try {
 				short len = in.readShort();

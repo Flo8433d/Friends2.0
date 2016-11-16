@@ -184,9 +184,9 @@ public class PlayerUtilities {
 				this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + "." + values[i],
 						serialized);
 			}
-			if(status.containsKey(this.player))
-				this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Status", status.get(this.player));
 		}
+		if(status.containsKey(this.player))
+			this.mgr.save(file, cfg, "Players." + this.player.getUniqueId().toString() + ".Status", status.get(this.player));
 	}
 
 	public void loadData() {

@@ -78,18 +78,6 @@ public class FileManager {
 
 	public void setupFiles(Friends friends) {
 		friends.saveDefaultConfig();
-		FileConfiguration cfg = this.getConfig("", "config.yml");
-
-		if (cfg.getString("Friends.Options.Status.Delay.Enable") == null) {
-			try {
-				createBackup(getFile("", "config.yml"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			this.getFile("", "config.yml").delete();
-			setupFiles(friends);
-			return;
-		}
 		this.loadFile(friends, "Messages.yml", "Messages.Commands.Reload.Reloaded");
 		this.loadFile(friends, "MySQL.yml", "MySQL.Enable");
 		setNewMessages();
@@ -120,6 +108,24 @@ public class FileManager {
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		}
+		
+		File Cfile = this.getFile("", "config.yml");
+		FileConfiguration Ccfg = this.getConfig(Cfile);
+		
+		if(Ccfg.getString("Friends.GUI.OptionsInv.StatusItem.Name") == null) {
+			try {
+				createBackup(Cfile);
+				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Enable", true);
+				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Name", "&7Your current Status:");
+				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.ItemID", "421:0");
+				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.NoStatusLore", "&cNo status set!");
+				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.InventorySlot", 37);
+				Ccfg.save(Cfile);
+				System.out.println("HAHAHAAH");
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
 	}

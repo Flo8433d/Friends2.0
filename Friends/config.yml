@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 2.4.3 	#
+#    Plugin made by HyChrod, Version: 2.4.5 	#
 #												#
 #################################################
 Friends:
@@ -260,7 +260,7 @@ Friends:
       # WARNING! If you use another number as above, the gui will not work!!
       InventorySize: 54
       PlayerHead:
-        Name: "&c&PLAYER%"
+        Name: "&c%PLAYER%"
       NextPageItem:
         Name: "&6Next Page"
         ItemID: "262:0"
@@ -364,6 +364,13 @@ Friends:
         Lore: "&7If this function is disabled//&7you can't receive any party invites"
         InventorySlot: 18
         ButtonInventorySlot: 27
+      StatusItem:
+        Enable: true
+        Name: "&7Your current Status:"
+        ItemID: "421:0"
+        # You can separate the lines with "//"!
+        NoStatusLore: "&cNo status set!"
+        InventorySlot: 37
       ButtonOff:
         Name: "&7Currently (&cDisabled&7)"
         ItemID: "351:8"

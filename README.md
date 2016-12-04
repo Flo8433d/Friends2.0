@@ -18,7 +18,7 @@ MySQL
 BungeeCord
 
 1. First you have to download the BungeeCord-Addon from spigot (https://www.spigotmc.org/resources/friends2-0-mc1-8-1-10-bungeecord-addon.28909/)
-2. Put in the downloaded .jar in the bungeecord Plugin folder
+2. Put the downloaded .jar in the bungeecord Plugin folder
 3. Restart your bungee
 4. Navigate to the normal Friends plugin folder on your spigot/bukkit server
 5. Open the config.yml

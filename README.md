@@ -8,7 +8,7 @@ Default
 
 MySQL
 
-1. If you want to use MySQL, naviagate into the Friends2.0 folder who was genereated into the plugins folder
+1. If you want to use MySQL, naviagate into the Friends2.0 folder, who was generated into the plugins folder
 2. Open the MySQL.yml
 3. Set 'Enable' to 'true'
 4. Fill the other options with your login data

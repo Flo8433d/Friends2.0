@@ -38,7 +38,7 @@ public class UtilitieItems {
 	}
 	
 	public ItemStack MAIN_REQUESTS(Integer requests) {
-		int rqs = requests;
+		int rqs = requests == 0 ? 1 : requests;
 		if(rqs > 64) 
 			rqs = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
@@ -47,7 +47,7 @@ public class UtilitieItems {
 	}
 	
 	public ItemStack MAIN_BLOCKED(Integer blocked) {
-		int blq = blocked;
+		int blq = blocked == 0 ? 1 : blocked;
 		if(blq > 64) 
 			blq = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");

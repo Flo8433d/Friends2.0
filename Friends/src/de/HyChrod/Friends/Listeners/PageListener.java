@@ -114,7 +114,6 @@ public class PageListener implements Listener {
 								}
 
 								if(type.equals(InventoryTypes.MAIN)) {
-									Bukkit.broadcastMessage(serialized);
 									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
 									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));
 									return;
@@ -125,7 +124,6 @@ public class PageListener implements Listener {
 									InventoryBuilder.openInv(p, InventoryBuilder.REQUESTEDIT_INVENTORY(p, false));
 								}
 								if (type.equals(InventoryTypes.BLOCKED)) {
-									Bukkit.broadcastMessage(serialized);
 									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
 									InventoryBuilder.openInv(p, InventoryBuilder.BLOCKEDEDIT_INVENOTRY(p, false));
 								}

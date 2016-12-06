@@ -1,3 +1,7 @@
+v2.4.9.1
+
+  Fixed a bug with special characters like "ä,ü,ö", who can be used in config.yml and messages.yml now
+
 v2.4.7
   
   Fixed a bug where you can't remove player from your blockedlist in the GUI

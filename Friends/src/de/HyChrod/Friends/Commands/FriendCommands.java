@@ -74,7 +74,7 @@ public class FriendCommands implements CommandExecutor {
 				return true;
 			}
 			
-			if(args[0].equalsIgnoreCase("help")) {	
+			if(args[0].equalsIgnoreCase("help")) {
 				if(args.length == 1) {
 					for(String value : FileManager.MessagesCfg.getConfigurationSection("Messages.Commands.Help.Page1").getKeys(false))
 						p.sendMessage(plugin.getString("Messages.Commands.Help.Page1." + value));

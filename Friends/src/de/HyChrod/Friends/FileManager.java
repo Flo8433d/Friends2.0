@@ -29,11 +29,11 @@ public class FileManager {
 	}
 
 	public FileConfiguration getConfig(String path, String name) {
-		return YamlConfiguration.loadConfiguration(this.getFile(path, name));
+		return new UTF8YamlConfiguration(getFile(path, name));
 	}
 
 	public FileConfiguration getConfig(File file) {
-		return YamlConfiguration.loadConfiguration(file);
+		return new UTF8YamlConfiguration(file);
 	}
 
 	public void saveFile(File file, FileConfiguration cfg) {
@@ -123,7 +123,6 @@ public class FileManager {
 				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.NoStatusLore", "&cNo status set!");
 				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.InventorySlot", 37);
 				Ccfg.save(Cfile);
-				System.out.println("HAHAHAAH");
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}

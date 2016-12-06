@@ -8,7 +8,7 @@ Default
 
 MySQL
 
-1. If you want to use MySQL, naviagate into the Friends2.0 folder who was genereated into the plugins folder
+1. If you want to use MySQL, naviagate into the Friends2.0 folder, who was generated into the plugins folder
 2. Open the MySQL.yml
 3. Set 'Enable' to 'true'
 4. Fill the other options with your login data
@@ -18,7 +18,7 @@ MySQL
 BungeeCord
 
 1. First you have to download the BungeeCord-Addon from spigot (https://www.spigotmc.org/resources/friends2-0-mc1-8-1-10-bungeecord-addon.28909/)
-2. Put in the downloaded .jar in the bungeecord Plugin folder
+2. Put the downloaded .jar in the bungeecord Plugin folder
 3. Restart your bungee
 4. Navigate to the normal Friends plugin folder on your spigot/bukkit server
 5. Open the config.yml

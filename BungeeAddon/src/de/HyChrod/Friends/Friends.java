@@ -6,11 +6,15 @@
 */
 package de.HyChrod.Friends;
 
+import java.io.IOException;
+
 import de.HyChrod.Friends.Listeners.ChangeServerListener;
 import de.HyChrod.Friends.Listeners.ChatListener;
 import de.HyChrod.Friends.Listeners.LoginListener;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
+import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
+import de.HyChrod.Friends.Util.Metrics;
 import de.HyChrod.Friends.Util.UpdateChecker;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
@@ -62,6 +66,14 @@ public class Friends extends Plugin {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {
+		}
+		
+		new AsyncMySQLReconnecter();
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new LoginListener(this));
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new ChangeServerListener());
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new ChatListener(this));

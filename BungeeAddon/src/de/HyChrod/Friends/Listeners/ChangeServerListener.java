@@ -14,6 +14,8 @@ import net.md_5.bungee.event.EventHandler;
 public class ChangeServerListener implements Listener {
 	@EventHandler(priority = 64)
 	public void onChange(ServerSwitchEvent e) {
-		BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), e.getPlayer().getServer().getInfo().getName(), "SERVER");
+		try {
+			BungeeSQL_Manager.set(e.getPlayer().getUniqueId().toString(), e.getPlayer().getServer().getInfo().getName(), "SERVER");
+		} catch (Exception ex) {}
 	}
 }

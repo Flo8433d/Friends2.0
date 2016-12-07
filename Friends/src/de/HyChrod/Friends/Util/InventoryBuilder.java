@@ -48,8 +48,7 @@ public class InventoryBuilder {
 					- 1, new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d"));
 		}
 		if(FileManager.ConfigCfg.getBoolean("Friends.GUI.OptionsInv.StatusItem.Enable")) {
-			List<String> preLore = new ArrayList<>(Arrays.asList("", 
-					ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.StatusItem.NoStatusLore"))));
+			List<String> preLore = new ArrayList<>(Arrays.asList(ChatColor.translateAlternateColorCodes('&', "//"+FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.StatusItem.NoStatusLore")).split("//")));
 			if(pu.getStatus() != null && pu.getStatus().length() >= 1) {
 				preLore = splitStatus(pu.getStatus());
 			}		

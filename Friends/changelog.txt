@@ -1,3 +1,9 @@
+v2.4.9.2
+
+  Fixed a bug with mysql connection who trys to connect without even activating in config
+  Fixed a bug with the lore of the status item who can be separated now with "//"
+  Added the lore to OptionsButtonOff in config.yml
+
 v2.4.9.1
 
   Fixed a bug with special characters like "ä,ü,ö", who can be used in config.yml and messages.yml now

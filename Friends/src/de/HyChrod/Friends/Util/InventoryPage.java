@@ -106,8 +106,10 @@ public class InventoryPage {
 			if (!type.equals(InventoryTypes.MAIN)) {
 				ItemStack IS = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 				SkullMeta SM = (SkullMeta) IS.getItemMeta();
-				SM.setDisplayName(type.getName().replace("%PLAYER%", player.getName()));
-				SM.setOwner(player.getName());
+				if(player != null && type != null && SM != null && type.getName() != null && player.getName() != null) {
+					SM.setDisplayName(type.getName().replace("%PLAYER%", player.getName()));
+					SM.setOwner(player.getName());
+				}
 				IS.setItemMeta(SM);
 				items.add(IS);
 			}

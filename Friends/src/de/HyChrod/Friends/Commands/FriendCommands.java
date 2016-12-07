@@ -23,7 +23,6 @@ import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.Listeners.BungeeMessagingListener;
 import de.HyChrod.Friends.Listeners.ChatListener;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
-import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.PlayerUtilities;
@@ -50,7 +49,6 @@ public class FriendCommands implements CommandExecutor {
 						return false;
 					}
 					this.mgr.reloadConfigs(plugin, true);
-					new AsyncMySQLReconnecter();
 					sender.sendMessage(plugin.getString("Messages.Commands.Reload.Reloaded"));
 					return true;
 				}

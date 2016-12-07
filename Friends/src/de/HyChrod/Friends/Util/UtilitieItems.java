@@ -66,6 +66,10 @@ public class UtilitieItems {
 		if(linkedList.contains(option)) {
 			IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
 			name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
+			if(FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore") != null 
+					&& !FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore").equalsIgnoreCase("")) {
+				lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore")).split("//"));
+			}
 		}
 		return MainStack(IdByString, 1, name, lore, code);
 	}

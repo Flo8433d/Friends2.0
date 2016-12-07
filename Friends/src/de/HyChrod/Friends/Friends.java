@@ -139,7 +139,7 @@ public class Friends extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
 
 		if (this.getServer().getBukkitVersion().startsWith("1.10")
-				|| this.getServer().getBukkitVersion().startsWith("1.9"))
+				|| this.getServer().getBukkitVersion().startsWith("1.9") || this.getServer().getBukkitVersion().startsWith("1.11"))
 			this.getServer().getPluginManager().registerEvents(new PlayerSwapHandItemsListener(), this);
 
 		new SQL_Manager();

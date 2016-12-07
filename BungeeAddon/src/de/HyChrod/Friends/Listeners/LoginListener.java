@@ -44,8 +44,8 @@ public class LoginListener implements Listener {
 		PlayerUtilities pu = new PlayerUtilities(e.getPlayer().getUniqueId().toString());
 		if ((e.getPlayer().hasPermission("Friends.Admin")) && (!UpdateChecker.check())
 				&& (this.plugin.ConfigCfg.getBoolean("Friends.CheckForUpdates"))) {
-			e.getPlayer().sendMessage(this.plugin.prefix + " Â§cA new Â§6BungeeCord Â§cupdate is available!");
-			e.getPlayer().sendMessage(this.plugin.prefix + " Â§cPlease update your plugin!");
+			e.getPlayer().sendMessage(this.plugin.prefix + " §cA new §6BungeeCord §cupdate is available!");
+			e.getPlayer().sendMessage(this.plugin.prefix + " §cPlease update your plugin!");
 		}
 		for (String player : pu.getFriends()) {
 			if (BungeeCord.getInstance().getPlayer(UUID.fromString(player)) != null) {
@@ -61,8 +61,10 @@ public class LoginListener implements Listener {
 	@EventHandler
 	public void onQuit(PlayerDisconnectEvent e) {
 		ProxiedPlayer p = e.getPlayer();
-		BungeeSQL_Manager.set(p.getUniqueId().toString(), Integer.valueOf(0), "ONLINE");
-		BungeeSQL_Manager.set(p.getUniqueId().toString(), Long.valueOf(System.currentTimeMillis()), "LASTONLINE");
+		try {
+			BungeeSQL_Manager.set(p.getUniqueId().toString(), Integer.valueOf(0), "ONLINE");
+			BungeeSQL_Manager.set(p.getUniqueId().toString(), Long.valueOf(System.currentTimeMillis()), "LASTONLINE");
+		} catch (Exception ex) {}
 		PlayerUtilities pu = new PlayerUtilities(p.getUniqueId().toString());
 		for (String player : pu.getFriends()) {
 			if (BungeeCord.getInstance().getPlayer(UUID.fromString(player)) != null) {

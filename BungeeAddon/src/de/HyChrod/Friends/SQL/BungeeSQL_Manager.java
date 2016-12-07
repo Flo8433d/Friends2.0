@@ -11,14 +11,13 @@ import java.sql.SQLException;
 
 public class BungeeSQL_Manager {
 
-	public static Boolean playerExists(String uuid) {
+	public static Boolean playerExists(String uuid) throws Exception {
 		if(!MySQL.isConnected()) {
 			MySQL.connect();
 		}
 		try {
 			ResultSet rs = MySQL
 					.query("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + uuid + "'");
-
 			if (rs.next()) {
 				return rs.getString("UUID") != null;
 			}
@@ -29,7 +28,7 @@ public class BungeeSQL_Manager {
 		return false;
 	}
 
-	public static void createPlayer(String uuid) {
+	public static void createPlayer(String uuid) throws Exception {
 		if(MySQL.isConnected()) {
 			if (!(playerExists(uuid))) {
 				MySQL.update("INSERT INTO friends2_0_BUNGEE(UUID, ONLINE, SERVER, LASTONLINE) VALUES ('"
@@ -46,7 +45,7 @@ public class BungeeSQL_Manager {
 		}
 	}
 
-	public static void set(String uuid, Object obj, String value) {
+	public static void set(String uuid, Object obj, String value) throws Exception {
 		if(MySQL.isConnected()) {
 			if (playerExists(uuid)) {
 				MySQL.update("UPDATE friends2_0_BUNGEE SET " + value + "='" + obj + "' WHERE UUID='"
@@ -61,7 +60,7 @@ public class BungeeSQL_Manager {
 		}
 	}
 
-	public static Object get(String uuid, String value) {
+	public static Object get(String uuid, String value) throws Exception {
 		if(!MySQL.isConnected()) {
 			MySQL.connect();
 		}
@@ -84,7 +83,7 @@ public class BungeeSQL_Manager {
 		return "OFFLINE";
 	}
 
-	public static boolean isOnline(String uuid) {
+	public static boolean isOnline(String uuid) throws Exception {
 		if(!MySQL.isConnected()) {
 			MySQL.connect();
 		}

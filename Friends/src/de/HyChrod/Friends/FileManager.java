@@ -114,14 +114,17 @@ public class FileManager {
 		File Cfile = this.getFile("", "config.yml");
 		FileConfiguration Ccfg = this.getConfig(Cfile);
 		
-		if(Ccfg.getString("Friends.GUI.OptionsInv.StatusItem.Name") == null) {
+		if(Ccfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore") == null) {
 			try {
 				createBackup(Cfile);
-				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Enable", true);
-				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Name", "&7Your current Status:");
-				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.ItemID", "421:0");
-				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.NoStatusLore", "&cNo status set!");
-				Ccfg.set("Friends.GUI.OptionsInv.StatusItem.InventorySlot", 37);
+				if(Ccfg.getString("Friends.GUI.OptionsInv.StatusItem.InventorySlot") == null) {
+					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Enable", true);
+					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Name", "&7Your current Status:");
+					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.ItemID", "421:0");
+					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.NoStatusLore", "&cNo status set!");
+					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.InventorySlot", 37);
+				}
+				Ccfg.set("Friends.GUI.OptionsInv.ButtonOff.Lore", "");
 				Ccfg.save(Cfile);
 			} catch (IOException ex) {
 				ex.printStackTrace();

@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
@@ -27,6 +27,8 @@ public enum ItemStacks {
 	REQUESTS_NEXTPAGE("Friends.GUI.RequestsInv.NextPageItem.Name", "Friends.GUI.RequestsInv.NextPageItem.Lore", "Friends.GUI.RequestsInv.NextPageItem.ItemID", "Friends.GUI.RequestsInv.NextPageItem.InventorySlot", 1),
 	REQUESTS_PREVIOUSPAGE("Friends.GUI.RequestsInv.PreviousPageItem.Name", "Friends.GUI.RequestsInv.PreviousPageItem.Lore", "Friends.GUI.RequestsInv.PreviousPageItem.ItemID", "Friends.GUI.RequestsInv.PreviousPageItem.InventorySlot", 1),
 	REQUESTS_BACK("Friends.GUI.RequestsInv.BackItem.Name", "Friends.GUI.RequestsInv.BackItem.Lore", "Friends.GUI.RequestsInv.BackItem.ItemID", "Friends.GUI.RequestsInv.BackItem.InventorySlot", 1),
+	REQUESTS_ACCEPTALL("Friends.GUI.RequestsInv.AcceptallItem.Name", "Friends.GUI.RequestsInv.AcceptallItem.Lore", "Friends.GUI.RequestsInv.AcceptallItem.ItemID", "Friends.GUI.RequestsInv.AcceptallItem.InventorySlot", 1),
+	REQUESTS_DENYALL("Friends.GUI.RequestsInv.DenyallItem.Name", "Friends.GUI.RequestsInv.DenyallItem.Lore", "Friends.GUI.RequestsInv.DenyallItem.ItemID", "Friends.GUI.RequestsInv.DenyallItem.InventorySlot", 1),
 	REQUESTS_PLACEHOLDER(null, null, "Friends.GUI.RequestsInv.PlaceholderItem.ItemID", null, 1),
 	BLOCKED_NEXTPAGE("Friends.GUI.BlockedInv.NextPageItem.Name", "Friends.GUI.BlockedInv.NextPageItem.Lore", "Friends.GUI.BlockedInv.NextPageItem.ItemID", "Friends.GUI.BlockedInv.NextPageItem.InventorySlot", 1),
 	BLOCKED_PREVIOUSPAGE("Friends.GUI.BlockedInv.PreviousPageItem.Name", "Friends.GUI.BlockedInv.PreviousPageItem.Lore", "Friends.GUI.BlockedInv.PreviousPageItem.ItemID", "Friends.GUI.BlockedInv.PreviousPageItem.InventorySlot", 1),

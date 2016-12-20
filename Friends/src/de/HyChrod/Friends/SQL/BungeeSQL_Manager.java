@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.SQL;

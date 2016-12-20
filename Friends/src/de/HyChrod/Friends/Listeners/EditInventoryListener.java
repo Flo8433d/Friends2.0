@@ -1,3 +1,9 @@
+/*
+*
+* This class was made by HyChrod
+* All rights reserved, 2017
+*
+*/
 package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
@@ -61,6 +67,10 @@ public class EditInventoryListener implements Listener {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										}
 										String server = String.valueOf(BungeeSQL_Manager.get(editPlayer, "SERVER"));
+										if(FileManager.ConfigCfg.getStringList("Friends.DisabledServers.Servers").contains(server)) {
+											p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledServer"));
+											return;
+										}
 										BungeeMessagingListener.sendToBungeeCord(p, "Connect", server, null);
 										return;
 									}

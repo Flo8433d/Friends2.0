@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Commands;
@@ -97,6 +97,7 @@ public class Command_Add {
 							out.write(msgbytes.toByteArray());
 
 							p.sendPluginMessage(Friends.getInstance(), "BungeeCord", out.toByteArray());
+							Bukkit.broadcastMessage("§aSEND");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

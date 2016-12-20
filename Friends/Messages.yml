@@ -91,6 +91,9 @@ Messages:
       Deny:
         Denier: '%PREFIX% &7You denied the request from &3%PLAYER%&7!'
         ToDeny: '%PREFIX% &3%PLAYER% &7denied your request!'
+    Denyall:
+      NoRequests: '%PREFIX% &cYou don''t have any requests!'
+      Deny: "%PREFIX% &cYou denied &3%COUNT% &crequests!"
     Toggle:
       NoOption: '%PREFIX% &cUnknown Option! -> <requests|chat|jumping>'
       ToggleRequests: '%PREFIX% &aYou toggled the requests!'
@@ -106,6 +109,7 @@ Messages:
       NoFriend: '%PREFIX% &cThe player you want to jump to have to be your friend!'
       Disabled: '%PREFIX% &cThis player deactivated jumping!'
       DisabledWorld: "%PREFIX% &cYou can''t jump to this player at the moment!"
+      DisabledServer: "%PREFIX% &cYou can''t jump to the server the player is currently on!"
       Jump:
         Jumper: '%PREFIX% &aYou jumped to &3%PLAYER%&a!'
         ToJump: '%PREFIX% &aYour friend &3%PLAYER% &ajumped to your location!'

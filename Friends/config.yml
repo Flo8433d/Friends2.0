@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 3.0.0 	#
+#    Plugin made by HyChrod, Version: 2.5.0 	#
 #												#
 #################################################
 Friends:
@@ -174,6 +174,18 @@ Friends:
         # You can separate the lines with "//"!
         Lore: "&7Click here to go back to the main GUI!"
         InventorySlot: 46
+      AcceptallItem:
+        Name: "&aAcceptall"
+        ItemID: "35:5"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to accept all requests!"
+        InventorySlot: 50
+      DenyallItem:
+        Name: "&cDenyall"
+        ItemID: "35:14"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to deny all requests!"
+        InventorySlot: 49
       PlaceholderItem:
         ItemID: "160:7"
         InventorySlots:
@@ -459,9 +471,18 @@ Friends:
     Worlds:
     - world_nether
   
+  # Put in the name of servers players should not jump to
+  # This list has only affect to the jumping feature of the plugin
+  # Only works for BungeeMode!
+  DisabledServers:
+    Enable: true
+    Servers:
+    - silent_hub
+    - premium_lobby
+  
 #################################################
 #												#
 #	You are not authorized to sell this plugin	#
-#	All rights reserved by HyChrod, 2016.		#
+#	All rights reserved by HyChrod, 2017.		#
 #												#
 #################################################

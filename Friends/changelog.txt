@@ -1,3 +1,9 @@
+v2.5.0
+
+  Added the Acceptall-Button to the requestsinv
+  Added the Denyall-Button to the requestsinv
+  Added a new feature to the config named "DisabledServer", where you can add servers players should not jump to
+
 v2.4.9.2
 
   Fixed a bug with mysql connection who trys to connect without even activating in config

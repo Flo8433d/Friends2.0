@@ -1,3 +1,9 @@
+/*
+*
+* This class was made by HyChrod
+* All rights reserved, 2017
+*
+*/
 package de.HyChrod.Friends;
 
 import java.io.File;

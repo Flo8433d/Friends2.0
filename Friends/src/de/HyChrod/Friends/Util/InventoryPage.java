@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
@@ -62,6 +62,10 @@ public class InventoryPage {
 				((ItemStacks) type.getItems().get(2)).getItem());
 		inv.setItem(((ItemStacks) type.getItems().get(3)).getInvSlot() - 1,
 				((ItemStacks) type.getItems().get(3)).getItem());
+		if(type.equals(InventoryTypes.REQUEST)) {
+			inv.setItem(ItemStacks.REQUESTS_ACCEPTALL.getInvSlot()-1, ItemStacks.REQUESTS_ACCEPTALL.getItem());
+			inv.setItem(ItemStacks.REQUESTS_DENYALL.getInvSlot()-1, ItemStacks.REQUESTS_DENYALL.getItem());
+		}
 		if (type.equals(InventoryTypes.MAIN)) {
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.BlockedItem.InventorySlot") - 1,
 					((ItemStack) type.getItems().get(4)));

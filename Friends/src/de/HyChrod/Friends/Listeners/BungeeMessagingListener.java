@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Listeners;
@@ -35,6 +35,7 @@ public class BungeeMessagingListener implements PluginMessageListener {
 		String subchannel = in.readUTF();
 		
 		if (subchannel.equals("AddingPlayer")) {
+			Bukkit.broadcastMessage("§aSUBMITTED!");
 			try {
 				short len = in.readShort();
 				byte[] msgbytes = new byte[len];

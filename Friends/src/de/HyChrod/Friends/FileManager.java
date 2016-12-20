@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends;
@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -96,15 +98,20 @@ public class FileManager {
 		File file = this.getFile("", "Messages.yml");
 		FileConfiguration cfg = this.getConfig(file);
 
-		if (cfg.getString("Messages.Commands.Jumping.DisabledWorld") == null) {
+		if (cfg.getString("Messages.Commands.Jumping.DisabledServer") == null) {
 			try {
 				createBackup(file);
-				cfg.set("Messages.Commands.Jumping.DisabledWorld", "%PREFIX% &cYou can't jump to this player at the moment!");
-				cfg.set("Messages.Commands.Help.WrongSite", "%PREFIX% &cThis site does not exist!");
-				cfg.set("Messages.Status.TooFast", "%PREFIX% &cYou can only change your status every 10 minutes!");
-				cfg.set("Messages.Status.ChangeStatus", "%PREFIX% &aYou successfully changed your status!");
-				cfg.set("Messages.Status.Clear.UnknownPlayer", "%PREFIX% &cThis player has'nt choosed a status yet!");
-				cfg.set("Messages.Status.Clear.Clear", "%PREFIX% &3%PLAYER%&a's status was cleared!");
+				if(cfg.getString("Messages.Commands.Jumping.DisabledWorlds") == null) {
+					cfg.set("Messages.Commands.Jumping.DisabledWorld", "%PREFIX% &cYou can't jump to this player at the moment!");
+					cfg.set("Messages.Commands.Help.WrongSite", "%PREFIX% &cThis site does not exist!");
+					cfg.set("Messages.Status.TooFast", "%PREFIX% &cYou can only change your status every 10 minutes!");
+					cfg.set("Messages.Status.ChangeStatus", "%PREFIX% &aYou successfully changed your status!");
+					cfg.set("Messages.Status.Clear.UnknownPlayer", "%PREFIX% &cThis player has'nt choosed a status yet!");
+					cfg.set("Messages.Status.Clear.Clear", "%PREFIX% &3%PLAYER%&a's status was cleared!");
+				}
+				cfg.set("Messages.Commands.Denyall.NoRequests", "%PREFIX% &cYou don't have any request!");
+				cfg.set("Messages.Commands.Denyall.Deny", "%PREFIX% &cYou denied &3%COUNT% &crequests!");
+				cfg.set("Messages.Commands.Jumping.DisabledServer", "%PREFIX% &cYou can't jump to the server this player is currently on!");
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -114,17 +121,27 @@ public class FileManager {
 		File Cfile = this.getFile("", "config.yml");
 		FileConfiguration Ccfg = this.getConfig(Cfile);
 		
-		if(Ccfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore") == null) {
+		if(Ccfg.getString("Friends.GUI.RequestsInv.DenyallItem.Name") == null) {
 			try {
 				createBackup(Cfile);
-				if(Ccfg.getString("Friends.GUI.OptionsInv.StatusItem.InventorySlot") == null) {
+				if(Ccfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore") == null) {
 					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Enable", true);
 					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.Name", "&7Your current Status:");
 					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.ItemID", "421:0");
 					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.NoStatusLore", "&cNo status set!");
 					Ccfg.set("Friends.GUI.OptionsInv.StatusItem.InventorySlot", 37);
+					Ccfg.set("Friends.GUI.OptionsInv.ButtonOff.Lore", "");
 				}
-				Ccfg.set("Friends.GUI.OptionsInv.ButtonOff.Lore", "");
+				Ccfg.set("Friends.GUI.RequestsInv.AcceptallItem.Name", "&aAcceptall");
+				Ccfg.set("Friends.GUI.RequestsInv.AcceptallItem.ItemID", "35:5");
+				Ccfg.set("Friends.GUI.RequestsInv.AcceptallItem.Lore", "&7Click to accept all requests!");
+				Ccfg.set("Friends.GUI.RequestsInv.AcceptallItem.InventorySlot", 50);
+				Ccfg.set("Friends.GUI.RequestsInv.DenyallItem.Name", "&cDenyall");
+				Ccfg.set("Friends.GUI.RequestsInv.DenyallItem.ItemID", "35:14");
+				Ccfg.set("Friends.GUI.RequestsInv.DenyallItem.Lore", "&7Click to deny all requests!");
+				Ccfg.set("Friends.GUI.RequestsInv.DenyallItem.InventorySlot", 49);
+				Ccfg.set("Friends.DisabledServer.Enable", true);
+				Ccfg.set("Friends.DisabledServers.Servers", new ArrayList<>(Arrays.asList("silent_hub", "premium_lobby")));
 				Ccfg.save(Cfile);
 			} catch (IOException ex) {
 				ex.printStackTrace();

@@ -1,3 +1,48 @@
+v2.5.2
+
+  Added the possibillity to change your status in the gui by clicking on the status-item
+  The list-message can be splitted now by using "//"
+  Added a new feature to the config named "EnabledServers", where you cann add servers the players can jump to instead of using "DisabledServers"
+
+v2.5.1
+ 
+  Bugfix
+
+v2.5.0
+
+  Added the Acceptall-Button to the requestsinv
+  Added the Denyall-Button to the requestsinv
+  Added a new feature to the config named "DisabledServer", where you can add servers players should not jump to
+
+v2.4.9.2
+
+  Fixed a bug with mysql connection who trys to connect without even activating in config
+  Fixed a bug with the lore of the status item who can be separated now with "//"
+  Added the lore to OptionsButtonOff in config.yml
+
+v2.4.9.1
+
+  Fixed a bug with special characters like "ä,ü,ö", who can be used in config.yml and messages.yml now
+
+v2.4.7
+  
+  Fixed a bug where you can't remove player from your blockedlist in the GUI
+
+v2.4.4
+
+  MySQL Bugfix
+  Bugfix with the name in FriendEditInv
+  Added command /status clear <Player> to remove the status of a specified player (- Friends.Commands.Status.Clear)
+  Bugfix with BungeeCord
+
+v2.4.3
+
+  -- CONFIG RESET --
+  Bugfix with friendlimit
+  Bugfix with online/offline
+  You can enable/disable Join-,Quitmessages
+  New status function
+
 v2.4.1
 
   Bugfix with request- and blockedcount

@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
@@ -38,7 +38,7 @@ public class UtilitieItems {
 	}
 	
 	public ItemStack MAIN_REQUESTS(Integer requests) {
-		int rqs = requests;
+		int rqs = requests == 0 ? 1 : requests;
 		if(rqs > 64) 
 			rqs = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.RequestsItem.ItemID").split(":");
@@ -47,7 +47,7 @@ public class UtilitieItems {
 	}
 	
 	public ItemStack MAIN_BLOCKED(Integer blocked) {
-		int blq = blocked;
+		int blq = blocked == 0 ? 1 : blocked;
 		if(blq > 64) 
 			blq = 1;
 		String[] IdByString = FileManager.ConfigCfg.getString("Friends.GUI.BlockedItem.ItemID").split(":");
@@ -66,6 +66,10 @@ public class UtilitieItems {
 		if(linkedList.contains(option)) {
 			IdByString = FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.ItemID").split(":");
 			name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Name"));
+			if(FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore") != null 
+					&& !FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore").equalsIgnoreCase("")) {
+				lore = Arrays.asList(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.ButtonOff.Lore")).split("//"));
+			}
 		}
 		return MainStack(IdByString, 1, name, lore, code);
 	}

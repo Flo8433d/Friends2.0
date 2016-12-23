@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Listeners;
@@ -67,6 +67,16 @@ public class EditInventoryListener implements Listener {
 											p.sendMessage(plugin.getString("Messages.Commands.Jumping.PlayerOffline"));
 										}
 										String server = String.valueOf(BungeeSQL_Manager.get(editPlayer, "SERVER"));
+										if(FileManager.ConfigCfg.getBoolean("Friends.DisabledServers.Enable"))
+											if(FileManager.ConfigCfg.getStringList("Friends.DisabledServers.Servers").contains(server)) {
+												p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledServer"));
+												return;
+											}
+										if(FileManager.ConfigCfg.getBoolean("Friends.EnabledServers.Enable"))
+											if(!FileManager.ConfigCfg.getStringList("Friends.EnabledServers.Servers").contains(server)) {
+												p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledServer"));
+												return;
+											}
 										BungeeMessagingListener.sendToBungeeCord(p, "Connect", server, null);
 										return;
 									}
@@ -79,7 +89,13 @@ public class EditInventoryListener implements Listener {
 										return;
 									}
 									Player toJump = Bukkit.getPlayer(editPlayer.getUniqueId());
-
+									if(FileManager.ConfigCfg.getBoolean("Friends.DisabledWorlds.Enable")) {
+										if(FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds.Worlds").contains(toJump.getWorld().getName())) {
+											p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledWorld"));
+											return;
+										}
+									}
+									
 									p.teleport(toJump);
 									p.sendMessage(plugin.getString("Messages.Commands.Jumping.Jump.Jumper")
 											.replace("%PLAYER%", editPlayer.getName()));
@@ -91,8 +107,7 @@ public class EditInventoryListener implements Listener {
 								if(e.getCurrentItem().equals(ItemStacks.EDIT_PARTY.getItem())) {
 									Bukkit.getScheduler().runTaskLaterAsynchronously(Friends.getInstance(), new Runnable() {
 										public void run() {
-											BungeeMessagingListener.sendToBungeeCord(p, "InvitePlayer::" + editPlayer.getName() + "@" + p.getName(), 
-													p.getName(), null);
+											BungeeMessagingListener.sendToBungeeCord(p, "InvitePlayer::" + editPlayer.getName() + "@" + p.getName(), p.getName(), null);
 										}
 									}, 5);
 									p.closeInventory();

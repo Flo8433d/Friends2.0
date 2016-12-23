@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends;
@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.HyChrod.Friends.Commands.FriendCommands;
+import de.HyChrod.Friends.Commands.StatusCommand;
 import de.HyChrod.Friends.Listeners.BlockedEditInventoryListener;
 import de.HyChrod.Friends.Listeners.BungeeMessagingListener;
 import de.HyChrod.Friends.Listeners.ChangeWorldListener;
@@ -55,6 +56,8 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.Msg
  * Friends.Commands.Reload
  * Friends.Commands.Acceptall
+ * Friends.Commands.Status
+ * Friends.Commands.Status.Clear
  * 
  */
 public class Friends extends JavaPlugin {
@@ -91,7 +94,7 @@ public class Friends extends JavaPlugin {
 			this.getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-
+		
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener());
 		registerClasses();
@@ -105,12 +108,10 @@ public class Friends extends JavaPlugin {
 		if (MySQL.isConnected()) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §2MySQL");
 			new AsyncMySQLReconnecter();
-		} else {
+		} else 
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §3FlatFile");
-		}
-		if (bungeeMode) {
+		if (bungeeMode)
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §9§n< BungeeMode >");
-		}
 		
 		try {
 	        Metrics metrics = new Metrics(this);
@@ -122,7 +123,8 @@ public class Friends extends JavaPlugin {
 
 	private void registerClasses() {
 		this.getCommand("Friends").setExecutor(new FriendCommands(this));
-
+		this.getCommand("Status").setExecutor(new StatusCommand(this));
+		
 		this.getServer().getPluginManager().registerEvents(new InventoryUtilListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
@@ -137,9 +139,8 @@ public class Friends extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new DamageListener(this), this);
 
 		if (this.getServer().getBukkitVersion().startsWith("1.10")
-				|| this.getServer().getBukkitVersion().startsWith("1.9")) {
+				|| this.getServer().getBukkitVersion().startsWith("1.9") || this.getServer().getBukkitVersion().startsWith("1.11"))
 			this.getServer().getPluginManager().registerEvents(new PlayerSwapHandItemsListener(), this);
-		}
 
 		new SQL_Manager();
 		new BungeeSQL_Manager();
@@ -149,9 +150,8 @@ public class Friends extends JavaPlugin {
 	public void onDisable() {
 		try {
 			PlayerUtilities.fullSave(true);
-			if (MySQL.isConnected()) {
+			if (MySQL.isConnected())
 				MySQL.disconnect();
-			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

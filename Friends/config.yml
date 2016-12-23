@@ -1,6 +1,6 @@
 #################################################
 #												#
-#    Plugin made by HyChrod, Version: 2.4.0 	#
+#    Plugin made by HyChrod, Version: 2.5.0 	#
 #												#
 #################################################
 Friends:
@@ -62,6 +62,8 @@ Friends:
     CanMoveItem: false
     # If this is enabled you have to confirm twice to remove a player from your friendlist!
     RemoveVerification: false
+    # If this is enabled you get a notification when a friend joins or quits the server!
+    JoinQuitMessages: true
     # If this is enabled the world the player is currently on will be shown under their name in the GUI!
     # This only works if BungeeMode is disabled!
     # If this is enabled the player gets notified on join if he has open friend requests
@@ -74,6 +76,13 @@ Friends:
       Enable: true
       # Values: %days% %hours% %minutes% %seconds%
       Format: "&cLast Online: &3%days% Days, %hours% Hours and %minutes% Minutes ago"
+    # The status players can set under their name in the gui
+    Status:
+      Delay:
+        # Enable or disbale the delay between changing your status
+        Enable: true
+        # Time in seconds
+        TimeStamp: 600
   
   FriendItem:
     ItemID: "397:3"
@@ -165,6 +174,18 @@ Friends:
         # You can separate the lines with "//"!
         Lore: "&7Click here to go back to the main GUI!"
         InventorySlot: 46
+      AcceptallItem:
+        Name: "&aAcceptall"
+        ItemID: "35:5"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to accept all requests!"
+        InventorySlot: 50
+      DenyallItem:
+        Name: "&cDenyall"
+        ItemID: "35:14"
+        # You can separate the lines with "//"!
+        Lore: "&7Click to deny all requests!"
+        InventorySlot: 49
       PlaceholderItem:
         ItemID: "160:7"
         InventorySlots:
@@ -251,7 +272,7 @@ Friends:
       # WARNING! If you use another number as above, the gui will not work!!
       InventorySize: 54
       PlayerHead:
-        Name: "&c&PLAYER%"
+        Name: "&c%PLAYER%"
       NextPageItem:
         Name: "&6Next Page"
         ItemID: "262:0"
@@ -355,10 +376,18 @@ Friends:
         Lore: "&7If this function is disabled//&7you can't receive any party invites"
         InventorySlot: 18
         ButtonInventorySlot: 27
+      StatusItem:
+        Enable: true
+        Name: "&7Your current Status:"
+        ItemID: "421:0"
+        # You can separate the lines with "//"!
+        NoStatusLore: "&cNo status set!"
+        InventorySlot: 37
       ButtonOff:
         Name: "&7Currently (&cDisabled&7)"
         ItemID: "351:8"
         # You can separate the lines with "//"!
+        Lore: ""
       ButtonOn:
         Name: "&7Currently (&aEnabled&7)"
         ItemID: "351:10"
@@ -442,9 +471,28 @@ Friends:
     Worlds:
     - world_nether
   
+  # Put in the name of servers players should not jump to
+  # This list has only affect to the jumping feature of the plugin
+  # Only works for BungeeMode!
+  # If you want to use this feature you have to disable "EnabledServers"!
+  DisabledServers:
+    Enable: true
+    Servers:
+    - silent_hub
+    - premium_lobby
+  
+  # Put in the name of servers players can jump to
+  # This list has only affect to the jumping feature of the plugin
+  # Only workds for BungeeMode!
+  # If you want to use this feature you have to disable "DisabledServer"!
+  EnabledServers:
+    Enable: false
+    Servers:
+    - lobby_1
+  
 #################################################
 #												#
 #	You are not authorized to sell this plugin	#
-#	All rights reserved by HyChrod, 2016.		#
+#	All rights reserved by HyChrod, 2017.		#
 #												#
 #################################################

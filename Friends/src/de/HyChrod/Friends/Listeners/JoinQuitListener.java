@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Listeners;
@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
+import de.HyChrod.Friends.SQL.SQL_Manager;
 import de.HyChrod.Friends.Util.PlayerUtilities;
 import de.HyChrod.Friends.Util.UpdateChecker;
 import de.HyChrod.Friends.Util.UtilitieItems;
@@ -98,22 +99,25 @@ public class JoinQuitListener implements Listener {
 
 		if (Friends.bungeeMode) {
 			BungeeSQL_Manager.set(p, 1, "ONLINE");
+			SQL_Manager.setName(p.getUniqueId().toString(), p.getName());
 			return;
 		}
-		for (Object uuid : pu.get(0, true)) {
-			OfflinePlayer player = null;
-			if(Friends.bungeeMode)
-				player = ((OfflinePlayer)uuid);
-			else
-				player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
-			if (player.isOnline()) {
-				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.get(3, false).contains("option_noChat")) {
-					Bukkit.getPlayer(player.getUniqueId())
-							.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
+		
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
+			for (Object uuid : pu.get(0, true)) {
+				OfflinePlayer player = null;
+				if(Friends.bungeeMode)
+					player = ((OfflinePlayer)uuid);
+				else
+					player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
+				if (player.isOnline()) {
+					PlayerUtilities puT = new PlayerUtilities(player);
+					if (!puT.get(3, false).contains("option_noChat")) {
+						Bukkit.getPlayer(player.getUniqueId())
+								.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
+					}
 				}
 			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -128,18 +132,19 @@ public class JoinQuitListener implements Listener {
 		pu.setLastOnline(System.currentTimeMillis());
 		pu.saveData(false);
 
-		for (Object uuid : pu.get(0, true)) {
-			OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
-			if(Friends.bungeeMode)
-				player = ((OfflinePlayer)uuid);
-			if (player.isOnline()) {
-				PlayerUtilities puT = new PlayerUtilities(player);
-				if (!puT.get(3, false).contains("option_noChat")) {
-					Bukkit.getPlayer(player.getUniqueId())
-							.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
+		if(FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
+			for (Object uuid : pu.get(0, true)) {
+				OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
+				if(Friends.bungeeMode)
+					player = ((OfflinePlayer)uuid);
+				if (player.isOnline()) {
+					PlayerUtilities puT = new PlayerUtilities(player);
+					if (!puT.get(3, false).contains("option_noChat")) {
+						Bukkit.getPlayer(player.getUniqueId())
+								.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
+					}
 				}
 			}
-		}
 	}
 
 }

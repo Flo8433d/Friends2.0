@@ -1,10 +1,14 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +46,14 @@ public class InventoryBuilder {
 					ItemStacks.OPTIONS_PRIVATEMESSAGES.getItem());
 			inv.setItem(FileManager.ConfigCfg.getInt("Friends.GUI.OptionsInv.OptionPrivateMessages.ButtonInventorySlot")
 					- 1, new UtilitieItems().OPTIONSBUTTON(pu.get(3, false), "option_noMsg", "§d"));
+		}
+		if(FileManager.ConfigCfg.getBoolean("Friends.GUI.OptionsInv.StatusItem.Enable")) {
+			List<String> preLore = new ArrayList<>(Arrays.asList(ChatColor.translateAlternateColorCodes('&', "//"+FileManager.ConfigCfg.getString("Friends.GUI.OptionsInv.StatusItem.NoStatusLore")).split("//")));
+			if(pu.getStatus() != null && pu.getStatus().length() >= 1) {
+				preLore = splitStatus(pu.getStatus());
+			}		
+			inv.setItem(ItemStacks.OPTIONS_STATUSITEM.getInvSlot()-1, ItemStacks.getItem(ItemStacks.OPTIONS_STATUSITEM.getName(),
+					preLore, ItemStacks.OPTIONS_STATUSITEM.getItemID(), 1));
 		}
 		if (FileManager.ConfigCfg.getBoolean("Friends.PartySystem.Enable")) {
 			inv.setItem(ItemStacks.OPTIONS_PARTYINVITES.getInvSlot() - 1, ItemStacks.OPTIONS_PARTYINVITES.getItem());
@@ -143,6 +155,24 @@ public class InventoryBuilder {
 		if (open)
 			p.openInventory(inv);
 		return inv;
+	}
+	
+	private static List<String> splitStatus(String s) {
+		List<String> splitted = new ArrayList<>();
+		splitted.add("");
+		String substring = "§e§o''";
+		int counter = 0;
+		for(int i = 0; i < s.length(); i++) {
+			substring = substring + s.charAt(i);
+			counter++;
+			if(counter >= 30 && !Character.isAlphabetic(s.charAt(i)) || counter >= 45) {
+				counter = 0;
+				splitted.add(substring);
+				substring = "§e";
+			}
+		}
+		splitted.add(substring + "''");
+		return splitted;
 	}
 
 	public static void openInv(final Player p, final Inventory inv) {

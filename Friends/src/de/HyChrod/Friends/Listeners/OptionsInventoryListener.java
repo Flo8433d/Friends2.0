@@ -1,20 +1,30 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Listeners;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
+import de.HyChrod.Friends.Commands.StatusCommand;
+import de.HyChrod.Friends.Util.AnvilGUI;
+import de.HyChrod.Friends.Util.AnvilGUI.AnvilClickEvent;
+import de.HyChrod.Friends.Util.AnvilGUI.AnvilClickEventHandler;
+import de.HyChrod.Friends.Util.AnvilGUI.AnvilSlot;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.ItemStacks;
@@ -74,6 +84,48 @@ public class OptionsInventoryListener implements Listener {
 											.getItemMeta().getDisplayName())) {
 								pu.toggleOption("option_noMsg");
 								this.reOpenInv(p);
+								return;
+							}
+							if(e.getCurrentItem().getItemMeta().getDisplayName().equals(ItemStacks.OPTIONS_STATUSITEM.getItem().getItemMeta().getDisplayName())) {
+								AnvilGUI anvilGUI = new AnvilGUI(p, new AnvilClickEventHandler() {
+									
+									@Override
+									public void onAnvilClick(AnvilClickEvent event) {
+										if(event.getSlot().equals(AnvilSlot.OUTPUT)) {
+											event.setWillClose(true);
+											event.setWillDestroy(true);
+											if(FileManager.ConfigCfg.getBoolean("Friends.Options.Status.Delay.Enable"))
+												if(StatusCommand.lastUsed.containsKey(p.getUniqueId().toString()))
+													if((System.currentTimeMillis() - StatusCommand.lastUsed.get(p.getUniqueId().toString())) 
+															< (FileManager.ConfigCfg.getLong("Friends.Options.Status.Delay.TimeStamp")*1000)) {
+														p.sendMessage(plugin.getString("Messages.Status.TooFast"));
+														return;
+													}
+											StatusCommand.lastUsed.put(p.getUniqueId().toString(), System.currentTimeMillis());
+											pu.setStatus(event.getName());
+											p.sendMessage(plugin.getString("Messages.Status.ChangeStatus"));
+											return;
+										}
+										event.setWillClose(false);
+										event.setWillDestroy(false);
+										return;
+									}
+								});
+								
+								ItemStack ITEM = new ItemStack(Material.NAME_TAG);
+								ItemMeta META = ITEM.getItemMeta();
+								String STATUS = pu.getStatus() != null ? pu.getStatus() : "Status";
+								META.setDisplayName(STATUS);
+								ITEM.setItemMeta(META);
+								
+								anvilGUI.setSlot(AnvilSlot.INPUT_LEFT, ITEM);
+								anvilGUI.setSlot(AnvilSlot.OUTPUT, new ItemStack(Material.PAPER));
+								try {
+									anvilGUI.open();
+								} catch (IllegalAccessException | InvocationTargetException
+										| InstantiationException e1) {
+									e1.printStackTrace();
+								}
 								return;
 							}
 							if (e.getCurrentItem().equals(ItemStacks.OPTIONS_BACK.getItem())) {

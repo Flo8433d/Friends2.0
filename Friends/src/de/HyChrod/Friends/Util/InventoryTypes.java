@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
@@ -34,6 +34,8 @@ public enum InventoryTypes {
 				items.add(ItemStacks.REQUESTS_NEXTPAGE);
 				items.add(ItemStacks.REQUESTS_PREVIOUSPAGE);
 				items.add(ItemStacks.REQUESTS_BACK);
+				items.add(ItemStacks.REQUESTS_ACCEPTALL);
+				items.add(ItemStacks.REQUESTS_DENYALL);
 			} else if (s.equals(".BlockedInv")) {
 				name = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.GUI.BlockedInv.PlayerHead.Name"));
 				items.add(ItemStacks.BLOCKED_PLACEHOLDER);
@@ -73,8 +75,8 @@ public enum InventoryTypes {
 			if (s.equals("")) {
 				PlayerUtilities pu = new PlayerUtilities(player);
 				
-				if(items.size() <= 5) {
-					while(items.size() <= 5)
+				if(items.size() <= 6) {
+					while(items.size() <= 6)
 						items.add(new ItemStack(Material.WOOD));
 				}
 				items.set(4, new UtilitieItems().MAIN_BLOCKED(pu.get(2, true).size()));

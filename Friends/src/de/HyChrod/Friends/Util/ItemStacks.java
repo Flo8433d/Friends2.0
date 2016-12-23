@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2016
+* All rights reserved, 2017
 *
 */
 package de.HyChrod.Friends.Util;
@@ -27,6 +27,8 @@ public enum ItemStacks {
 	REQUESTS_NEXTPAGE("Friends.GUI.RequestsInv.NextPageItem.Name", "Friends.GUI.RequestsInv.NextPageItem.Lore", "Friends.GUI.RequestsInv.NextPageItem.ItemID", "Friends.GUI.RequestsInv.NextPageItem.InventorySlot", 1),
 	REQUESTS_PREVIOUSPAGE("Friends.GUI.RequestsInv.PreviousPageItem.Name", "Friends.GUI.RequestsInv.PreviousPageItem.Lore", "Friends.GUI.RequestsInv.PreviousPageItem.ItemID", "Friends.GUI.RequestsInv.PreviousPageItem.InventorySlot", 1),
 	REQUESTS_BACK("Friends.GUI.RequestsInv.BackItem.Name", "Friends.GUI.RequestsInv.BackItem.Lore", "Friends.GUI.RequestsInv.BackItem.ItemID", "Friends.GUI.RequestsInv.BackItem.InventorySlot", 1),
+	REQUESTS_ACCEPTALL("Friends.GUI.RequestsInv.AcceptallItem.Name", "Friends.GUI.RequestsInv.AcceptallItem.Lore", "Friends.GUI.RequestsInv.AcceptallItem.ItemID", "Friends.GUI.RequestsInv.AcceptallItem.InventorySlot", 1),
+	REQUESTS_DENYALL("Friends.GUI.RequestsInv.DenyallItem.Name", "Friends.GUI.RequestsInv.DenyallItem.Lore", "Friends.GUI.RequestsInv.DenyallItem.ItemID", "Friends.GUI.RequestsInv.DenyallItem.InventorySlot", 1),
 	REQUESTS_PLACEHOLDER(null, null, "Friends.GUI.RequestsInv.PlaceholderItem.ItemID", null, 1),
 	BLOCKED_NEXTPAGE("Friends.GUI.BlockedInv.NextPageItem.Name", "Friends.GUI.BlockedInv.NextPageItem.Lore", "Friends.GUI.BlockedInv.NextPageItem.ItemID", "Friends.GUI.BlockedInv.NextPageItem.InventorySlot", 1),
 	BLOCKED_PREVIOUSPAGE("Friends.GUI.BlockedInv.PreviousPageItem.Name", "Friends.GUI.BlockedInv.PreviousPageItem.Lore", "Friends.GUI.BlockedInv.PreviousPageItem.ItemID", "Friends.GUI.BlockedInv.PreviousPageItem.InventorySlot", 1),
@@ -37,6 +39,7 @@ public enum ItemStacks {
 	OPTIONS_JUMPING("Friends.GUI.OptionsInv.OptionsJumping.Name", "Friends.GUI.OptionsInv.OptionsJumping.Lore", "Friends.GUI.OptionsInv.OptionsJumping.ItemID", "Friends.GUI.OptionsInv.OptionsJumping.InventorySlot", 1),
 	OPTIONS_PRIVATEMESSAGES("Friends.GUI.OptionsInv.OptionPrivateMessages.Name", "Friends.GUI.OptionsInv.OptionPrivateMessages.Lore", "Friends.GUI.OptionsInv.OptionPrivateMessages.ItemID", "Friends.GUI.OptionsInv.OptionPrivateMessages.InventorySlot", 1),
 	OPTIONS_PARTYINVITES("Friends.GUI.OptionsInv.OptionsPartyInvites.Name", "Friends.GUI.OptionsInv.OptionsPartyInvites.Lore", "Friends.GUI.OptionsInv.OptionsPartyInvites.ItemID", "Friends.GUI.OptionsInv.OptionsPartyInvites.InventorySlot", 1),
+	OPTIONS_STATUSITEM("Friends.GUI.OptionsInv.StatusItem.Name", null, "Friends.GUI.OptionsInv.StatusItem.ItemID", "Friends.GUI.OptionsInv.StatusItem.InventorySlot", 1),
 	OPTIONS_BACK("Friends.GUI.OptionsInv.BackItem.Name", "Friends.GUI.OptionsInv.BackItem.Lore", "Friends.GUI.OptionsInv.BackItem.ItemID", "Friends.GUI.OptionsInv.BackItem.InventorySlot", 1),
 	OPTIONS_PLACEHOLDER(null, null, "Friends.GUI.OptionsInv.PlaceholderItems.ItemID", null, 1),
 	EDIT_REMOVE("Friends.GUI.FriendEditInv.RemoveItem.Name", "Friends.GUI.FriendEditInv.RemoveItem.Lore", "Friends.GUI.FriendEditInv.RemoveItem.ItemID", "Friends.GUI.FriendEditInv.RemoveItem.InventorySlot", 1),
@@ -97,8 +100,12 @@ public enum ItemStacks {
 		return invSlot;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ItemStack getItem() {
+		return getItem(name, lore, itemID, amount);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemStack getItem(String name, List<String> lore, String[] itemID, Integer amount) {
 		int id = Integer.valueOf(itemID[0]);
 		int byt = 0;
 		if(itemID.length > 1) {byt = Integer.valueOf(itemID[1]);}

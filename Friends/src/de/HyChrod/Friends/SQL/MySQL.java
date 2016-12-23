@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2017
+* All rights reserved, 2016
 *
 */
 package de.HyChrod.Friends.SQL;
@@ -34,20 +34,9 @@ public class MySQL {
 		if (isConnected()) {
 			try {
 				PreparedStatement ps = getConnection().prepareStatement(
-						"CREATE TABLE IF NOT EXISTS friends2_0(UUID VARCHAR(50), NAME VARCHAR(20), FRIENDS TEXT, BLOCKED TEXT, REQUESTS TEXT, OPTIONS TEXT, LASTONLINE TEXT, STATUS TEXT)");
+						"CREATE TABLE IF NOT EXISTS friends2_0(UUID VARCHAR(50), FRIENDS TEXT, BLOCKED TEXT, REQUESTS TEXT, OPTIONS TEXT, LASTONLINE TEXT)");
 				ps.executeUpdate();
-				
-				try {
-					PreparedStatement ps1 = getConnection().prepareStatement("ALTER TABLE friends2_0 ADD COLUMN STATUS TEXT AFTER LASTONLINE;");
-					ps1.executeUpdate();
-				} catch (Exception ex) {}
-				
-				try {
-					PreparedStatement ps2 = getConnection().prepareStatement("ALTER TABLE friends2_0 ADD COLUMN NAME VARCHAR(20) AFTER UUID;");
-					ps2.executeUpdate();
-				} catch (Exception ex) {}
 			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
 		}
 	}

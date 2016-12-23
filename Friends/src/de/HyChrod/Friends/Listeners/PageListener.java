@@ -1,18 +1,16 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2017
+* All rights reserved, 2016
 *
 */
 package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +21,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Commands.FriendCommands;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryPage;
 import de.HyChrod.Friends.Util.InventoryTypes;
@@ -89,45 +86,22 @@ public class PageListener implements Listener {
 								toReplace.put(1, FileManager.ConfigCfg.getString("Friends.GUI.FriendHead.NameOffline").split("%PLAYER%"));
 								toReplace.put(2, FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.PlayerHead.Name").split("%PLAYER%"));
 								toReplace.put(3, FileManager.ConfigCfg.getString("Friends.GUI.RequestsInv.PlayerHead.Name").split("%PLAYER%"));
-								for(int i = 0; i <= 3; i++) {
-									for(int a = 0; a < toReplace.get(i).length; a++) {
-										String replaceString = toReplace.get(i)[a];
-										friendsName = friendsName.replace(ChatColor.translateAlternateColorCodes('&', replaceString), "");
-										
-										for(int b = 0; b <= 3; b++) {
-											for(int c = 0; c < toReplace.get(b).length; c++) {
-												String[] contraString = toReplace.get(b);
-												String othersString = contraString[c];											
-												if(othersString.contains(replaceString)) {
-													othersString = othersString.replace(replaceString, "");
-												}	
-												contraString[c] = othersString;
-												toReplace.put(b, contraString);
-											}
-										}
-									}
-								}
-								String[] cSplit = friendsName.split("§");
-								String serialized = "";
-								for(int i = 0; i < cSplit.length; i++) {
-									String toAdd = cSplit[i];
-									if(cSplit[i].length() >= 1 && (i != 0))
-										toAdd = cSplit[i].substring(1, cSplit[i].length());
-									serialized = serialized + toAdd;
-								}
+								for(int i = 0; i <= 3; i++)
+									for(int a = 0; a < toReplace.get(i).length; a++)
+										friendsName = friendsName.replace(ChatColor.translateAlternateColorCodes('&', toReplace.get(i)[a]), "");
 
 								if(type.equals(InventoryTypes.MAIN)) {
-									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
+									EditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
 									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));
 									return;
 								}
 								
 								if (type.equals(InventoryTypes.REQUEST)) {
-									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
+									RequestEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
 									InventoryBuilder.openInv(p, InventoryBuilder.REQUESTEDIT_INVENTORY(p, false));
 								}
 								if (type.equals(InventoryTypes.BLOCKED)) {
-									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(serialized));
+									BlockedEditInventoryListener.editing.put(p, Bukkit.getOfflinePlayer(friendsName));
 									InventoryBuilder.openInv(p, InventoryBuilder.BLOCKEDEDIT_INVENOTRY(p, false));
 								}
 								if (currentSite.containsKey(p)) {
@@ -137,67 +111,17 @@ public class PageListener implements Listener {
 							}
 							
 							if(type.getItems().size() >= 5) {
-								if(type.equals(InventoryTypes.MAIN)) {
-									if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(3)).getItem())) {
-										InventoryBuilder.openInv(p, InventoryBuilder.OPTIONS_INVENTORY(p, false));
-										return;
-									}
-									if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(4)))) {
-										InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, false));
-										return;
-									}
-									if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(5)))) {
-										InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.REQUEST, false));
-										return;
-									}
+								
+								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(3)).getItem())) {
+									InventoryBuilder.openInv(p, InventoryBuilder.OPTIONS_INVENTORY(p, false));
 									return;
 								}
-								if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(3)).getItem())) {
-									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+								if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(4)))) {
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, false));
 									return;
 								}
-								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(4)).getItem())) {
-									int i = 0;
-									PlayerUtilities pu = new PlayerUtilities(p);
-									for (Object requests : pu.get(1, true)) {
-										i++;
-										OfflinePlayer ToAccept = null;
-										if (Friends.bungeeMode)
-											ToAccept = ((OfflinePlayer) requests);
-										else
-											ToAccept = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
-										
-										PlayerUtilities tu = new PlayerUtilities(ToAccept);
-										pu.update(ToAccept.getUniqueId().toString(), 0, true);
-										tu.update(p.getUniqueId().toString(), 0, true);
-										pu.update(ToAccept.getUniqueId().toString(), 1, false);
-										if (BungeeMessagingListener.isOnline(ToAccept)) {
-											FriendCommands.sendMessage(p, ToAccept.getName(),plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
-										}
-									}
-									p.sendMessage(plugin.getString("Messages.Commands.Acceptall.Accept").replace("%COUNT%",
-											String.valueOf(i)));
-									p.closeInventory();
-									return;
-								}
-								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(5)).getItem())) {
-									int i = 0;
-									PlayerUtilities pu = new PlayerUtilities(p);
-									for (Object requests : pu.get(1, true)) {
-										i++;
-										OfflinePlayer toDeny = null;
-										if (Friends.bungeeMode)
-											toDeny = ((OfflinePlayer) requests);
-										else
-											toDeny = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
-										pu.update(toDeny.getUniqueId().toString(), 1, false);
-										if (BungeeMessagingListener.isOnline(toDeny)) {
-											FriendCommands.sendMessage(p, toDeny.getName(),plugin.getString("Messages.Commands.Deny.Deny.ToDeny").replace("%PLAYER%", p.getName()));
-										}
-									}
-									p.sendMessage(plugin.getString("Messages.Commands.Denyall.Deny").replace("%COUNT%",
-											String.valueOf(i)));
-									p.closeInventory();
+								if(e.getCurrentItem().equals(((ItemStack)type.getItems().get(5)))) {
+									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.REQUEST, false));
 									return;
 								}
 								

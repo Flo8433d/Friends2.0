@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2017
+* All rights reserved, 2016
 *
 */
 package de.HyChrod.Friends.Listeners;
@@ -53,22 +53,24 @@ public class RequestEditInventoryListener implements Listener {
 								PlayerUtilities puT = new PlayerUtilities(inEdit);
 								PlayerUtilities puP = new PlayerUtilities(p);
 								if (e.getCurrentItem().equals(ItemStacks.REQUEST_EDIT_ACCEPT.getItem())) {
-									if (puP.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
-										if (!p.hasPermission("Friends.ExtraFriends") || puP.get(0, true).size() 
-												> FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
+									if (puP.get(0, true).size() > FileManager.ConfigCfg
+											.getInt("Friends.Options.FriendLimit")) {
+										if (!p.hasPermission("Friends.ExtraFriends")
+												|| puP.get(0, true).size() > FileManager.ConfigCfg
+														.getInt("Friends.Options.FriendLimit+")) {
 											p.sendMessage(
 													plugin.getString("Messages.Commands.Accept.LimitReached.Accepter"));
 											return;
 										}
 									}
-									if (puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
-										if(inEdit.isOnline()) {
-											Player toCheck = Bukkit.getPlayer(inEdit.getName());
-											if (!toCheck.hasPermission("Friends.ExtraFriends") || puT.get(0, true).size() 
-													> FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-												p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
-												return;
-											}
+									if (puT.get(0, true).size() > FileManager.ConfigCfg
+											.getInt("Friends.Options.FriendLimit")) {
+										if (!p.hasPermission("Friends.ExtraFriends")
+												|| puT.get(0, true).size() > FileManager.ConfigCfg
+														.getInt("Friends.Options.FriendLimit+")) {
+											p.sendMessage(plugin
+													.getString("Messages.Commands.Accept.LimitReached.Requester"));
+											return;
 										}
 									}
 

@@ -1,7 +1,7 @@
 /*
 *
 #* This class was made by HyChrod
-* All rights reserved, 2017
+* All rights reserved, 2016
 *
 */
 package de.HyChrod.Friends.Commands;
@@ -20,16 +20,10 @@ import org.bukkit.entity.Player;
 
 import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.Accept_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.Block_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.Deny_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.List_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.MSG_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.Remove_Command;
-import de.HyChrod.Friends.Commands.BungeeSubCommands.Unblock_Command;
 import de.HyChrod.Friends.Listeners.BungeeMessagingListener;
 import de.HyChrod.Friends.Listeners.ChatListener;
 import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
+import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
 import de.HyChrod.Friends.Util.InventoryBuilder;
 import de.HyChrod.Friends.Util.InventoryTypes;
 import de.HyChrod.Friends.Util.PlayerUtilities;
@@ -56,6 +50,7 @@ public class FriendCommands implements CommandExecutor {
 						return false;
 					}
 					this.mgr.reloadConfigs(plugin, true);
+					new AsyncMySQLReconnecter();
 					sender.sendMessage(plugin.getString("Messages.Commands.Reload.Reloaded"));
 					return true;
 				}
@@ -79,7 +74,7 @@ public class FriendCommands implements CommandExecutor {
 				return true;
 			}
 			
-			if(args[0].equalsIgnoreCase("help")) {
+			if(args[0].equalsIgnoreCase("help")) {	
 				if(args.length == 1) {
 					for(String value : FileManager.MessagesCfg.getConfigurationSection("Messages.Commands.Help.Page1").getKeys(false))
 						p.sendMessage(plugin.getString("Messages.Commands.Help.Page1." + value));
@@ -103,10 +98,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				if (args.length == 2) {
 					OfflinePlayer toRemove = Bukkit.getOfflinePlayer(args[1]);
-					if(Friends.bungeeMode) {
-						new Remove_Command(plugin, p, toRemove);
-						return false;
-					}
 					PlayerUtilities puP = new PlayerUtilities(p);
 					PlayerUtilities puT = new PlayerUtilities(toRemove);
 
@@ -148,10 +139,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				}
 				OfflinePlayer toSend = Bukkit.getOfflinePlayer(args[1]);
-				if(Friends.bungeeMode) {
-					new MSG_Command(plugin, p, toSend, args);
-					return false;
-				}
 				PlayerUtilities puP = new PlayerUtilities(p);
 				if (puP.get(3, false).contains("option_noMsg")) {
 					p.sendMessage(plugin.getString("Messages.Commands.MSG.DisabledSelf"));
@@ -191,10 +178,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				if (args.length == 2) {
 					OfflinePlayer toBlock = Bukkit.getOfflinePlayer(args[1]);
-					if(Friends.bungeeMode) {
-						new Block_Command(plugin, p, toBlock);
-						return false;
-					}
 					PlayerUtilities puP = new PlayerUtilities(p);
 					PlayerUtilities puT = new PlayerUtilities(toBlock);
 
@@ -232,10 +215,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				if (args.length == 2) {
 					OfflinePlayer toUnblock = Bukkit.getOfflinePlayer(args[1]);
-					if(Friends.bungeeMode) {
-						new Unblock_Command(plugin, p, toUnblock);
-						return false;
-					}
 					PlayerUtilities puP = new PlayerUtilities(p);
 
 					if (puP.get(2, false).contains(toUnblock.getUniqueId().toString())) {
@@ -260,10 +239,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				if (args.length == 2) {
 					OfflinePlayer toAccept = Bukkit.getOfflinePlayer(args[1]);
-					if(Friends.bungeeMode) {
-						new Accept_Command(plugin, p, toAccept);
-						return false;
-					}
 					PlayerUtilities puP = new PlayerUtilities(p);
 					PlayerUtilities puT = new PlayerUtilities(toAccept);
 
@@ -275,15 +250,13 @@ public class FriendCommands implements CommandExecutor {
 								return false;
 							}
 						}
-						if (puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit"))
-							if(toAccept.isOnline()) {
-								Player toCheck = Bukkit.getPlayer(toAccept.getName());
-								if (!toCheck.hasPermission("Friends.ExtraFriends") || puT.get(0, true)
-										.size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-									p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
-									return false;
-								}
+						if (puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+							if (!p.hasPermission("Friends.ExtraFriends") || puT.get(0, true)
+									.size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
+								p.sendMessage(plugin.getString("Messages.Commands.Accept.LimitReached.Requester"));
+								return false;
 							}
+						}
 
 						puP.update(toAccept.getUniqueId().toString(), 0, true);
 						puT.update(p.getUniqueId().toString(), 0, true);
@@ -291,7 +264,9 @@ public class FriendCommands implements CommandExecutor {
 						p.sendMessage(plugin.getString("Messages.Commands.Accept.Accept.Accepter").replace("%PLAYER%",
 								toAccept.getName()));
 						if (BungeeMessagingListener.isOnline(toAccept)) {
-							sendMessage(p, toAccept.getName(), plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
+							sendMessage(p, toAccept.getName(),
+									plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%",
+											p.getName()));
 						}
 						return true;
 					}
@@ -303,9 +278,6 @@ public class FriendCommands implements CommandExecutor {
 				return false;
 			}
 
-			/*
-			 * ACCEPTALL
-			 */
 			if (args[0].equalsIgnoreCase("acceptall")) {
 				if (!checkPerm(p, "Friends.Commands.Acceptall"))
 					return false;
@@ -319,26 +291,23 @@ public class FriendCommands implements CommandExecutor {
 					int i = 0;
 					for (Object requests : pu.get(1, true)) {
 						i++;
-						OfflinePlayer ToAccept = null;
+						OfflinePlayer player = null;
 						if (Friends.bungeeMode)
-							ToAccept = ((OfflinePlayer) requests);
+							player = ((OfflinePlayer) requests);
 						else
-							ToAccept = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
-						
-						if(Friends.bungeeMode) {
-							new Accept_Command(plugin, p, ToAccept);
-						} else {
-							PlayerUtilities tu = new PlayerUtilities(ToAccept);
-							pu.update(ToAccept.getUniqueId().toString(), 0, true);
-							tu.update(p.getUniqueId().toString(), 0, true);
-							pu.update(ToAccept.getUniqueId().toString(), 1, false);
-							if (BungeeMessagingListener.isOnline(ToAccept)) {
-								sendMessage(p, ToAccept.getName(),plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
-							}
+							player = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
+						PlayerUtilities tu = new PlayerUtilities(player);
+						pu.update(player.getUniqueId().toString(), 0, true);
+						tu.update(p.getUniqueId().toString(), 0, true);
+						pu.update(player.getUniqueId().toString(), 1, false);
+						p.sendMessage(plugin.getString("Messages.Commands.Acceptall.Accept").replace("%COUNT%",
+								String.valueOf(i)));
+						if (BungeeMessagingListener.isOnline(player)) {
+							sendMessage(p, player.getName(),
+									plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%",
+											p.getName()));
 						}
 					}
-					p.sendMessage(plugin.getString("Messages.Commands.Acceptall.Accept").replace("%COUNT%",
-							String.valueOf(i)));
 					return true;
 				}
 				p.sendMessage(plugin.getString("Messages.Commands.WrongUsage").replace("%COMMAND%", "/f acceptall"));
@@ -353,10 +322,6 @@ public class FriendCommands implements CommandExecutor {
 					return false;
 				if (args.length == 2) {
 					OfflinePlayer toDeny = Bukkit.getOfflinePlayer(args[1]);
-					if(Friends.bungeeMode) {
-						new Deny_Command(plugin, p, toDeny);
-						return false;
-					}
 					PlayerUtilities puP = new PlayerUtilities(p);
 
 					if (puP.get(1, false).contains(toDeny.getUniqueId().toString())) {
@@ -444,10 +409,6 @@ public class FriendCommands implements CommandExecutor {
 				if (!checkPerm(p, "Friends.Commands.List"))
 					return false;
 				if (args.length == 1) {
-					if(Friends.bungeeMode) {
-						new List_Command(plugin, p);
-						return false;
-					}
 					PlayerUtilities pu = new PlayerUtilities(p);
 
 					String online = "";
@@ -464,7 +425,7 @@ public class FriendCommands implements CommandExecutor {
 							offline = offline + friend.getName() + ", ";
 					}
 
-					p.sendMessage(plugin.getString("Messages.Commands.List")
+					p.sendMessage(plugin.getString("Messages.Commands.List.List")
 							.replace("%ONLINE_COUNT%", String.valueOf(online.split(",").length - 1))
 							.replace("%OFFLINE_COUNT%", String.valueOf(offline.split(",").length - 1))
 							.replace("%ONLINE%", online).replace("%OFFLINE%", offline));
@@ -504,21 +465,9 @@ public class FriendCommands implements CommandExecutor {
 
 							if (Friends.bungeeMode) {
 								String server = String.valueOf(BungeeSQL_Manager.get(toJump, "SERVER"));
-								if(FileManager.ConfigCfg.getStringList("Friends.DisabledServers.Servers").contains(server)) {
-									p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledServer"));
-									return false;
-								}
 								BungeeMessagingListener.sendToBungeeCord(p, "Connect", server, null);
 								return true;
 							}
-							if(FileManager.ConfigCfg.getBoolean("Friends.DisabledWorlds.Enable")) {
-								if(FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds.Worlds").contains(Bukkit.getPlayer(toJump.getName())
-										.getWorld().getName())) {
-									p.sendMessage(plugin.getString("Messages.Commands.Jumping.DisabledWorld"));
-									return false;
-								}
-							}
-							
 							p.teleport((Player) toJump);
 							return true;
 
@@ -578,7 +527,7 @@ public class FriendCommands implements CommandExecutor {
 		return false;
 	}
 
-	public static void sendMessage(Player p, String toSend, String message) {
+	public void sendMessage(Player p, String toSend, String message) {
 		if (!Friends.bungeeMode) {
 			Player send = Bukkit.getPlayer(toSend);
 			send.sendMessage(message);
@@ -592,7 +541,7 @@ public class FriendCommands implements CommandExecutor {
 			out.writeUTF(message);
 		} catch (IOException ex) {
 		}
-		p.sendPluginMessage(Friends.getInstance(), "BungeeCord", b.toByteArray());
+		p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
 *
 * This class was made by HyChrod
-* All rights reserved, 2017
+* All rights reserved, 2016
 *
 */
 package de.HyChrod.Friends.Commands;
@@ -63,23 +63,23 @@ public class Command_Add {
 			p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.NoRequests"));
 			return false;
 		}
-		if (puP.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit"))
+		if (puP.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
 			if (!p.hasPermission("Friends.ExtraFriends") || puP.get(0, true).size() > FileManager.ConfigCfg
 					.getInt("Friends.Options.FriendLimit+")) {
 				p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.LimitReached.Requester"));
 				return false;
 			}
-		if (puT.get(0,true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit"))
-			if(toAdd.isOnline()) {
-				Player toCheck = Bukkit.getPlayer(toAdd.getName());
-				if (!toCheck.hasPermission("Friends.ExtraFriends") || puT.get(0, true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit+")) {
-					p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.LimitReached.ToAdd"));
-					return false;
-				}
+		}
+		if (puT.get(0,true).size() > FileManager.ConfigCfg.getInt("Friends.Options.FriendLimit")) {
+			if (!p.hasPermission("Friends.ExtraFriends") || puT.get(0, true).size() > FileManager.ConfigCfg
+					.getInt("Friends.Options.FriendLimit+")) {
+				p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.LimitReached.ToAdd"));
+				return false;
 			}
+		}
 		puT.update(p.getUniqueId().toString(), 1, true);
 		if (Friends.bungeeMode) {
-			if(BungeeMessagingListener.isOnline(toAdd))
+			if(BungeeMessagingListener.isOnline(toAdd)) {
 				Bukkit.getScheduler().runTaskLaterAsynchronously(Friends.getInstance(), new Runnable() {
 					public void run() {
 						try {
@@ -97,18 +97,17 @@ public class Command_Add {
 							out.write(msgbytes.toByteArray());
 
 							p.sendPluginMessage(Friends.getInstance(), "BungeeCord", out.toByteArray());
-							Bukkit.broadcastMessage("§aSEND");
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
 				}, 20);
-		} else {
-			if(toAdd.isOnline()) {
-				ReflectionsManager.sendRequestMessages(p, Bukkit.getPlayer(toAdd.getUniqueId()));
 			}
+		} else {
+			if(toAdd.isOnline()) ReflectionsManager.sendRequestMessages(p, Bukkit.getPlayer(toAdd.getUniqueId()));
 		}
-		p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.Add.Requester").replace("%PLAYER%", toAdd.getName()));
+		p.sendMessage(Friends.getInstance().getString("Messages.Commands.Add.Add.Requester").replace("%PLAYER%",
+				toAdd.getName()));
 		return true;
 	}
 

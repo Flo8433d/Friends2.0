@@ -1,19 +1,23 @@
 /*
-*
-* This class was made by HyChrod
-* All rights reserved, 2017
-*
-*/
+ *
+ * This class was made by HyChrod
+ * All rights reserved, 2017
+ *
+ */
 package de.HyChrod.Friends;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.HyChrod.Friends.Commands.FriendCommands;
+import de.HyChrod.Friends.Commands.CommandSerializable;
+import de.HyChrod.Friends.Commands.FriendCommand;
 import de.HyChrod.Friends.Commands.StatusCommand;
+import de.HyChrod.Friends.DataHandlers.FileManager;
 import de.HyChrod.Friends.Listeners.BlockedEditInventoryListener;
 import de.HyChrod.Friends.Listeners.BungeeMessagingListener;
 import de.HyChrod.Friends.Listeners.ChangeWorldListener;
@@ -28,13 +32,9 @@ import de.HyChrod.Friends.Listeners.PageListener;
 import de.HyChrod.Friends.Listeners.PlayerSwapHandItemsListener;
 import de.HyChrod.Friends.Listeners.RemoveVerificationInventoryListener;
 import de.HyChrod.Friends.Listeners.RequestEditInventoryListener;
-import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
 import de.HyChrod.Friends.SQL.MySQL;
-import de.HyChrod.Friends.SQL.SQL_Manager;
-import de.HyChrod.Friends.Util.AsyncMySQLReconnecter;
-import de.HyChrod.Friends.Util.Metrics;
-import de.HyChrod.Friends.Util.PlayerUtilities;
-import de.HyChrod.Friends.Util.UpdateChecker;
+import de.HyChrod.Friends.Utilities.Metrics;
+import de.HyChrod.Friends.Utilities.UpdateChecker;
 
 /*
  * Friends.Use
@@ -60,69 +60,58 @@ import de.HyChrod.Friends.Util.UpdateChecker;
  * Friends.Commands.Status.Clear
  * 
  */
+
 public class Friends extends JavaPlugin {
 
 	public String prefix;
-	public static boolean bungeeMode = false;
 	private static Friends instance;
-
-	private FileManager mgr = new FileManager();
-
+	public static boolean bungeemode;
+	
+	public ExecutorService pool = Executors.newCachedThreadPool();
+	
 	@Override
 	public void onEnable() {
-		this.mgr.setupFiles(this);
-		if (FileManager.ConfigCfg.getString("Friends.Prefix") == null) {
-			getServer().reload();
+		FileManager.setupFiles(this);
+		if(FileManager.ConfigCfg.getString("Friends.Prefix") == null) {
+			this.getServer().reload();
 			return;
 		}
-		try {
-			if (FileManager.MySQLCfg.getBoolean("MySQL.Enable")) {
-				MySQL.perform();
-				if (FileManager.ConfigCfg.getBoolean("Friends.BungeeMode"))
-					MySQL.performBungee();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		bungeemode = FileManager.ConfigCfg.getString("Friends.BungeeMode") != null ? FileManager.ConfigCfg.getBoolean("Friends.BungeeMode") : false;
 		instance = this;
-		this.prefix = ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.Prefix"));
-		if (FileManager.ConfigCfg.getBoolean("Friends.BungeeMode"))
-			bungeeMode = true;
-		if (!MySQL.isConnected() && FileManager.ConfigCfg.getBoolean("Friends.BungeeMode")) {
-			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cTo use BungeeMode you have to use MySQL!");
-			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cPlease set up your MySQL Database and try again!");
-			this.getServer().getPluginManager().disablePlugin(this);
-			return;
+		if(FileManager.MySQLCfg.getBoolean("MySQL.Enable") || bungeemode) {
+			MySQL.perform();
+			if(!MySQL.isConnected()) {
+				Bukkit.getConsoleSender().sendMessage(this.prefix + " §cCant connect to MySQL!");
+				Bukkit.getConsoleSender().sendMessage(this.prefix + " §cPlease check your data and try again!");
+				this.getServer().getPluginManager().disablePlugin(this);
+				return;
+			}
 		}
-		
+		registerClasses();
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessagingListener());
-		registerClasses();
-
-		if (!UpdateChecker.check() && FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates")) {
+		if(!BlockedEditInventoryListener.simplyNameCheck(this))
+			return;
+		
+		if(!UpdateChecker.check() && FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates")) {
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cA new update is available!");
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cPlease update your plugin!");
 			Bukkit.getConsoleSender().sendMessage(this.prefix + " §cYou will get no support for this version!!");
 		}
-		Bukkit.getConsoleSender().sendMessage(this.prefix + " §aPlugin was loaded successfully!");
-		if (MySQL.isConnected()) {
-			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §2MySQL");
-			new AsyncMySQLReconnecter();
-		} else 
-			Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: §3FlatFile");
-		if (bungeeMode)
-			Bukkit.getConsoleSender().sendMessage(this.prefix + " §9§n< BungeeMode >");
-		
-		try {
-	        Metrics metrics = new Metrics(this);
-	        metrics.start();
-	    } catch (IOException e) {
-	    }
+		Bukkit.getConsoleSender().sendMessage(this.prefix + " §aThe plugin was loaded successfully!");
+		String MODE = MySQL.isConnected() ? bungeemode ? "§9- BungeeMode -" : "§d- MySQL -" : "§3- FlatFile -";
+		Bukkit.getConsoleSender().sendMessage(this.prefix + " §aMode: " + MODE);
 		return;
 	}
-
+	
 	private void registerClasses() {
-		this.getCommand("Friends").setExecutor(new FriendCommands(this));
+		try {
+			new Metrics(this).start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		new CommandSerializable();
+		this.getCommand("Friends").setExecutor(new FriendCommand(this));
 		this.getCommand("Status").setExecutor(new StatusCommand(this));
 		
 		this.getServer().getPluginManager().registerEvents(new InventoryUtilListener(this), this);
@@ -141,30 +130,21 @@ public class Friends extends JavaPlugin {
 		if (this.getServer().getBukkitVersion().startsWith("1.10")
 				|| this.getServer().getBukkitVersion().startsWith("1.9") || this.getServer().getBukkitVersion().startsWith("1.11"))
 			this.getServer().getPluginManager().registerEvents(new PlayerSwapHandItemsListener(), this);
-
-		new SQL_Manager();
-		new BungeeSQL_Manager();
 	}
 
 	@Override
 	public void onDisable() {
-		try {
-			PlayerUtilities.fullSave(true);
-			if (MySQL.isConnected())
-				MySQL.disconnect();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		if(MySQL.isConnected())
+			MySQL.disconnect();
 		return;
 	}
-
+	
 	public String getString(String path) {
-		return ChatColor.translateAlternateColorCodes('&',
-				FileManager.MessagesCfg.getString(path).replace("%PREFIX%", this.prefix));
+		return ChatColor.translateAlternateColorCodes('&', FileManager.MessagesCfg.getString(path).replace("%PREFIX%", this.prefix));
 	}
-
+	
 	public static Friends getInstance() {
 		return instance;
 	}
-
+	
 }

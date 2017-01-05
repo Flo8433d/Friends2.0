@@ -7,12 +7,10 @@
 package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,15 +19,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Commands.FriendCommands;
-import de.HyChrod.Friends.Util.InventoryBuilder;
-import de.HyChrod.Friends.Util.InventoryPage;
-import de.HyChrod.Friends.Util.InventoryTypes;
-import de.HyChrod.Friends.Util.ItemStacks;
-import de.HyChrod.Friends.Util.PlayerUtilities;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.Commands.SubCommands.AcceptAll_Command;
+import de.HyChrod.Friends.Commands.SubCommands.DenyAll_Command;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.SQL.Callback;
+import de.HyChrod.Friends.Utilities.InventoryBuilder;
+import de.HyChrod.Friends.Utilities.InventoryPage;
+import de.HyChrod.Friends.Utilities.InventoryTypes;
+import de.HyChrod.Friends.Utilities.ItemStacks;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class PageListener implements Listener {
 
@@ -56,20 +56,17 @@ public class PageListener implements Listener {
 				if (e.getCurrentItem() != null) {
 					if (e.getCurrentItem().hasItemMeta()) {
 						if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
-							
 							if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(1)).getItem())) {
-								PlayerUtilities pu = new PlayerUtilities(p);
 								Inventory inv = p.getOpenInventory().getTopInventory();
-								this.nextPage(p, pu, inv, type);
+								this.nextPage(p, PlayerUtilities.getUtilities(p.getUniqueId().toString()), inv, type);
 								return;
 							}
 							if (e.getCurrentItem().equals(((ItemStacks)type.getItems().get(2)).getItem())) {
-								PlayerUtilities pu = new PlayerUtilities(p);
 
 								if (currentSite.containsKey(p)) {
 									if (currentSite.get(p) > 0) {
 										int page = currentSite.get(p) - 1;
-										new InventoryPage(plugin, p, page, pu, type).open(true);
+										new InventoryPage(plugin, p, page, PlayerUtilities.getUtilities(p.getUniqueId().toString()), type).open(true);
 										currentSite.put(p, page);
 										return;
 									}
@@ -157,47 +154,19 @@ public class PageListener implements Listener {
 									return;
 								}
 								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(4)).getItem())) {
-									int i = 0;
-									PlayerUtilities pu = new PlayerUtilities(p);
-									for (Object requests : pu.get(1, true)) {
-										i++;
-										OfflinePlayer ToAccept = null;
-										if (Friends.bungeeMode)
-											ToAccept = ((OfflinePlayer) requests);
-										else
-											ToAccept = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
+									new AcceptAll_Command(plugin, p, new String[] {"acceptall"}, new Callback<Boolean>() {
 										
-										PlayerUtilities tu = new PlayerUtilities(ToAccept);
-										pu.update(ToAccept.getUniqueId().toString(), 0, true);
-										tu.update(p.getUniqueId().toString(), 0, true);
-										pu.update(ToAccept.getUniqueId().toString(), 1, false);
-										if (BungeeMessagingListener.isOnline(ToAccept)) {
-											FriendCommands.sendMessage(p, ToAccept.getName(),plugin.getString("Messages.Commands.Accept.Accept.ToAccept").replace("%PLAYER%", p.getName()));
-										}
-									}
-									p.sendMessage(plugin.getString("Messages.Commands.Acceptall.Accept").replace("%COUNT%",
-											String.valueOf(i)));
-									p.closeInventory();
+										@Override
+										public void call(Boolean done) {p.closeInventory();}
+									});
 									return;
 								}
 								if(e.getCurrentItem().equals(((ItemStacks)type.getItems().get(5)).getItem())) {
-									int i = 0;
-									PlayerUtilities pu = new PlayerUtilities(p);
-									for (Object requests : pu.get(1, true)) {
-										i++;
-										OfflinePlayer toDeny = null;
-										if (Friends.bungeeMode)
-											toDeny = ((OfflinePlayer) requests);
-										else
-											toDeny = Bukkit.getOfflinePlayer(UUID.fromString(((String) requests)));
-										pu.update(toDeny.getUniqueId().toString(), 1, false);
-										if (BungeeMessagingListener.isOnline(toDeny)) {
-											FriendCommands.sendMessage(p, toDeny.getName(),plugin.getString("Messages.Commands.Deny.Deny.ToDeny").replace("%PLAYER%", p.getName()));
-										}
-									}
-									p.sendMessage(plugin.getString("Messages.Commands.Denyall.Deny").replace("%COUNT%",
-											String.valueOf(i)));
-									p.closeInventory();
+									new DenyAll_Command(plugin, p, new String[] {"denyall"}, new Callback<Boolean>() {
+
+										@Override
+										public void call(Boolean done) {p.closeInventory();}
+									});
 									return;
 								}
 								
@@ -234,13 +203,15 @@ public class PageListener implements Listener {
 				freeSlots++;
 			}
 		}
-		if (freeSlots > 0) {
-			player.sendMessage(plugin.getString("Messages.GUI" + type.getS() + ".NoMorePages"));
-			return;
-		}
 		int page = 1;
 		if (currentSite.containsKey(player))
 			page = currentSite.get(player) + 1;
+		if (freeSlots > 0) {
+			player.sendMessage(plugin.getString("Messages.GUI" + type.getS() + ".NoMorePages"));
+			new InventoryPage(plugin, player, page, pu, type).open(true);
+			currentSite.put(player, page);
+			return;
+		}
 		new InventoryPage(plugin, player, page, pu, type).open(true);
 		currentSite.put(player, page);
 	}

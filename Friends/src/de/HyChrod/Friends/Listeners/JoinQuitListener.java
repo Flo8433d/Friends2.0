@@ -6,6 +6,7 @@
 */
 package de.HyChrod.Friends.Listeners;
 
+import java.sql.ResultSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -19,13 +20,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.SQL.BungeeSQL_Manager;
-import de.HyChrod.Friends.SQL.SQL_Manager;
-import de.HyChrod.Friends.Util.PlayerUtilities;
-import de.HyChrod.Friends.Util.UpdateChecker;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.SQL.Callback;
+import de.HyChrod.Friends.SQL.QueryRunnable;
+import de.HyChrod.Friends.SQL.UpdateRunnable;
+import de.HyChrod.Friends.Utilities.FriendPlayer;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
+import de.HyChrod.Friends.Utilities.UpdateChecker;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class JoinQuitListener implements Listener {
 
@@ -38,7 +41,43 @@ public class JoinQuitListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		PlayerUtilities pu = new PlayerUtilities(p);
+
+		plugin.pool.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					PlayerUtilities pu = new PlayerUtilities(p.getUniqueId().toString());
+					while (!pu.isFinished)
+						synchronized (this) {
+							wait(5L);
+						}
+
+					if (FileManager.ConfigCfg.getBoolean("Friends.Options.RequestNotification")
+							&& !pu.getRequests().isEmpty()) {
+						p.sendMessage(plugin.getString("Messages.RequestNotification").replace("%REQUESTS%",
+								String.valueOf(pu.getRequests().size())));
+					}
+					if (!Friends.bungeemode)
+						if (FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
+							for (FriendPlayer FP : pu.getFriends()) {
+								OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(FP.getUUID()));
+								if (player.isOnline()) {
+									PlayerUtilities puT = PlayerUtilities.getUtilities(player.getUniqueId().toString());
+									while (!puT.isFinished)
+										synchronized (this) {
+											wait(5L);
+										}
+									if (!puT.getOptions().contains("option_noChat")) {
+										Bukkit.getPlayer(player.getUniqueId()).sendMessage(plugin
+												.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
+									}
+								}
+							}
+				} catch (Exception ex) {
+				}
+			}
+		});
 
 		if (p.hasPermission("Friends.Admin")) {
 			if (FileManager.ConfigCfg.getBoolean("Friends.CheckForUpdates") && !UpdateChecker.check()) {
@@ -46,11 +85,6 @@ public class JoinQuitListener implements Listener {
 				p.sendMessage(plugin.prefix + " §cPlease update your plugin!");
 
 			}
-		}
-
-		if (FileManager.ConfigCfg.getBoolean("Friends.Options.RequestNotification") && !pu.get(1, true).isEmpty()) {
-			p.sendMessage(plugin.getString("Messages.RequestNotification").replace("%REQUESTS%",
-					String.valueOf(pu.get(1, true).size())));
 		}
 
 		if (FileManager.ConfigCfg.getBoolean("Friends.FriendItem.GiveOnJoin")) {
@@ -83,68 +117,104 @@ public class JoinQuitListener implements Listener {
 					}
 				}
 			}
-			
-			if(FileManager.ConfigCfg.getBoolean("Friends.DisabledWorlds.Enable")) {
-				if(!FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds.Worlds").contains(p.getWorld().getName())) {
+
+			if (FileManager.ConfigCfg.getBoolean("Friends.DisabledWorlds.Enable")) {
+				if (!FileManager.ConfigCfg.getStringList("Friends.DisabledWorlds.Worlds")
+						.contains(p.getWorld().getName())) {
 					p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1,
 							new UtilitieItems().FRIENDITEM(p));
 				}
-			} else if(FileManager.ConfigCfg.getBoolean("Friends.EnabledWorlds.Enable")) {
-				if(FileManager.ConfigCfg.getStringList("Friends.EnabledWorlds.Worlds").contains(p.getWorld().getName())) {
+			} else if (FileManager.ConfigCfg.getBoolean("Friends.EnabledWorlds.Enable")) {
+				if (FileManager.ConfigCfg.getStringList("Friends.EnabledWorlds.Worlds")
+						.contains(p.getWorld().getName())) {
 					p.getInventory().setItem(FileManager.ConfigCfg.getInt("Friends.FriendItem.InventorySlot") - 1,
 							new UtilitieItems().FRIENDITEM(p));
 				}
 			}
 		}
 
-		if (Friends.bungeeMode) {
-			BungeeSQL_Manager.set(p, 1, "ONLINE");
-			SQL_Manager.setName(p.getUniqueId().toString(), p.getName());
+		if (Friends.bungeemode) {
+			new QueryRunnable("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + p.getUniqueId().toString() + "'",
+					new Callback<ResultSet>() {
+
+						@Override
+						public void call(ResultSet rs) {
+							try {
+								if (rs.next()) {
+									new UpdateRunnable("UPDATE friends2_0_BUNGEE SET ONLINE= '1' WHERE UUID= '"
+											+ p.getUniqueId().toString() + "'", null).runTaskAsynchronously(plugin);
+									return;
+								}
+								new UpdateRunnable(
+										"INSERT INTO friends2_0_BUNGEE(UUID, ONLINE, SERVER, LASTONLINE) VALUES ('"
+												+ p.getUniqueId().toString() + "', '1', '', '')",
+										null).runTaskAsynchronously(plugin);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+					}).runTaskAsynchronously(plugin);
 			return;
 		}
-		
-		if(FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
-			for (Object uuid : pu.get(0, true)) {
-				OfflinePlayer player = null;
-				if(Friends.bungeeMode)
-					player = ((OfflinePlayer)uuid);
-				else
-					player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
-				if (player.isOnline()) {
-					PlayerUtilities puT = new PlayerUtilities(player);
-					if (!puT.get(3, false).contains("option_noChat")) {
-						Bukkit.getPlayer(player.getUniqueId())
-								.sendMessage(plugin.getString("Messages.FriendJoin").replace("%PLAYER%", p.getName()));
-					}
-				}
-			}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
-		if (Friends.bungeeMode) {
-			BungeeSQL_Manager.set(p, System.currentTimeMillis(), "LASTONLINE");
-			return;
+		if (Friends.bungeemode) {
+			new QueryRunnable("SELECT * FROM friends2_0_BUNGEE WHERE UUID= '" + p.getUniqueId().toString() + "'",
+					new Callback<ResultSet>() {
+
+						@Override
+						public void call(ResultSet rs) {
+							try {
+								if (rs.next()) {
+									new UpdateRunnable("UPDATE friends2_0_BUNGEE SET (ONLINE, LASTONLINE) VALUES ('" + 0
+											+ "', '" + System.currentTimeMillis() + "') WHERE UUID= '"
+											+ p.getUniqueId().toString() + "'", null).runTaskAsynchronously(plugin);
+									return;
+								}
+								new UpdateRunnable(
+										"INSERT INTO friends2_0_BUNGEE(UUID, ONLINE, SERVER, LASTONLINE) VALUES ('"
+												+ p.getUniqueId().toString() + "', '0', '', '"
+												+ System.currentTimeMillis() + "')",
+										null).runTaskAsynchronously(plugin);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+					}).runTaskAsynchronously(plugin);
 		}
+		plugin.pool.execute(new Runnable() {
 
-		PlayerUtilities pu = new PlayerUtilities(p);
-		pu.setLastOnline(System.currentTimeMillis());
-		pu.saveData(false);
+			@Override
+			public void run() {
+				try {
+					PlayerUtilities pu = PlayerUtilities.getUtilities(p.getUniqueId().toString());
+					while (!pu.isFinished)
+						synchronized (this) {
+							wait(5L);
+						}
+					pu.flushLastOnline();
+					if (Friends.bungeemode)
+						return;
+					if (FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
+						for (FriendPlayer FP : pu.getFriends()) {
+							OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(FP.getUUID()));
+							if (player.isOnline()) {
+								PlayerUtilities puT = PlayerUtilities.getUtilities(player.getUniqueId().toString());
 
-		if(FileManager.ConfigCfg.getBoolean("Friends.Options.JoinQuitMessages"))
-			for (Object uuid : pu.get(0, true)) {
-				OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuid)));
-				if(Friends.bungeeMode)
-					player = ((OfflinePlayer)uuid);
-				if (player.isOnline()) {
-					PlayerUtilities puT = new PlayerUtilities(player);
-					if (!puT.get(3, false).contains("option_noChat")) {
-						Bukkit.getPlayer(player.getUniqueId())
-								.sendMessage(plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
-					}
+								if (!puT.getOptions().contains("option_noChat")) {
+									Bukkit.getPlayer(player.getUniqueId()).sendMessage(
+											plugin.getString("Messages.FriendQuit").replace("%PLAYER%", p.getName()));
+								}
+							}
+						}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
+		});
 	}
 
 }

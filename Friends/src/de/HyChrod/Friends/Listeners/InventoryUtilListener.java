@@ -15,11 +15,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Util.InventoryBuilder;
-import de.HyChrod.Friends.Util.InventoryTypes;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.Utilities.InventoryBuilder;
+import de.HyChrod.Friends.Utilities.InventoryTypes;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class InventoryUtilListener implements Listener {
 
@@ -42,7 +43,21 @@ public class InventoryUtilListener implements Listener {
 									.equals(ChatColor.translateAlternateColorCodes('&',
 											FileManager.ConfigCfg.getString("Friends.FriendItem.Displayname")))
 									|| e.getItem().equals(new UtilitieItems().FRIENDITEM(((Player) e.getPlayer())))) {
-								InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+								
+								plugin.pool.execute(new Runnable() {
+									
+									@Override
+									public void run() {
+										try {
+											PlayerUtilities pu = PlayerUtilities.getUtilities(p.getUniqueId().toString());
+											if(!pu.isFinished) {
+												p.sendMessage(plugin.getString("Messages.GUI.LoadData"));
+												return;
+											}
+											InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+										} catch (Exception ex) {ex.printStackTrace();}
+									}
+								});
 								return;
 							}
 						}

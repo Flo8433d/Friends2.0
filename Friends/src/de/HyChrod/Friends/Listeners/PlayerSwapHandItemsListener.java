@@ -12,7 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class PlayerSwapHandItemsListener implements Listener {
 

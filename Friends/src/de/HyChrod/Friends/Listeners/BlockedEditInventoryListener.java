@@ -8,6 +8,7 @@ package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -16,12 +17,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Util.InventoryBuilder;
-import de.HyChrod.Friends.Util.InventoryTypes;
-import de.HyChrod.Friends.Util.ItemStacks;
-import de.HyChrod.Friends.Util.PlayerUtilities;
+import de.HyChrod.Friends.Commands.SubCommands.Unblock_Command;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.SQL.Callback;
+import de.HyChrod.Friends.Utilities.InventoryBuilder;
+import de.HyChrod.Friends.Utilities.InventoryTypes;
+import de.HyChrod.Friends.Utilities.ItemStacks;
 
 public class BlockedEditInventoryListener implements Listener {
 
@@ -47,11 +49,21 @@ public class BlockedEditInventoryListener implements Listener {
 						if (e.getCurrentItem().hasItemMeta()) {
 							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								if (e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_UNBLOCK.getItem())) {
-									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.update(editing.get(p).getUniqueId().toString(), 2, false);
-									p.sendMessage(plugin.getString("Messages.Commands.Unblock.Unblock")
-											.replace("%PLAYER%", editing.get(p).getName()));
-									InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED, true);
+									try {
+										new Unblock_Command(plugin, p, new String[] { "unblock", editing.get(p).getName() },
+												new Callback<Boolean>() {
+
+													@Override
+													public void call(Boolean isSuccessful) {
+														if (isSuccessful)
+															InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.BLOCKED,
+																	true);
+														else
+															p.closeInventory();
+													}
+												});
+									} catch (Exception ex) {ex.printStackTrace();}
+									p.closeInventory();
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.BLOCKED_EDIT_BACK.getItem())) {
@@ -65,6 +77,18 @@ public class BlockedEditInventoryListener implements Listener {
 				}
 			}
 		}
+	}
+
+	public static boolean simplyNameCheck(Friends friends) {
+		if (!friends.getDescription().getAuthors().get(0).equals("HyChrod")) {
+			Bukkit.getConsoleSender()
+					.sendMessage(friends.prefix + " §cYou're using an unofficial version of this plugin");
+			Bukkit.getConsoleSender().sendMessage(friends.prefix + " §cSomeone changed the authors name!");
+			Bukkit.getConsoleSender().sendMessage(friends.prefix + " §cThe official author is: HyChrod");
+			friends.getServer().getPluginManager().disablePlugin(friends);
+			return false;
+		}
+		return true;
 	}
 
 }

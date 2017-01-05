@@ -1,3 +1,4 @@
+# Here you can change all messages to your wishes!
 Messages:
   Commands:
     NoPlayer: '%PREFIX% &cOnly players can perform this command!'
@@ -16,7 +17,7 @@ Messages:
         '7': '%PREFIX% &c------------------------------------------'
         '8': '%PREFIX% &3More Commands --> /f help 2'
       Page2:
-        '0': '%PREFIX% &c[&6Page2&c]------------------------------------'
+        '0': '%PREFIX% &c[&9Page2&c]------------------------------------'
         '1': '%PREFIX% &3/f unblock <Player> &f| Unblocks a player'
         '2': '%PREFIX% &3/f toggle requests &f| Toggle requests'
         '3': '%PREFIX% &3/f toggle <chat|msg> &f| Toggles chat or msg'
@@ -27,7 +28,7 @@ Messages:
         '8': '%PREFIX% &3More Commands --> /f help 3'
         '9': '%PREFIX% &c------------------------------------------'
       Page3:
-        '0': '%PREFIX% &c[&6Page3&c]------------------------------------'
+        '0': '%PREFIX% &c[&9Page3&c]------------------------------------'
         '1': '%PREFIX% &3/f jump <Player> &f| Jump to a friend'
         '2': '%PREFIX% &3/f info &f| See some informations'
         '3': '%PREFIX% &3/msg <Player> <Message> &f| Send a message'
@@ -40,7 +41,7 @@ Messages:
         '4': '%PREFIX% &9------------------------------------------'
       WrongSite: '%PREFIX% &cThis site does not exist!'
     Add:
-      PlayerOffline: '%PREFIX% &cThis player seems to be offline!'
+      PlayerOffline: '%PREFIX% &cThis player hasn''t played on this server before!'
       AlreadyFriends: '%PREFIX% &cThis player is already your friend!'
       AlreadyRequested: '%PREFIX% &cYou''ve already send this player a request!'
       SendSelf: '%PREFIX% &cYou can''t send yourself a request!'
@@ -68,6 +69,7 @@ Messages:
         Remover: '%PREFIX% &7You removed &3%PLAYER% &7from your friendlist!'
         ToRemove: '%PREFIX% &7You''re no longer a friend of &3%PLAYER%&7!'
     Block:
+      PlayerOffline: '%PREFIX% &cThis player hasn''t played on this server before!'
       AlreadyBlocked: '%PREFIX% &cYou''ve already blocked this player!'
       Block:
         Blocker: '%PREFIX% &7You have blocked &3%PLAYER%&7!'
@@ -130,6 +132,7 @@ Messages:
   FriendChatDisabled: '%PREFIX% &cYou disabled the friendchat!'
   RequestNotification: '%PREFIX% &aYou have &7(&3%REQUESTS%&7) &aopen friend-requests!'
   GUI:
+    LoadData: "%PREFIX% &cPlease wait a moment, your data is being loaded.."
     NoMorePages: '%PREFIX% &cThere are no more pages!'
     FirstPage: '%PREFIX% &cYou are already on the first page!'
     RequestsInv:

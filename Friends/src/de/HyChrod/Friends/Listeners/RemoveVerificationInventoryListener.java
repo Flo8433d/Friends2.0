@@ -8,7 +8,6 @@ package de.HyChrod.Friends.Listeners;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,12 +16,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Util.InventoryBuilder;
-import de.HyChrod.Friends.Util.InventoryTypes;
-import de.HyChrod.Friends.Util.ItemStacks;
-import de.HyChrod.Friends.Util.PlayerUtilities;
+import de.HyChrod.Friends.Commands.SubCommands.Remove_Command;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.SQL.Callback;
+import de.HyChrod.Friends.Utilities.InventoryBuilder;
+import de.HyChrod.Friends.Utilities.InventoryTypes;
+import de.HyChrod.Friends.Utilities.ItemStacks;
 
 public class RemoveVerificationInventoryListener implements Listener {
 
@@ -46,29 +46,22 @@ public class RemoveVerificationInventoryListener implements Listener {
 						if (e.getCurrentItem().hasItemMeta()) {
 							if (e.getCurrentItem().getItemMeta().hasDisplayName()) {
 								final OfflinePlayer toConfirm = confirming.get(p);
-								PlayerUtilities puT = new PlayerUtilities(toConfirm);
 								if (e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CANCLE.getItem())) {
 									EditInventoryListener.editing.put(p, toConfirm);
 									InventoryBuilder.openInv(p, InventoryBuilder.EDIT_INVENTORY(p, false));
 									return;
 								}
 								if (e.getCurrentItem().equals(ItemStacks.REMOVEVERIFICATION_CONFIRM.getItem())) {
-									PlayerUtilities pu = new PlayerUtilities(p);
-									pu.update(toConfirm.getUniqueId().toString(), 0, false);
-									puT.update(p.getUniqueId().toString(), 0, false);
-									p.sendMessage(plugin.getString("Messages.Commands.Remove.Remove.Remover")
-											.replace("%PLAYER%", toConfirm.getName()));
-									if (Friends.bungeeMode && !toConfirm.isOnline()) {
-										BungeeMessagingListener.sendToBungeeCord(p, "Message", toConfirm.getName(),
-												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
-														.replace("%PLAYER%", p.getName()));
-									}
-									if (toConfirm.isOnline()) {
-										Bukkit.getPlayer(toConfirm.getUniqueId()).sendMessage(
-												plugin.getString("Messages.Commands.Remove.Remove.ToRemove")
-														.replace("%PLAYER%", p.getName()));
-									}
-									InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+									new Remove_Command(plugin, p, new String[] {"remove", toConfirm.getName()}, new Callback<Boolean>() {
+										
+										@Override
+										public void call(Boolean isSuccessful) {
+											if(isSuccessful)
+												InventoryBuilder.openInv(p, InventoryBuilder.INVENTORY(plugin, p, InventoryTypes.MAIN, false));
+											else
+												p.closeInventory();
+										}
+									});
 									return;
 								}
 							}

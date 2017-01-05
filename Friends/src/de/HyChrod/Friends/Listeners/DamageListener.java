@@ -12,11 +12,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Commands.Command_Add;
-import de.HyChrod.Friends.Util.PlayerUtilities;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.Commands.SubCommands.Add_Command;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.SQL.Callback;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class DamageListener implements Listener {
 
@@ -32,9 +33,9 @@ public class DamageListener implements Listener {
 		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 			Player toAdd = (Player) e.getEntity();
 			Player p = (Player) e.getDamager();
-
-			PlayerUtilities pu = new PlayerUtilities(p);
-			if (pu.get(0, false).contains(toAdd.getUniqueId().toString())) {
+			
+			PlayerUtilities pu = PlayerUtilities.getUtilities(p.getUniqueId().toString());
+			if (pu.getFriends().contains(toAdd.getUniqueId().toString())) {
 				if (FileManager.ConfigCfg.getBoolean("Friends.Options.FriendCanPvP")) {
 					return;
 				}
@@ -50,9 +51,11 @@ public class DamageListener implements Listener {
 									.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
 								e.setCancelled(true);
 
-								new Command_Add(p, toAdd.getName());
-								p.sendMessage(plugin.getString("Messages.Commands.Add.Add.Requester")
-										.replace("%PLAYER%", toAdd.getName()));
+								new Add_Command(plugin, p, new String[] {"add",toAdd.getName()}, new Callback<Boolean>() {
+									
+									@Override
+									public void call(Boolean done) {}
+								});
 								return;
 							}
 						}

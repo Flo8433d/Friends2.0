@@ -13,16 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.HyChrod.Friends.DataHandlers.FileManager;
+
 public class MySQL {
 
-	public static String host, port, database, username, passwort;
 	public static Connection con;
 
 	public static void connect() {
 		if (!isConnected()) {
 			try {
-				con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username,
-						passwort);
+				con = DriverManager.getConnection("jdbc:mysql://" + FileManager.SQL_DATA[0] + ":" + FileManager.SQL_DATA[1] + "/" + FileManager.SQL_DATA[2], 
+						FileManager.SQL_DATA[3], FileManager.SQL_DATA[4]);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

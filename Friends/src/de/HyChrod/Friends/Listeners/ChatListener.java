@@ -18,9 +18,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import de.HyChrod.Friends.FileManager;
 import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Util.PlayerUtilities;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.Utilities.FriendPlayer;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
 
 public class ChatListener implements Listener {
 
@@ -34,43 +35,55 @@ public class ChatListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		if (Friends.bungeeMode) {
+		if (Friends.bungeemode) {
 			return;
 		}
 		if (FileManager.ConfigCfg.getBoolean("Friends.FriendChat.Enable")) {
 			if (e.getMessage().startsWith(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"))) {
 				e.setCancelled(true);
 				
-				PlayerUtilities pu = new PlayerUtilities(p);
-				if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.SpyChat.Enable")) {
-					for(Player spyer : spy) {
-						if(!p.equals(spyer) && (!pu.get(0, false).contains(spyer.getUniqueId().toString()) || pu.get(3, false).contains("options_noChat"))) {
-							spyer.sendMessage(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendChat.SpyChat.Format"))
-									.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()
-											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), "")));
-						}
+				plugin.pool.execute(new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							PlayerUtilities pu = PlayerUtilities.getUtilities(p.getUniqueId().toString());
+							while(!pu.isFinished)
+								synchronized (this) {
+									wait(5L);
+								}
+							if(FileManager.ConfigCfg.getBoolean("Friends.FriendChat.SpyChat.Enable")) {
+								for(Player spyer : spy) {
+									if(!p.equals(spyer) && (!pu.getFriends().contains(spyer.getUniqueId().toString()) || pu.getOptions().contains("options_noChat"))) {
+										spyer.sendMessage(ChatColor.translateAlternateColorCodes('&', FileManager.ConfigCfg.getString("Friends.FriendChat.SpyChat.Format"))
+												.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage()
+														.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), "")));
+									}
+								}
+							}
+							if(pu.getOptions().contains("option_noChat")) {
+								p.sendMessage(plugin.getString("Messages.FriendChatDisabled"));
+								return;
+							}
+							for (FriendPlayer FP : pu.getFriends()) {
+								OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(FP.getUUID()));
+								if (player.isOnline()) {
+									PlayerUtilities puT = PlayerUtilities.getUtilities(player.getUniqueId().toString());
+									while(!puT.isFinished)
+										synchronized (this) {
+											wait(5L);
+										}
+									if (!puT.getOptions().contains("option_noChat")) {
+										Bukkit.getPlayer(player.getUniqueId())
+												.sendMessage(plugin.getString("Messages.FriendChatFormat")
+														.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
+														.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
+									}
+								}
+							}
+						} catch (Exception ex) {ex.printStackTrace();}
 					}
-				}
-				if(pu.get(3, false).contains("option_noChat")) {
-					p.sendMessage(plugin.getString("Messages.FriendChatDisabled"));
-					return;
-				}
-				for (Object uuids : pu.get(0, true)) {
-					OfflinePlayer player = null;
-					if(Friends.bungeeMode)
-						player = ((OfflinePlayer)uuids);
-					else
-						player = Bukkit.getOfflinePlayer(UUID.fromString(String.valueOf(uuids)));
-					if (player.isOnline()) {
-						PlayerUtilities puT = new PlayerUtilities(player);
-						if (!puT.get(3, false).contains("option_noChat")) {
-							Bukkit.getPlayer(player.getUniqueId())
-									.sendMessage(plugin.getString("Messages.FriendChatFormat")
-											.replace("%PLAYER%", p.getName()).replace("%MESSAGE%", e.getMessage())
-											.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));
-						}
-					}
-				}
+				});
 				p.sendMessage(plugin.getString("Messages.FriendChatFormat").replace("%PLAYER%", p.getName())
 						.replace("%MESSAGE%", e.getMessage())
 						.replace(FileManager.ConfigCfg.getString("Friends.FriendChat.Code"), ""));

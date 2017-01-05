@@ -16,8 +16,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import de.HyChrod.Friends.FileManager;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class ItemListener implements Listener {
 

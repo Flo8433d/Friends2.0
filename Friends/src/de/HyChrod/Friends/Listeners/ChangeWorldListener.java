@@ -14,8 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.HyChrod.Friends.FileManager;
-import de.HyChrod.Friends.Util.UtilitieItems;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class ChangeWorldListener implements Listener {
 

@@ -25,7 +25,7 @@ BungeeCord
 6. Set 'BungeeMode' to 'true'
 7. Set BungeeCord and IP-Forwarding in your Spigot.yml in your server-folder to 'true'
 8. Restart your server
-9. BungeeCord should work now
+9. BungeeCord should work now (If not, check your Java- and MC-Version)
 
 # Commands & Permissions
 

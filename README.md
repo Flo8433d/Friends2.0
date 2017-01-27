@@ -4,7 +4,7 @@ Default
 
 1. First you have to put the .jar in the plugins folder
 2. Restart your server
-3. The plugin should work now
+3. The plugin should work now (If not, check your Java- and MC-Version)
 
 MySQL
 

@@ -6,18 +6,16 @@
 */
 package de.HyChrod.Friends.Listeners;
 
+import de.HyChrod.Friends.Commands.SubCommands.Add_Command;
+import de.HyChrod.Friends.DataHandlers.FileManager;
+import de.HyChrod.Friends.Friends;
+import de.HyChrod.Friends.Utilities.PlayerUtilities;
+import de.HyChrod.Friends.Utilities.UtilitieItems;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-
-import de.HyChrod.Friends.Friends;
-import de.HyChrod.Friends.Commands.SubCommands.Add_Command;
-import de.HyChrod.Friends.DataHandlers.FileManager;
-import de.HyChrod.Friends.SQL.Callback;
-import de.HyChrod.Friends.Utilities.PlayerUtilities;
-import de.HyChrod.Friends.Utilities.UtilitieItems;
 
 public class DamageListener implements Listener {
 
@@ -49,14 +47,10 @@ public class DamageListener implements Listener {
 						if (p.getItemInHand().getItemMeta().hasDisplayName()) {
 							if (p.getItemInHand().getItemMeta().getDisplayName()
 									.equals(new UtilitieItems().FRIENDITEM(p).getItemMeta().getDisplayName())) {
-								e.setCancelled(true);
 
-								new Add_Command(plugin, p, new String[] {"add",toAdd.getName()}, new Callback<Boolean>() {
-									
-									@Override
-									public void call(Boolean done) {}
-								});
-								return;
+								new Add_Command(plugin, p, new String[] {"add",toAdd.getName()}, done -> {});
+
+								e.setCancelled(true);
 							}
 						}
 					}

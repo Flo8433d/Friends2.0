@@ -31,23 +31,23 @@ BungeeCord
 
 | Commands      | Description   | Permission  |
 | ------------- |:-------------:| -----:|
-| /friends | Opens the gui | - Friends.Use|
-| /friends help     | Shows all commands | - Friends.Use |
-| /friends add [Player]      | Sends a friend-request to the player | - Friends.Commands.Add |
-| /friends remove [Player] | Removes a player form your friendlist  | - Friends.Commands.Remove |
-| /friends accept [Player] | Accepts a request  | - Friends.Commands.Accept |
-| /friends acceptall | Accepts all open requets | - Friends.Commands.Acceptall
-| /friends deny [Player] | Deny a request  | - Friends.Commands.Deny |
-| /friends block [Player] | Blocks a player  | - Friends.Commands.Block |
-| /friends unblock [Player] | Unlocks a player  | - Friends.CommandsUnblock |
-| /friends list | Shows all your current friends  | - Friends.Commands.List |
-| /friends toggle requests | Enable or disable requests  | - Friends.Commands.Toggle.Requests |
-| /friends toggle chat | Enable or disable the friend-chat  | - Friends.Commands.Toggle.Chat |
-| /friends toggle jumping | Allow or disallow friends to jump to you  | - Friends.Commands.Toggle.Jumping |
-| /friends toggle msg | Allow or disallow friends to jsend private messages  | - Friends.Commands.Toggle.Msg |
-| /friends toggle spychat | Allows admins to see the friendchat of others | - Friends.Commands.SpyChat |
-| /friends info | See some additional informations  | / |
-| /friends reload | Reload the plugin to commit changes | - Friends.Commands.Reload |
-| /friends msg [Player] (Message] | Sends a private message | - Friends.Commands.Msg
-| /status [Message] | Sets a status | - Friends.Commands.Status |
-| /status clear [Player] | Clears the status of specified player | - Friends.Commands.Status.Clear |
+| /timesg | Shows all commands | - |
+| /setlobby | Set the lobby to the players location | TimeSG.Commands.Setup |
+| /createmap [Name] | Creates a map | TimeSG.Commands.Setup |
+| /deletemap [Name] | Deletes a map  | TimeSG.Commands.Setup |
+| /setspectator [Name] | Sets the spectator-spawn to the players location | TimeSG.Commands.Setup |
+| /addspawn [Name] | Adds a spawn  | TimeSG.Commands.Setup |
+| /removespawn [Name] | Removes a spawn | TimeSG.Commands.Setup |
+| /sethologram | Sets the position for the holograms  | TimeSG.Commands.Setup |
+| /setranking [Rank] [armorstand / sign] | Sets the armorstand/sign for a rank | TimeSG.Commands.Setup |
+| /removeranking [Rank] [armorstand / sign] | Removes the armorstand/sign for a rank | TimeSG.Commands.Setup |
+| /savearmorstand [Rank] | Saves the current loadout of a armorstand | TimeSG.Commands.Setup |
+| /buildmode | Toggles the possibillity to build  | TimeSG.Commands.Buildmode |
+| /fix | Fix your position  | TimeSG.Commands.Fix |
+| /start | Reduces the counter to 10 seconds  | TimeSG.Commands.Start |
+| /forcemap | Forces the map | TimeSG.Commands.Forcemap |
+| /stats | Shows your stats  | - |
+| /stats [Player] | Shows the stats of chosen the player | TimeSG.Stats.Others |
+| /stats #[Rank] | Shows the stats of a specified rank | TimeSG.Stats.Others |
+| /top | Shows the top players | TimeSG.Commands.Top |
+
